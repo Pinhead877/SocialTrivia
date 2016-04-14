@@ -1,0 +1,5 @@
+#clock-wrap
+  h2 Time Left
+  span= "{{ time.hours | numberFixedLen:2 }} : "
+  span= "{{ time.minutes | numberFixedLen:2 }} : "
+  span= "{{ time.seconds | numberFixedLen:2 }}"
