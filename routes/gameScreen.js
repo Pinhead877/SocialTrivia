@@ -6,7 +6,7 @@ router.get('/:gameid', function(req, res, next) {
 });
 
 
-// TODO - delete this!!!
+// TODO - delete this!!! Changes
 router.get('/', function(req, res, next) {
   res.render('gamescreen', {});
 });
