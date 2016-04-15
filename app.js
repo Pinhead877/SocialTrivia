@@ -9,6 +9,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var gameScreen = require("./routes/gameScreen");
 var templates = require('./routes/templates');
+var gamecont = require('./routes/gamecontroller');
 
 var app = express();
 
@@ -28,6 +29,7 @@ app.use('/', routes);
 app.use('/templates', templates)
 app.use("/gamescreen", gameScreen);
 app.use('/users', users);
+app.use('/gamecontroller', gamecont);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
