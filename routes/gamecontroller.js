@@ -3,7 +3,7 @@ var router = express.Router();
 
 // TODO - delete this!!! Changes
 router.get('/', function(req, res, next) {
-  res.render('quesview', {});
+  res.render('qpick', {});
 });
 
 module.exports = router;

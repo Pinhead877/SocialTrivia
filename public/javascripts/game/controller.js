@@ -2,8 +2,8 @@ app.controller('game-screen-clock', ["$scope", "$log", function($scope, $log){
   var timer;
 
   $scope.time = {
-    hours: 0,
-    minutes: 1,
+    hours: 1,
+    minutes: 0,
     seconds: 0
   }
 

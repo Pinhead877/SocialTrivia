@@ -1,3 +1,5 @@
+link(rel='stylesheet', href='/stylesheets/templates/quesdiv.css')
 #ques-wrap
   h2 Available Questions
-  #num(ng-repeat="num in [] | range: numOfQues")= "{{ num }}"
+  div.numwrap(ng-repeat="num in [] | range: numOfQues")
+    div.notanswered(id="num{{ num }}")= "{{ num }}"
