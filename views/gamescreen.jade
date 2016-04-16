@@ -6,11 +6,11 @@ block head
   script(src="/javascripts/game/controller.min.js")
   script(src="/javascripts/game/filter.min.js")
   script(src="/javascripts/game/directive.min.js")
-  
+  script(src="/javascripts/game/game-socket.min.js")
 block main
   #game-container(ng-app="game-screen")
-    h1 Game Screen
+    h1#logo Game Screen
     #upper-wrap
-      clock-div
-      high-scores-div
+      clock-div.upper-module
+      high-scores-div.upper-module
     ques-div

@@ -1,5 +1,9 @@
-app.controller('game-screen-clock', ["$scope", "$log", function($scope, $log){
+
+app.controller('game-screen-clock', ["$scope", function($scope){
   var timer;
+
+  // TODO - get the time on the screen start, on the server - if the time didnt start so start it.
+  // if not so send the current time. the time needs to run both on the server and on the client.
 
   $scope.time = {
     hours: 1,
@@ -43,4 +47,5 @@ app.controller('game-screen-high', ["$scope", "$log", function($scope, $log){
 
 app.controller('game-screen-ques', ["$scope", "$log", function($scope, $log){
   $scope.numOfQues = 50;
+
 }]);

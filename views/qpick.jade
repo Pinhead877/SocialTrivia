@@ -1,9 +1,10 @@
 extends layoutmobile
-  
+
 block main
-  h1 Pick a Question
-  input#in(type='text')
-  button#pick Send
-  
-  script.
-    var socket = io();
+  link(rel='stylesheet', href='/stylesheets/gameremote.css')
+  #cont-wrap(ng-app="remote")
+    #view(ng-view)
+      #quespick(ng-controller="remote-cont")
+        h1 Pick a Question
+        input#in(type='text', ng-model='numin')
+        button#pick(ng-click="sendnum()") Send
