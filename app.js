@@ -1,4 +1,5 @@
 var express = require('express');
+var socket_io = require('socket.io');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -13,6 +14,8 @@ var gamecont = require('./routes/gamecontroller');
 var services = require('./routes/services');
 
 var app = express();
+var io = socket_io();
+app.io = io;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

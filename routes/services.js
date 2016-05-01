@@ -1,22 +1,31 @@
-var express = require('express');
-var router = express.Router();
+module.exports = function(io) {
+    var app = require('express');
+    var router = app.Router();
 
-router.get('/:game/:que',function(req, res){
-  var gameId = req.params.game;
-  var queId = req.params.que;
+    io.on('connection', function(socket){
 
-  //TODO socket here to paint the question on the screen
+      router.get('/:game/:que',function(req, res){
+        var gameId = req.params.game;
+        var queId = req.params.que;
 
-  res.sendStatus(200);
-});
+        //TODO socket here to paint the question on the screen
 
-//TODO change to POST because of the many parameters
-router.get('/answers/:gameId/:queId/:answer',function(req, res){
-  if(req.params.answer==1){
-    res.send("Correct Answer");
-  }else{
-    res.send("Wrong Answer");
-  }
-});
+        res.sendStatus(200);
+      });
 
-module.exports = router;
+      //TODO change to POST because of the many parameters
+      router.get('/answers/:gameId/:queId/:answer',function(req, res){
+        if(req.params.answer==1){
+          res.send("Correct Answer");
+          socket.broadcast.emit('correct', req.params.queId);
+        }else{
+          res.send("Wrong Answer");
+          socket.broadcast.emit('wrong', req.params.queId);
+        }
+      });
+
+    });
+
+
+    return router;
+}
