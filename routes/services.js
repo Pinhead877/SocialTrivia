@@ -5,14 +5,14 @@ module.exports = function(io) {
     io.on('connection', function(socket){
       screenSocket = socket;
       console.log("screen connected");
+      socket.on('room', function(gameId){
+        socket.join(gameId);
+      })
     });
 
-    router.get('/:game/:que',function(req, res){
-      var gameId = req.params.game;
-      var queId = req.params.que;
-
+    router.get('/:gameId/:queId',function(req, res){
       //TODO socket here to paint the question on the screen
-
+      io.sockets.in(req.params.gameId).emit('selected', req.params.queId);
       res.sendStatus(200);
     });
 

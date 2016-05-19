@@ -2,8 +2,10 @@
 
 var socket = io();
 
-socket.on('selectednum', function(num){
-  console.log('selectednum: '+num);
+socket.emit('room', 1234);
+
+socket.on('selected', function(num){
+  console.log('selected: '+num);
   $('#num'+num).removeClass("unanswered");
   $('#num'+num).addClass("selected");
 });
