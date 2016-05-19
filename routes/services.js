@@ -18,7 +18,7 @@ module.exports = function(io) {
 
     //TODO change to POST because of the many parameters
     router.get('/answers/:gameId/:queId/:answer',function(req, res){
-      console.log("answers");
+      console.log("Answers");
       if(req.params.answer==1){
         res.send("Correct Answer");
         //screenSocket.to(req.params.gameId).emit('correct', req.params.queId);
@@ -27,6 +27,11 @@ module.exports = function(io) {
         res.send("Wrong Answer");
         io.sockets.in(req.params.gameId).emit('wrong', req.params.queId);
       }
+    });
+
+    router.get('/back/:gameId/:queId', function(req, res){
+      console.log('Back');
+      io.sockets.in(req.params.gameId).emit('unanswered', req.params.queId);
     });
 
 

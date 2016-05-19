@@ -15,4 +15,8 @@ app.controller('quescreen-cont',["$scope", "$http", function($scope, $http){
     });
   };
 
+  $scope.$on('$locationChangeStart', function() {
+    $http.get('/services/back'+$scope.gameid+'/'+$scope.numin);
+  });
+
 }]);
