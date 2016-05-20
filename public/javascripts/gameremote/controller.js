@@ -5,7 +5,6 @@ app.controller('remote-cont', ["$scope", "$location", "$http" ,function($scope, 
     console.log("Clicked: "+$scope.numin);
     $http.get('/services/'+$scope.gameid+'/'+$scope.numin)
     .then(function(res){
-      console.log(res);
       if(res.status==200){
         window.location = "/gamecontroller/quescreen/"+$scope.gameid+"/"+$scope.numin;
       }

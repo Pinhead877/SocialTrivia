@@ -6,17 +6,25 @@ app.controller('quescreen-cont',["$scope","$location", "$http", function($scope,
     $scope.answer = 1;
     $http.get("/services/answers/"+$scope.params.gameId+"/"+$scope.params.queId+"/"+$scope.answer).then(function(res){
       $scope.respond = res.data;
+      goBack();
     });
   };
   $scope.sendno = function(){
     $scope.answer = 0;
     $http.get("/services/answers/"+$scope.params.gameId+"/"+$scope.params.queId+"/"+$scope.answer).then(function(res){
       $scope.respond = res.data;
+      goBack();
     });
   };
-
-  $scope.$on('$locationChangeStart', function(event) {
-    $http.get('/services/back/'+$scope.gameid+'/'+$scope.numin);
-  });
+  window.onbeforeunload = function(event) {
+    $http.get('/services/back/'+$scope.params.gameId+'/'+$scope.params.queId);
+  }
 
 }]);
+
+function goBack(){
+  setTimeout(function(){
+    window.onbeforeunload = undefined;
+    window.history.back();
+  },1000);
+}
