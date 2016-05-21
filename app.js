@@ -6,6 +6,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var mongodb = require('mongodb');
+
 var app = express();
 var io = socket_io();
 app.io = io;
@@ -15,7 +17,7 @@ var users = require('./routes/users');
 var gameScreen = require("./routes/gameScreen")();
 var templates = require('./routes/templates');
 var gamecont = require('./routes/gamecontroller');
-var services = require('./routes/services')(io);
+var services = require('./routes/services')(io, services);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

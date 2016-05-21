@@ -1,4 +1,4 @@
-module.exports = function(io) {
+module.exports = function(io, mongodb) {
     var app = require('express');
     var router = app.Router();
 
