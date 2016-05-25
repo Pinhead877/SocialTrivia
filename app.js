@@ -17,7 +17,7 @@ var users = require('./routes/users');
 var gameScreen = require("./routes/gameScreen")();
 var templates = require('./routes/templates');
 var gamecont = require('./routes/gamecontroller');
-var services = require('./routes/services')(io, services);
+var services = require('./routes/services')(io, mongodb);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
