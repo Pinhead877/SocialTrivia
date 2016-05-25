@@ -2,12 +2,32 @@ module.exports = function(io, mongodb) {
     var app = require('express');
     var router = app.Router();
 
+    var url = 'mongodb://127.0.0.1/socialdb';
+
     io.on('connection', function(socket){
       screenSocket = socket;
       console.log("screen connected");
       socket.on('room', function(gameId){
         socket.join(gameId);
       })
+    });
+
+    router.post('/create/game', function(req, res){
+      var gameName = req.body.gameName;
+      var gameid = Math.random()*1000000;
+      console.log(gameid);
+    });
+
+    router.get('/:gameId', function(req, res){
+      var mongoClient = mongodb.mongoClient;
+
+      mongoClient.connect(url, function(err){
+        if(err){
+          console.log("Error Connecting to DB: "+err);
+        }else{
+          console.log("Connected To DB!");
+        }
+      });
     });
 
     router.get('/:gameId/:queId',function(req, res){

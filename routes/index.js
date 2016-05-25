@@ -6,8 +6,8 @@ router.get('/', function(req, res, next) {
   res.render('mainScreen/index');
 });
 
-// router.get('/gamescreen', function(req, res, next) {
-//   res.render('gamescreen', {});
-// });
+router.get('/create', function(req, res){
+  res.render('mainScreen/create');
+})
 
 module.exports = router;
