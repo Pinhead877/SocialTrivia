@@ -1,18 +1,30 @@
 doctype html
 html
 
-  head
-  
-    block title
-      title Social Gaming
-    
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    script(src="/javascripts/base/angular.min.js")
-    script(src="/javascripts/base/jquery-2.2.1.min.js")
-    script(src='/socket.io/socket.io.js')
+   head
 
-    
-    block head
-    
-  body
-    block main
+      block title
+      title Social Gaming
+
+      link(rel='stylesheet', href='/stylesheets/style.css')
+      script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js")
+      script(src="https://code.angularjs.org/1.5.5/angular-cookies.min.js")
+      script(src="/javascripts/base/jquery-2.2.1.min.js")
+      script(src='/socket.io/socket.io.js')
+      script(src="/javascripts/layout/login/module.js")
+      script(src="/javascripts/layout/login/controller.js")
+
+
+      block head
+
+   body(ng-app="mainApp")
+      #loginwrap(ng-controller="login-cont")
+         #login(ng-hide="loggedin")
+            h3
+               a(href="", ng-click="login()") Login
+         #profile(ng-show="loggedin")
+            h3 Hello, 
+               span(ng-bind="user.name")
+               span= " - "
+               a(href="", ng-click="logout()")  Logout
+      block main

@@ -1,1 +1,1 @@
-var app = angular.module('create-page', []);
+// angular.module('create-page', ['ngCookies']);
