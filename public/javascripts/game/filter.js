@@ -1,4 +1,4 @@
-app.filter('numberFixedLen', function () {
+angular.module('mainApp').filter('numberFixedLen', function () {
         return function (n, len) {
             var num = parseInt(n, 10);
             len = parseInt(len, 10);
@@ -13,7 +13,7 @@ app.filter('numberFixedLen', function () {
         };
     });
 
-app.filter('range', function(){
+angular.module('mainApp').filter('range', function(){
   return function(arr, num){
     sum = parseInt(num);
 
