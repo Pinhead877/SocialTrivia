@@ -3,7 +3,6 @@ module.exports = function(io, mongodb) {
    var router = app.Router();
    var async = require('asyncawait/async');
    var await = require('asyncawait/await');
-   var Promise = require('bluebird');
    var monDB = mongodb.MongoClient;
 
    var url = 'mongodb://127.0.0.1/socialdb';
@@ -29,8 +28,8 @@ module.exports = function(io, mongodb) {
             var asyncFind = async(function(){
                return await(data.find({}));
             });
-            asyncFind().then(function(d){
-               d.toArray(function(e,ids){
+            asyncFind().then(function(dataReturned){
+               dataReturned.toArray(function(e,ids){
                   var checkID = true;
                   while(checkID){
                      gameid = Math.floor((Math.random()*9999999));
@@ -38,9 +37,10 @@ module.exports = function(io, mongodb) {
                         checkID = false;
                      }
                   }
-                  data.insertOne({_id:gameid, name: gameName});
+                  var respond = {_id:gameid, name: gameName};
+                  data.insertOne(respond);
                   db.close();
-                  res.send({_id:gameid, name: gameName});
+                  res.send(respond);
                });
             }).catch(function(e) {
                console.log(e);

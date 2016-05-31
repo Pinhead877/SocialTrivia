@@ -10,6 +10,13 @@ router.get('/', function(req, res, next) {
   res.render('mainScreen/index');
 });
 
+router.use(function(req, res, next){
+   if(req.cookies.user){
+         next('route');
+   }
+   next();
+});
+
 router.get('/create', function(req, res){
   res.render('mainScreen/create');
 })
