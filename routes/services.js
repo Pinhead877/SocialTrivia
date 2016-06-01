@@ -72,6 +72,13 @@ module.exports = function(io, mongodb) {
       io.sockets.in(req.params.gameId).emit('unanswered', req.params.queId);
    });
 
+   router.get('/session', function(req, res){
+      if(req.session.username){
+         res.send({username: req.session.username})
+      }else{
+         res.send({});
+      }
+   });
 
    return router;
 }

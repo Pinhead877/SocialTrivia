@@ -1,22 +1,32 @@
 var express = require('express');
 var router = express.Router();
 
+//        /users
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+   res.send('respond with a resource');
 });
 
 router.post('/login', function(req, res){
    console.log("login");
-   req.session.username = req.body.username;
-   res.send({id: req.session.id});
+   console.log(req.body.username);
+   var sess = req.session;
+   sess.username = req.body.username;
+   console.log(sess);
+   sess.save();
+   res.sendStatus(200);
 });
 
 router.get('/logout', function(req, res){
    req.session.destroy(function(err){
-      console.log(err);
+      if(err){
+         res.sendStatus(500);
+         return;
+      }
    });
    res.sendStatus(200);
+   return;
 });
 
 module.exports = router;

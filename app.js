@@ -30,26 +30,32 @@ app.set('view engine', 'jade');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(session({
-   genid: function(){
-      return Math.floor(Math.random()*999999999);
-   },
    secret: "secret-service",
    resave: false,
    saveUninitialized: false,
+   httpOnly: false,
    store: new MongoSession({
-      url: "mongodb://127.0.0.1/socialdb"
+      url: "mongodb://127.0.0.1/socialdb",
+      ttl: 14*24*60*60
    })
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/services', services);
 app.use('/templates', templates);
-app.use("/gamescreen", gameScreen);
 app.use('/users', users);
+app.use(function(req, res, next){
+   if(req.session.username){
+      next();
+   }else{
+      res.redirect('/login?last='+req.originalUrl);
+   }
+});
+app.use('/gamescreen', gameScreen);
 app.use('/gamecontroller', gamecont);
 
 // catch 404 and forward to error handler
