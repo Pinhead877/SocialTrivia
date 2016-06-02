@@ -13,6 +13,7 @@ router.post('/login', function(req, res){
    console.log(req.body.username);
    var sess = req.session;
    sess.username = req.body.username;
+   sess.userid = 9999;
    console.log(sess);
    sess.save();
    res.sendStatus(200);

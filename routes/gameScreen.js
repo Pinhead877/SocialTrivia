@@ -5,7 +5,6 @@ module.exports = function(){
    var router = express.Router();
 
    router.get('/create',function(req, res){
-      console.log("Create");
       res.render('gameScreen/create');
    });
 

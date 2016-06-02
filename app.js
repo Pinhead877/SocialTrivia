@@ -10,6 +10,8 @@ var await = require('asyncawait/await');
 var MongoSession = require('connect-mongo')(session);
 
 var mongodb = require('mongodb');
+mongodb.urlToDB = 'mongodb://127.0.0.1/socialdb';
+
 
 var app = express();
 var io = socket_io();
@@ -21,6 +23,7 @@ var gameScreen = require("./routes/gameScreen")();
 var templates = require('./routes/templates');
 var gamecont = require('./routes/gamecontroller');
 var services = require('./routes/services')(io, mongodb);
+var questions = require('./routes/questions')(mongodb);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,9 +32,17 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
+// app.use(cookieParser());
 app.use(session({
    secret: "secret-service",
    resave: false,
+   name: 'Social-Trivia',
+   cookie: {
+      path: '/',
+      httpOnly: false,
+      secure: false,
+      maxAge: 14*24*60*60
+   },
    saveUninitialized: false,
    httpOnly: false,
    store: new MongoSession({
@@ -41,10 +52,10 @@ app.use(session({
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
+app.use('/questions', questions);
 app.use('/services', services);
 app.use('/templates', templates);
 app.use('/users', users);

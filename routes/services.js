@@ -1,11 +1,10 @@
+
 module.exports = function(io, mongodb) {
    var app = require('express');
    var router = app.Router();
    var async = require('asyncawait/async');
    var await = require('asyncawait/await');
    var monDB = mongodb.MongoClient;
-
-   var url = 'mongodb://127.0.0.1/socialdb';
 
    io.on('connection', function(socket){
       screenSocket = socket;
@@ -15,29 +14,43 @@ module.exports = function(io, mongodb) {
       })
    });
 
+   //Create new game - recieve a name from the client
+   //than creates random game id and checks that it dosent apear in the DB
+   //saves and sends to the client the _id, as it apears in the DB, the game name and the creators id
    router.post('/create/game', function(req, res){
       var gameName = req.body.name;
       var gameid;
-      monDB.connect(url, function(err, db){
+      monDB.connect(mongodb.urlToDB, function(err, db){
          if(err){
             console.log("Error: "+err);
             res.send({ });
          }else{
             console.log("Connected To DB!");
             var data = db.collection("games");
+            //create but still not use! an async function
+            //to get the data from the DB
             var asyncFind = async(function(){
                return await(data.find({}));
             });
+            //check for duplicate game id
             asyncFind().then(function(dataReturned){
                dataReturned.toArray(function(e,ids){
                   var checkID = true;
                   while(checkID){
-                     gameid = Math.floor((Math.random()*9999999));
+                     gameid = Math.floor((Math.random()*999999999));
                      if(!isNumInArray(gameid, ids)){
                         checkID = false;
                      }
                   }
-                  var respond = {_id:gameid, name: gameName};
+                  var respond = {
+                     _id: gameid,
+                     name: gameName,
+                     dateCreated: new Date(),
+                     creator: {
+                        userid: req.session.userid,
+                        username: req.session.username
+                     }
+                  };
                   data.insertOne(respond);
                   db.close();
                   res.send(respond);
@@ -74,7 +87,7 @@ module.exports = function(io, mongodb) {
 
    router.get('/session', function(req, res){
       if(req.session.username){
-         res.send({username: req.session.username})
+         res.send(req.session);
       }else{
          res.send({});
       }

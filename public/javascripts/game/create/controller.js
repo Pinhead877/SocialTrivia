@@ -1,4 +1,4 @@
-angular.module('mainApp').controller('create-cont', ['$scope', '$http', '$cookies', function($scope, $http, $cookies){
+angular.module('mainApp').controller('create-cont', ['$scope', '$http', function($scope, $http){
    $scope.data = {};
    $scope.dataRecieved = false;
    $scope.create = function(){
@@ -6,7 +6,6 @@ angular.module('mainApp').controller('create-cont', ['$scope', '$http', '$cookie
          if(result.data._id){
             $scope.data = result.data;
             $scope.log = "Game Number: "+$scope.data._id;
-            $cookies.put("gameid", $scope.data._id);
             $scope.dataRecieved = true;
          }else{
             $scope.log = result.data;

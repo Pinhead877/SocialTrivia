@@ -3,20 +3,20 @@ var router = express.Router();
 
 // TODO - delete this!!! Changes
 router.get('/', function(req, res, next) {
-  res.render('question/qpick', {});
+   res.render('gameremote/qpick', {});
 });
 
 router.get('/quescreen/:gameId/:queId', function(req, res){
-  //TODO get the question from the DB or the server
+   //TODO get the question from the DB or the server
 
-  var params = {
-    gameId: req.params.gameId,
-    queId: req.params.queId,
-    count: 5,
-    que: "What is called a cat?"
-  };
+   var params = {
+      gameId: req.params.gameId,
+      queId: req.params.queId,
+      count: 5,
+      que: "What is called a cat?"
+   };
 
-  res.render('question/quescreen',{params: params});
+   res.render('gameremote/quescreen',{params: params});
 })
 
 module.exports = router;
