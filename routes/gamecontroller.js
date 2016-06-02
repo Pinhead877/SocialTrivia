@@ -3,7 +3,7 @@ var router = express.Router();
 
 // TODO - delete this!!! Changes
 router.get('/', function(req, res, next) {
-  res.render('qpick', {});
+  res.render('question/qpick', {});
 });
 
 router.get('/quescreen/:gameId/:queId', function(req, res){
@@ -16,7 +16,7 @@ router.get('/quescreen/:gameId/:queId', function(req, res){
     que: "What is called a cat?"
   };
 
-  res.render('quescreen',{params: params});
+  res.render('question/quescreen',{params: params});
 })
 
 module.exports = router;
