@@ -15,18 +15,12 @@ html
       script(src='/socket.io/socket.io.js')
       script(src="/javascripts/layout/module.js")
       script(src="/javascripts/layout/login/controller.js")
+      script(src="/javascripts/layout/login/directive.js")
 
       block head
 
    body(ng-app="mainApp")
       // TODO - Create directive for this 
-      #loginwrap(ng-controller="login-cont")
-         #login(ng-hide="loggedin")
-            h3
-               a(href="", ng-click="login()") Login
-         #profile(ng-show="loggedin")
-            h3 Hello, 
-               span(ng-bind="user.username")
-               span= " - "
-               a(href="", ng-click="logout()")  Logout
+      login-div
+      
       block main
