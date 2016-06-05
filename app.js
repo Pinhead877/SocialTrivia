@@ -18,7 +18,7 @@ var io = socket_io();
 app.io = io;
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var users = require('./routes/users')(mongodb);
 var gameScreen = require("./routes/gameScreen")();
 var templates = require('./routes/templates');
 var gamecont = require('./routes/gamecontroller');

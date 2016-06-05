@@ -2,8 +2,8 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$cookies'
 
    $scope.loggedin = false;
    $scope.userDetails = {
-      username: "Admin",
-      password: "1234567"
+      username: "Admin2",
+      password: "123456"
    }
    $scope.user = {};
    $http.get("/services/session").then(function(result){

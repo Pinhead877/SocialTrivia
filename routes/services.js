@@ -89,7 +89,7 @@ module.exports = function(io, mongodb) {
       if(req.session.username){
          res.send(req.session);
       }else{
-         res.send({});
+         res.sendStatus(500);
       }
    });
 
