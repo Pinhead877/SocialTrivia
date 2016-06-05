@@ -1,16 +1,13 @@
-extends layoutmobile
+extends ../layoutmobile
 
 block append head
-  script(src='/javascripts/gameremote/module.min.js')
   script(src='/javascripts/gameremote/controller.min.js')
+  link(rel='stylesheet', href='/stylesheets/gameremote.css')
 
 block title 
   title Pick a Question
   
 block main
-  link(rel='stylesheet', href='/stylesheets/gameremote.css')
-  #cont-wrap(ng-app="remote")
-    #view(ng-view)
       #quespick(ng-controller="remote-cont")
         h1 Pick a Question
         input#in(type='text', ng-model='numin')

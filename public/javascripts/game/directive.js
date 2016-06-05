@@ -1,4 +1,4 @@
-app.directive("clockDiv", function(){
+angular.module('mainApp').directive("clockDiv", function(){
   return {
     restrict: "E",
     controller: "game-screen-clock",
@@ -6,7 +6,7 @@ app.directive("clockDiv", function(){
   }
 });
 
-app.directive('highScoresDiv', function(){
+angular.module('mainApp').directive('highScoresDiv', function(){
   return {
     restrict: "E",
     controller: "game-screen-high",
@@ -14,7 +14,7 @@ app.directive('highScoresDiv', function(){
   }
 });
 
-app.directive('quesDiv', function(){
+angular.module('mainApp').directive('quesDiv', function(){
   return {
     restrict: "E",
     controller: "game-screen-ques",

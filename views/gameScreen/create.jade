@@ -1,0 +1,15 @@
+extends ../layout
+
+block head
+  script(src="/javascripts/game/create/controller.js")
+
+block main
+  #wrap(ng-controller="create-cont")
+    h1 Create Game
+    h3#gamenumber(ng-bind="log")
+    #ques(ng-show="dataRecieved")
+      h2 Choose Questions
+      #quesList questions list
+    input#name(placeholder="Game Name", ng-model="data.name", ng-hide="dataRecieved")
+    button(ng-click="create()", ng-hide="dataRecieved") Create
+    button(ng-click="continue()", ng-show="dataRecieved") Continue

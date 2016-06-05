@@ -1,5 +1,5 @@
 
-app.controller('game-screen-clock', ["$scope", function($scope){
+angular.module('mainApp').controller('game-screen-clock', ["$scope", function($scope){
   var timer;
 
   // TODO - get the time on the screen start, on the server - if the time didnt start so start it.
@@ -37,7 +37,7 @@ app.controller('game-screen-clock', ["$scope", function($scope){
   startTimeUpdate();
 }]);
 
-app.controller('game-screen-high', ["$scope", "$log", function($scope, $log){
+angular.module('mainApp').controller('game-screen-high', ["$scope", "$log", function($scope, $log){
   $scope.players = [
     {  name: "Alex", points: 90  },
     {  name: "Alex2", points: 50  },
@@ -45,7 +45,7 @@ app.controller('game-screen-high', ["$scope", "$log", function($scope, $log){
   ];
 }]);
 
-app.controller('game-screen-ques', ["$scope", "$log", function($scope, $log){
+angular.module('mainApp').controller('game-screen-ques', ["$scope", "$log", function($scope, $log){
   $scope.numOfQues = 50;
 
 }]);
