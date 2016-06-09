@@ -30,14 +30,6 @@ module.exports = function(mongodb) {
             })
          }
       });
-      // console.log("login");
-      // console.log(req.body.username);
-      // var sess = req.session;
-      // sess.username = req.body.username;
-      // sess.userid = 9999;
-      // console.log(sess);
-      // sess.save();
-      // res.sendStatus(200);
    });
 
    router.get('/logout', function(req, res){
@@ -48,8 +40,6 @@ module.exports = function(mongodb) {
          }
       });
       res.sendStatus(200);
-      return;
-
    });
 
    return router;

@@ -1,10 +1,7 @@
 angular.module('mainApp').controller('login-cont',['$scope', '$http', '$cookies', '$window', '$location', function($scope, $http, $cookies, $window, $location){
-
+   $scope.upper = true;
    $scope.loggedin = false;
-   $scope.userDetails = {
-      username: "Admin2",
-      password: "123456"
-   }
+   $scope.userDetails = {};
    $scope.user = {};
    $http.get("/services/session").then(function(result){
       if(result.data.username){
@@ -13,6 +10,11 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$cookies'
          $scope.loggedin = true;
       }else{
          console.log("No Session");
+      }
+   });
+   $scope.$watch('upper', function(){
+      if($scope.upper===true){
+
       }
    });
 

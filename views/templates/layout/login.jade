@@ -1,8 +1,7 @@
-#login(ng-hide="loggedin")
-   h3
-      a(href="", ng-click="login()") Login
-#profile(ng-show="loggedin")
-   h3 Hello, 
-      span(ng-bind="user.username")
-      span= " - "
-      a(href="", ng-click="logout()")  Logout
+link(rel='stylesheet', href="/stylesheets/templates/login.css")
+#login(ng-hide="loggedin", ng-class="{'upper-div': upper}")
+   span Username
+   input(type="text", placeholder="Username", ng-model="userDetails.username")
+   span Password
+   input(type="password", placeholder="Password", ng-model="userDetails.password")
+   button(ng-click="login()") Login

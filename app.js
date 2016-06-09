@@ -26,13 +26,13 @@ var services = require('./routes/services')(io, mongodb);
 var questions = require('./routes/questions')(mongodb);
 
 // view engine setup
+//TODO - change the view engine to pug
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-// app.use(cookieParser());
 app.use(session({
    secret: "secret-service",
    resave: false,

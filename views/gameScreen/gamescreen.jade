@@ -1,4 +1,4 @@
-extends ../layout
+extends ../layoutlogin
   
 block head
    link(href='/stylesheets/gamescreen.css', rel='stylesheet')
@@ -7,8 +7,8 @@ block head
    script(src="/javascripts/game/directive.min.js")
    script(src="/javascripts/game/game-socket.min.js")
   
-  
-block main
+
+block append main
    #game-container
       h2#logo Game Screen
       #upper-wrap
