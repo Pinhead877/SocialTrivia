@@ -1,0 +1,32 @@
+extends ../layout
+
+block title
+   title Social Trivia - Register
+
+block append head
+   script(src="/javascripts/mainscreen/register/controller.js")
+   script(src="/javascripts/layout/filter.min.js")
+   
+block main
+   #register-form(ng-controller="register")
+      h1 Register
+      #form-wrap
+         span Username
+         input(type="text" ng-model="userDetails.username")
+         span Password
+         input(type='password', ng-model="userDetails.password")
+         span Gender
+         select(ng-model="userDetails.gender")
+            option Male
+            option Female
+         span Birthday
+         span Day
+         select(ng-model="userDetails.birthday.day")
+            option(ng-repeat="num in [] | range: 31") {{num}}
+         span Month
+         select(ng-model="userDetails.birthday.month")
+            option(ng-repeat="num in [] | range: 12") {{num}}
+         span Year
+         select(ng-model="userDetails.birthday.year")
+            option(ng-repeat="num in [] | rangeFromTO:1900:currentYear") {{num}}
+         button(ng-click="regiterUser()") Submit

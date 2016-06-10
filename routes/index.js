@@ -7,6 +7,10 @@ router.get('/', function(req, res, next) {
 
 router.get('/login', function(req, res){
    res.render('mainScreen/login', {base: req.headers.host});
-})
+});
+
+router.get('/register', function(req, res){
+   res.render('mainScreen/register')
+});
 
 module.exports = router;

@@ -1,7 +1,10 @@
 link(rel='stylesheet', href="/stylesheets/templates/login.css")
 #login(ng-hide="loggedin", ng-class="{'upper-div': upper}")
-   span Username
-   input(type="text", placeholder="Username", ng-model="userDetails.username")
-   span Password
-   input(type="password", placeholder="Password", ng-model="userDetails.password")
-   button(ng-click="login()") Login
+   #username
+      span Username
+      input(type="text", placeholder="Username", ng-model="userDetails.username")
+   #password
+      span Password
+      input(type="password", placeholder="Password", ng-model="userDetails.password")
+   #login-butt
+      button(ng-click="login()") Login

@@ -7,6 +7,24 @@ module.exports = function(mongodb) {
       res.render('profile/profilescreen');
    });
 
+   router.post('/create', function(req, res){
+      mondb.connect(mongodb.urlToDB, function(err, db){
+         var data = db.collection("users");
+         var user = data.find({
+            username: req.body.username
+         });
+         user.toArray(function(e,user){
+            if(user.length>0){
+               res.send({error: "Username already exists!"});
+            }else{
+               var ins = data.insert(req.body);
+               console.log(ins);
+               res.sendStatus(200);
+            }
+         });
+      });
+   });
+
    router.post('/login', function(req, res){
       mondb.connect(mongodb.urlToDB, function(err, db){
          if(err){

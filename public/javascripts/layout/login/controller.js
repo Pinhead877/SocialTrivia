@@ -1,4 +1,4 @@
-angular.module('mainApp').controller('login-cont',['$scope', '$http', '$cookies', '$window', '$location', function($scope, $http, $cookies, $window, $location){
+angular.module('mainApp').controller('login-cont',['$scope', '$http', '$window', '$location', function($scope, $http, $window, $location){
    $scope.upper = true;
    $scope.loggedin = false;
    $scope.userDetails = {};
@@ -25,7 +25,7 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$cookies'
             if($location.search().last){
                $window.location.href = $location.search().last;
             }else{
-               $window.location.reload();
+               $window.location.href = '/';
             }
          }
       });

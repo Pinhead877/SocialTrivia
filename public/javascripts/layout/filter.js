@@ -24,3 +24,15 @@ angular.module('mainApp').filter('range', function(){
     return arr;
   };
 });
+
+angular.module('mainApp').filter('rangeFromTO', function(){
+  return function(arr, start, end){
+    sum = parseInt(end);
+
+    for(i=start;i<sum+1;i++){
+      arr.push(i);
+    }
+
+    return arr;
+  };
+});
