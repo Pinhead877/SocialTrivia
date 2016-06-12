@@ -9,16 +9,22 @@ module.exports = function(mongodb) {
 
    router.post('/create', function(req, res){
       //TODO - add validation check if empty and check length
+      var userDetails = req.body;
+      if(isObjectInvalid(userDetails, res)){
+         console.log("bad");
+         res.send({error: {code: 1005, message: "Dev - General Error!"}});
+         return;
+      }
       mondb.connect(mongodb.urlToDB, function(err, db){
          var data = db.collection("users");
          var user = data.find({
-            nickname: req.body.nickname
+            nickname: generateRegExp(userDetails.nickname)
          });
          user.toArray(function(e,user){
             if(user.length>0){
-               res.send({error: "nickname already exists!"});
+               res.send({error: {code: 1001, message: "Username already exists"}});
             }else{
-               var ins = data.insert(req.body);
+               var ins = data.insert(userDetails);
                console.log(ins);
                res.sendStatus(200);
             }
@@ -29,25 +35,26 @@ module.exports = function(mongodb) {
    router.post('/login', function(req, res){
       mondb.connect(mongodb.urlToDB, function(err, db){
          if(err){
-            res.send({error: "DB Connection error"})
-         }else{
-            var data = db.collection("users");
-            var user = data.find({
-               nickname: req.body.nickname,
-               password: req.body.password
-            });
-            user.toArray(function(e,user) {
-               console.log(user);
-               if(user.length === 0){
-                  res.sendStatus(500);
-               }else if(user.length===1){
-                  var sess = req.session;
-                  sess.nickname = user[0].nickname;
-                  sess.userid = user[0]._id;
-                  res.sendStatus(200);
-               }
-            })
+            res.send({error: "DB Connection error"});
+            return;
          }
+         var data = db.collection("users");
+         var user = data.find({
+            nickname: generateRegExp(req.body.nickname),
+            password: req.body.password
+         });
+         user.toArray(function(e,user) {
+            console.log(user);
+            if(user.length === 0){
+               res.sendStatus(500);
+            }else if(user.length===1){
+               var sess = req.session;
+               sess.nickname = user[0].nickname;
+               sess.userid = user[0]._id;
+               res.sendStatus(200);
+            }
+         })
+
       });
    });
 
@@ -62,4 +69,49 @@ module.exports = function(mongodb) {
    });
 
    return router;
+}
+
+function generateRegExp(text) {
+   return new RegExp(["^",text,"$"].join(""), "i");
+}
+
+function isObjectInvalid(obj, res) {
+   if(!isNicknameValid(obj.nickname)) return true;
+   if(!isStringValid(obj.password)) return true;
+   if(isEmptyOrUndefined(obj.gender)) return true;
+   if(isEmptyOrUndefined(obj.birthday)) return true;
+   return false;
+}
+
+function isNicknameValid(text) {
+   if(isLengthInvalid(text)) return false;
+   if(!isStringValid(text)) return false;
+   return true;
+}
+
+function isLengthInvalid(text){
+   if(text.length<4 || text.length>10) return true;
+   return false;
+}
+
+function isStringValid(text){
+   console.log(text);
+   console.log("isStringValid");
+   if(isEmptyOrUndefined(text)) return false;
+   console.log("Passed - isEmptyOrUndefined");
+   if(!isStringConatainsNumbersAndLetters(text)) return false;
+   console.log("Passed - isStringConatainsNumbersAndLetters");
+   return true;
+}
+
+function isEmptyOrUndefined(item){
+   if(item==="" || item===undefined || item===null) return true;
+   return false;
+}
+
+function isStringConatainsNumbersAndLetters(inputtxt){
+   //RegExp of letters and Numbers
+   var letterNumber = /([a-z]|[A-Z]|[0-9])/g;
+   if(inputtxt.match(letterNumber).length<inputtxt.length) return false;
+   return true;
 }
