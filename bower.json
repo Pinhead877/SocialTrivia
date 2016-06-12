@@ -1,0 +1,21 @@
+{
+  "name": "socialTrivia",
+  "description": "Social Trivia Game",
+  "main": "bin/www",
+  "authors": [
+    "Pinhead877 <apchi877@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Pinhead877/SocialTrivia",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "crypto-js": "^3.1.6"
+  }
+}

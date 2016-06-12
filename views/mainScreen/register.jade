@@ -1,7 +1,12 @@
 extends ../layout
 
+doctype html
+
 block title
    title Social Trivia - Register
+
+//- TODO - https://scotch.io/tutorials/angularjs-form-validation-with-ngmessages
+//- TODO - add error messages from the server - nickname exists or something 
 
 block append head
    script(src="/javascripts/mainscreen/register/controller.js")
@@ -10,23 +15,31 @@ block append head
 block main
    #register-form(ng-controller="register")
       h1 Register
-      #form-wrap
-         span Username
-         input(type="text" ng-model="userDetails.username")
-         span Password
-         input(type='password', ng-model="userDetails.password")
-         span Gender
-         select(ng-model="userDetails.gender")
-            option Male
-            option Female
-         span Birthday
-         span Day
-         select(ng-model="userDetails.birthday.day")
-            option(ng-repeat="num in [] | range: 31") {{num}}
-         span Month
-         select(ng-model="userDetails.birthday.month")
-            option(ng-repeat="num in [] | range: 12") {{num}}
-         span Year
-         select(ng-model="userDetails.birthday.year")
-            option(ng-repeat="num in [] | rangeFromTO:1900:currentYear") {{num}}
-         button(ng-click="regiterUser()") Submit
+      form(name="registerForm", novalidate, ng-submit="registerUser()")
+         .form-group(ng-class="{ 'has-error' : registerForm.nickname.$invalid && !registerForm.nickname.$pristine }")
+            label Nickname
+            input.form-control(type="text", name="nickname",  ng-model="userDetails.nickname", ng-minlength="4", ng-max-length="10", required)
+         .form-group(ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine }")   
+            label Password
+            input.form-control(type='password', name="password" ng-model="userDetails.password" ng-minlength="4", ng-max-length="10", required)
+         .form-group(ng-class="{ 'has-error' : registerForm.gender.$invalid && !registerForm.gender.$pristine }")
+            label Gender
+            select.form-control(name="gender", ng-model="userDetails.gender", required)
+               option Male
+               option Female
+         label Birthday
+         .form-group(ng-class="{ 'has-error' : registerForm.day.$invalid && !registerForm.day.$pristine }")
+            label Day
+            select.form-control(name="day", ng-model="userDetails.birthday.day", required)
+               option(ng-repeat="num in [] | range: 31") {{num}}
+         .form-group(ng-class="{ 'has-error' : registerForm.month.$invalid && !registerForm.month.$pristine }")
+            label Month
+            select.form-control(name="month", ng-model="userDetails.birthday.month", required)
+               option(ng-repeat="num in [] | range: 12") {{num}}
+         .form-group(ng-class="{ 'has-error' : registerForm.year.$invalid && !registerForm.year.$pristine }")
+            label Year
+            select.form-control(name="year", ng-model="userDetails.birthday.year", required)
+               option(ng-repeat="num in [] | rangeFromTO:currentYear:1900") {{num}}
+         #register-butt
+            button.btn(type="submit", ng-disabled="registerForm.$invalid") Submit
+            button.btn(type="button", ng-click="clearFields()") Clear

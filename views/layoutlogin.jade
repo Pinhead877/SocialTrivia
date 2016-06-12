@@ -4,6 +4,6 @@ block main
    login-div(upper="true")
    #profile(ng-show="loggedin")
       h3 Hello, 
-         span(ng-bind="user.username")
+         span(ng-bind="user.nickname")
          span= " - "
          a(href="", ng-click="logout()")  Logout

@@ -60,7 +60,7 @@ app.use('/services', services);
 app.use('/templates', templates);
 app.use('/users', users);
 app.use(function(req, res, next){
-   if(req.session.username){
+   if(req.session.nickname){
       next();
    }else{
       res.redirect('/login?last='+req.originalUrl);

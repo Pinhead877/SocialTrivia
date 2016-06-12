@@ -3,10 +3,12 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$window',
    $scope.loggedin = false;
    $scope.userDetails = {};
    $scope.user = {};
+   $scope.enc = CryptoJS.SHA3;
+   $scope.requiredField = false;
+
    $http.get("/services/session").then(function(result){
-      if(result.data.username){
-         console.log("Session: "+result.data.username);
-         $scope.user.username = result.data.username;
+      if(result.data.nickname){
+         $scope.user.nickname = result.data.nickname;
          $scope.loggedin = true;
       }else{
          console.log("No Session");
@@ -19,16 +21,20 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$window',
    });
 
    $scope.login = function(){
-      $http.post("/users/login", $scope.userDetails).then(function(result){
-         if(result.status===200){
-            console.log($location.search().last);
-            if($location.search().last){
-               $window.location.href = $location.search().last;
-            }else{
-               $window.location.href = '/';
+      if($scope.loginForm.$valid){
+         var encPass = $scope.enc($scope.userDetails.password, { outputLength: 256 });
+         $scope.userDetails.password = encPass.toString();
+
+         $http.post("/users/login", $scope.userDetails).then(function(result){
+            if(result.status===200){
+               if($location.search().last){
+                  $window.location.href = $location.search().last;
+               }else{
+                  $window.location.href = '/';
+               }
             }
-         }
-      });
+         });
+      }
    }
    $scope.logout = function(){
       $http.get("/users/logout").then(function(result){

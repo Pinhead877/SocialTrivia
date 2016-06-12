@@ -4,3 +4,5 @@ angular.module('mainApp', ['ngRoute']).config(
       $locationProvider.html5Mode(true);
    }
 );
+
+angular.module('mainApp').run()

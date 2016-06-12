@@ -48,7 +48,7 @@ module.exports = function(io, mongodb) {
                      dateCreated: new Date(),
                      creator: {
                         userid: req.session.userid,
-                        username: req.session.username
+                        nickname: req.session.nickname
                      }
                   };
                   data.insertOne(respond);
@@ -86,7 +86,7 @@ module.exports = function(io, mongodb) {
    });
 
    router.get('/session', function(req, res){
-      if(req.session.username){
+      if(req.session.nickname){
          res.send(req.session);
       }else{
          res.sendStatus(500);

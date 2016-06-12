@@ -8,14 +8,15 @@ module.exports = function(mongodb) {
    });
 
    router.post('/create', function(req, res){
+      //TODO - add validation check if empty and check length
       mondb.connect(mongodb.urlToDB, function(err, db){
          var data = db.collection("users");
          var user = data.find({
-            username: req.body.username
+            nickname: req.body.nickname
          });
          user.toArray(function(e,user){
             if(user.length>0){
-               res.send({error: "Username already exists!"});
+               res.send({error: "nickname already exists!"});
             }else{
                var ins = data.insert(req.body);
                console.log(ins);
@@ -32,7 +33,7 @@ module.exports = function(mongodb) {
          }else{
             var data = db.collection("users");
             var user = data.find({
-               username: req.body.username,
+               nickname: req.body.nickname,
                password: req.body.password
             });
             user.toArray(function(e,user) {
@@ -41,7 +42,7 @@ module.exports = function(mongodb) {
                   res.sendStatus(500);
                }else if(user.length===1){
                   var sess = req.session;
-                  sess.username = user[0].username;
+                  sess.nickname = user[0].nickname;
                   sess.userid = user[0]._id;
                   res.sendStatus(200);
                }
