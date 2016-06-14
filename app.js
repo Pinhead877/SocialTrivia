@@ -22,7 +22,7 @@ var gameScreen = require("./routes/gameScreen")();
 var templates = require('./routes/templates');
 var gamecont = require('./routes/gamecontroller');
 var services = require('./routes/services')(io, mongodb, errors);
-var questions = require('./routes/questions')(mongodb);
+var questions = require('./routes/questions')(mongodb, errors);
 
 // view engine setup
 //TODO - change the view engine to pug
@@ -45,7 +45,7 @@ app.use(session({
    saveUninitialized: false,
    httpOnly: false,
    store: new MongoSession({
-      url: "mongodb://127.0.0.1/socialdb",
+      url: "mongodb://admin:123456@127.0.0.1/socialdb?authMechanism=DEFAULT",
       ttl: 14*24*60*60
    })
 }));

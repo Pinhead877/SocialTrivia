@@ -24,11 +24,14 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$window',
 
    $scope.login = function(){
       if($scope.loginForm.$valid){
-         var encPass = $scope.enc($scope.userDetails.password, { outputLength: 256 });
+         var encPass = $scope.enc($scope.unprotectedPassword, { outputLength: 256 });
+
          $scope.userDetails.password = encPass.toString();
 
          $http.post("/users/login", $scope.userDetails).then(function(result){
-            if(result.status===200){
+            if(result.data.error){
+               alert(result.data.error.message);
+            }else if(result.status===200){
                if($location.search().last){
                   $window.location.href = $location.search().last;
                }else{

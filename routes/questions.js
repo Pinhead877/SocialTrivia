@@ -1,5 +1,5 @@
 
-module.exports = function(mongodb) {
+module.exports = function(mongodb, errors) {
    var app = require('express');
    var router = app.Router();
    var monDB = mongodb.MongoClient;

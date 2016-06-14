@@ -11,7 +11,7 @@ module.exports = function(mongodb, errors) {
       //TODO - add validation check if empty and check length
       var userDetails = req.body;
       if(isObjectInvalid(userDetails, res)){
-         res.send({error: {code: 1005, message: "Dev - General Error!"}});
+         res.send({error: errors.DEV_ERROR});
          return;
       }
       mondb.connect(mongodb.urlToDB, function(err, db){
@@ -25,7 +25,7 @@ module.exports = function(mongodb, errors) {
          });
          user.toArray(function(e,user){
             if(user.length>0){
-               res.send({error: {code: 1001, message: "Username already exists"}});
+               res.send({error: errors.USER_EXISTS});
             }else{
                var ins = data.insert(userDetails);
                res.sendStatus(200);
@@ -47,7 +47,7 @@ module.exports = function(mongodb, errors) {
          });
          user.toArray(function(e,user) {
             if(user.length === 0){
-               res.sendStatus(500);
+               res.send({error: errors.BAD_LOGIN});
             }else if(user.length===1){
                var sess = req.session;
                sess.nickname = user[0].nickname;
