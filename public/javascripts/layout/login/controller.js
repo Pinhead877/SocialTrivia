@@ -7,11 +7,11 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$window',
    $scope.requiredField = false;
 
    $http.get("/services/session").then(function(result){
-      if(result.data.nickname){
+      if(result.data.error){
+         console.log(result.data.error.message);
+      }else if(result.data.nickname){
          $scope.user.nickname = result.data.nickname;
          $scope.loggedin = true;
-      }else{
-         console.log("No Session");
       }
    });
    $scope.$watch('upper', function(){

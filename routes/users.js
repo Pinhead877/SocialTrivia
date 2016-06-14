@@ -11,7 +11,6 @@ module.exports = function(mongodb) {
       //TODO - add validation check if empty and check length
       var userDetails = req.body;
       if(isObjectInvalid(userDetails, res)){
-         console.log("bad");
          res.send({error: {code: 1005, message: "Dev - General Error!"}});
          return;
       }
@@ -25,7 +24,6 @@ module.exports = function(mongodb) {
                res.send({error: {code: 1001, message: "Username already exists"}});
             }else{
                var ins = data.insert(userDetails);
-               console.log(ins);
                res.sendStatus(200);
             }
          });
@@ -44,7 +42,6 @@ module.exports = function(mongodb) {
             password: req.body.password
          });
          user.toArray(function(e,user) {
-            console.log(user);
             if(user.length === 0){
                res.sendStatus(500);
             }else if(user.length===1){

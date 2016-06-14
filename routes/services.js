@@ -89,7 +89,7 @@ module.exports = function(io, mongodb) {
       if(req.session.nickname){
          res.send(req.session);
       }else{
-         res.sendStatus(500);
+         res.send({error: {code: 1007, message: "No session found, please login"}});
       }
    });
 

@@ -14,7 +14,7 @@ module.exports = function(mongodb) {
             res.send({error: "database connection error" });
          }else{
             var quesCollection = db.collection('questions');
-            var results = quesCollection.find({public: true});
+            var results = quesCollection.find({public: true, isActive: true});
             results.toArray(function(err, ques){
                res.send(ques);
             });
