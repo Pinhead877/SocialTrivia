@@ -12,6 +12,8 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$window',
       }else if(result.data.nickname){
          $scope.user.nickname = result.data.nickname;
          $scope.loggedin = true;
+      }else{
+         console.log("Unknown server response");
       }
    });
    $scope.$watch('upper', function(){

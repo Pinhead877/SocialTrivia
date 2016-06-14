@@ -1,5 +1,5 @@
 
-module.exports = function(io, mongodb) {
+module.exports = function(io, mongodb, errors) {
    var app = require('express');
    var router = app.Router();
    var async = require('asyncawait/async');
@@ -27,8 +27,8 @@ module.exports = function(io, mongodb) {
          }else{
             console.log("Connected To DB!");
             var data = db.collection("games");
-            //create but still not use! an async function
-            //to get the data from the DB
+            //declare but not use! the async function
+            //used to get the data from the DB
             var asyncFind = async(function(){
                return await(data.find({}));
             });
@@ -89,13 +89,16 @@ module.exports = function(io, mongodb) {
       if(req.session.nickname){
          res.send(req.session);
       }else{
-         res.send({error: {code: 1007, message: "No session found, please login"}});
+         res.send({error: errors.NO_SESSION});
       }
    });
 
    return router;
 }
 
+/**     Private Methods    **/
+
+//function to check if a number is in a given array
 var isNumInArray = function(num, arr){
    var t;
    arr.forEach(function(val,i,arr){

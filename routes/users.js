@@ -1,4 +1,4 @@
-module.exports = function(mongodb) {
+module.exports = function(mongodb, errors) {
    var express = require('express');
    var router = express.Router();
    var mondb = mongodb.MongoClient;
@@ -15,6 +15,10 @@ module.exports = function(mongodb) {
          return;
       }
       mondb.connect(mongodb.urlToDB, function(err, db){
+         if(err){
+            res.send({error: errors.DB_CONNECT_ERROR});
+            return;
+         }
          var data = db.collection("users");
          var user = data.find({
             nickname: generateRegExp(userDetails.nickname)
@@ -33,7 +37,7 @@ module.exports = function(mongodb) {
    router.post('/login', function(req, res){
       mondb.connect(mongodb.urlToDB, function(err, db){
          if(err){
-            res.send({error: "DB Connection error"});
+            res.send({error: errors.DB_CONNECT_ERROR});
             return;
          }
          var data = db.collection("users");
@@ -50,8 +54,7 @@ module.exports = function(mongodb) {
                sess.userid = user[0]._id;
                res.sendStatus(200);
             }
-         })
-
+         });
       });
    });
 

@@ -8,21 +8,20 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var await = require('asyncawait/await');
 var MongoSession = require('connect-mongo')(session);
-
+var errors = require('./base/errorcons');
 var mongodb = require('mongodb');
 mongodb.urlToDB = 'mongodb://127.0.0.1/socialdb';
-
 
 var app = express();
 var io = socket_io();
 app.io = io;
 
 var routes = require('./routes/index');
-var users = require('./routes/users')(mongodb);
+var users = require('./routes/users')(mongodb, errors);
 var gameScreen = require("./routes/gameScreen")();
 var templates = require('./routes/templates');
 var gamecont = require('./routes/gamecontroller');
-var services = require('./routes/services')(io, mongodb);
+var services = require('./routes/services')(io, mongodb, errors);
 var questions = require('./routes/questions')(mongodb);
 
 // view engine setup
