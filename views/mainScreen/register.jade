@@ -18,10 +18,10 @@ block main
       form(name="registerForm", novalidate, ng-submit="registerUser()")
          .form-group(ng-class="{ 'has-error' : registerForm.nickname.$invalid && !registerForm.nickname.$pristine }")
             label Nickname
-            input.form-control(type="text", name="nickname",  ng-model="userDetails.nickname", ng-minlength="4", ng-max-length="10", required)
+            input.form-control(type="text", name="nickname",  ng-model="userDetails.nickname", ng-minlength="4", ng-maxlength="10", required)
          .form-group(ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine }")   
             label Password
-            input.form-control(type='password', name="password" ng-model="userDetails.password" ng-minlength="4", ng-max-length="10", required)
+            input.form-control(type='password', name="password" ng-model="userDetails.password" ng-minlength="4", ng-maxlength="10", required)
          .form-group(ng-class="{ 'has-error' : registerForm.gender.$invalid && !registerForm.gender.$pristine }")
             label Gender
             select.form-control(name="gender", ng-model="userDetails.gender", required)

@@ -33,20 +33,21 @@ app.set('view engine', 'jade');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(session({
-   secret: "secret-service",
-   resave: false,
+   secret: "secret-service onIce",
+   resave: true,
    name: 'Social-Trivia',
    cookie: {
       path: '/',
       httpOnly: false,
       secure: false,
-      maxAge: 14*24*60*60
+      expires: null,
+      maxAge: 14*24*60*60*1000
    },
    saveUninitialized: false,
    httpOnly: false,
    store: new MongoSession({
       url: "mongodb://admin:123456@127.0.0.1/socialdb?authMechanism=DEFAULT",
-      ttl: 14*24*60*60
+      ttl: 14*24*60*60*1000
    })
 }));
 app.use(bodyParser.json());
@@ -54,7 +55,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/questions', questions);
 app.use('/services', services);
 app.use('/templates', templates);
 app.use('/users', users);
@@ -65,6 +65,7 @@ app.use(function(req, res, next){
       res.redirect('/login?last='+req.originalUrl);
    }
 });
+app.use('/questions', questions);
 app.use('/gamescreen', gameScreen);
 app.use('/gamecontroller', gamecont);
 

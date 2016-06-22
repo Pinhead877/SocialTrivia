@@ -1,0 +1,16 @@
+extends ../layoutlogin
+
+block append head
+   script(src="/javascripts/questions/quelist/controller.js")
+
+block main
+   #ques-list-wrap(ng-controller="que-list-ctrl")
+      table
+         tr
+            td Created By
+            td Question
+            td Answer
+         tr(ng-repeat="q in questions")
+            
+            td= "{{ q.question }}"
+            td= "{{ q.answer }}"
