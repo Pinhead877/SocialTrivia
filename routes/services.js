@@ -52,8 +52,8 @@ module.exports = function(io, mongodb, errors) {
                      }
                   };
                   data.insertOne(respond);
-                  db.close();
                   res.send(respond);
+                  db.close();
                });
             }).catch(function(e) {
                console.log(e);

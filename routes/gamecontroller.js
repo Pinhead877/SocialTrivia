@@ -17,6 +17,6 @@ router.get('/quescreen/:gameId/:queId', function(req, res){
    };
 
    res.render('gameremote/quescreen',{params: params});
-})
+});
 
 module.exports = router;
