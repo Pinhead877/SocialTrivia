@@ -10,6 +10,10 @@ module.exports = function(mongodb, errors) {
    //TODO - send the userid and name of the requested ids
    router.get('/list', function(req, res){
       console.log(req.query);
+   });
+
+   router.post('/list', function(req, res){
+      console.log(req.body);
    })
 
    router.post('/create', function(req, res){

@@ -1,8 +1,13 @@
 
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+var request = require('request');
+
 module.exports = function(mongodb, errors) {
    var app = require('express');
    var router = app.Router();
    var monDB = mongodb.MongoClient;
+   var ObjectID = require('mongodb').ObjectID
 
 
    router.get('/list', function(req, res){
@@ -10,7 +15,7 @@ module.exports = function(mongodb, errors) {
    });
 
    //function to get all the questions in the DB
-   //tat are PUBLIC!
+   //that PUBLIC!
    router.get('/list/:type', function(req, res){
       var type = req.params.type;
       monDB.connect(mongodb.urlToDB, function(err, db){
@@ -18,6 +23,7 @@ module.exports = function(mongodb, errors) {
             res.send({error: errors.DB_CONNECT_ERROR });
             db.close();
          }else{
+
             var quesCollection = db.collection('questions');
             var results;
             if(type == "public"){
@@ -30,9 +36,24 @@ module.exports = function(mongodb, errors) {
                db.close();
                return;
             }
+            var resultUsers;
             results.toArray(function(err, ques){
-               res.send(ques);
-               db.close();
+               var userIds = [];
+               for(var i=0;i<ques.length;i++){
+                  var userId = ques[i].userid;
+                  if(!isArrayContains(userIds, userId)){
+                     userIds.push(new ObjectID(userId));
+                  }
+               }
+               var usersCollection = db.collection('users');
+               resultUsers = usersCollection.find({_id : {$in: userIds}});
+               resultUsers.toArray(function(err, users){
+                  for(var i=0;i<ques.length;i++){
+                     ques[i].nickname = getUserObjectById(ques[i].userid, users).nickname;
+                  }
+                  res.send(ques);
+                  db.close();
+               });
             });
          }
       });
@@ -75,6 +96,18 @@ module.exports = function(mongodb, errors) {
 }
 
 /** ====================== Private Methods ====================== **/
+function getUserObjectById(userid, users){
+   for(var i=0;i<users.length;i++){
+      if(userid == users[i]._id) return users[i];
+   }
+   return null;
+}
+function isArrayContains(array, item){
+   for(var j=0;j<array.length;j++){
+      if(item == array[j]) return true;
+   }
+   return false;
+}
 
 function isTextInvalid(text, min, max){
    if(text===undefined || text === null) return true;

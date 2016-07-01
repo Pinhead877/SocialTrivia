@@ -1,16 +1,22 @@
 extends ../layoutlogin
 
+block append basescripts
+   script(src="/components/angular-ui-grid/ui-grid.min.js")
+   link(rel="stylesheet", href="/components/angular-ui-grid/ui-grid.min.css")
+   
 block append head
    script(src="/javascripts/questions/quelist/controller.js")
 
 block main
+   //- change to angular grid
    #ques-list-wrap(ng-controller="que-list-ctrl")
-      table
-         tr
-            td Created By
-            td Question
-            td Answer
-         tr(ng-repeat="q in questions")
-            
-            td= "{{ q.question }}"
-            td= "{{ q.answer }}"
+      .quesGrid(ui-grid="{ data: questions }")
+      //- table
+      //-    tr
+      //-       td Created By
+      //-       td Question
+      //-       td Answer
+      //-    tr(ng-repeat="q in questions")
+      //-       td= "{{ q.nickname }}" 
+      //-       td= "{{ q.question }}"
+      //-       td= "{{ q.answer }}"
