@@ -1,25 +1,20 @@
 angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', function($scope, $http){
 
+   $scope.gridOptions = {
+      columnDefs: [
+         { field: "question", displayName: "Question" },
+         { field: "answer", displayName: "Answer" },
+         { field: "isPrivate", displayName: "Public" },
+         { field: "nickname", displayName: "Created By" }
+      ]
+   }
+
    $scope.getQuestions = function(){
       $http.get('/questions/list/public').then(function(result){
-         $scope.questions = result.data;
+         $scope.gridOptions.data = result.data;
       });
-      // var userIds = [];
-      // for(i=0;i<questions.length;i++){
-      //    var userId = questions[i].userid;
-      //    if(!isArrayContains(userIds, userId)){
-      //       userIds.push(userId);
-      //    }
-      // }
-      // var specs = {
-      //    ids: userIds
-      // }
-      // $http.post('/users/list', specs).then(function(result){
-      //    $scope.usersDetails = result.data;
-      //    console.log($scope.usersDetails);
-      // });
-
    }
+
 
    $scope.getQuestions();
 
