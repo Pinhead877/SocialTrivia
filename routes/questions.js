@@ -38,6 +38,7 @@ module.exports = function(mongodb, errors) {
             }
             var resultUsers;
             results.toArray(function(err, ques){
+               // TODO - Do only if type is public - if private use the creators name
                var userIds = [];
                for(var i=0;i<ques.length;i++){
                   var userId = ques[i].userid;
