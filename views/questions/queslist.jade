@@ -4,15 +4,9 @@ block append head
    script(src="/javascripts/questions/quelist/controller.js")
 
 block main
-   //- change to angular grid
    #ques-list-wrap(ng-controller="que-list-ctrl")
+      .listHeader
+         label Show only own questions?
+         input(type="checkbox", ng-model="showPrivate", ng-change="getQuestions(showPrivate)", ng-true-value="'private'", ng-false-value="'public'")
+         a(ng-click="goToAddQuestion()") Add a new question
       .quesGrid(ui-grid="gridOptions")
-      //- table
-      //-    tr
-      //-       td Created By
-      //-       td Question
-      //-       td Answer
-      //-    tr(ng-repeat="q in questions")
-      //-       td= "{{ q.nickname }}" 
-      //-       td= "{{ q.question }}"
-      //-       td= "{{ q.answer }}"
