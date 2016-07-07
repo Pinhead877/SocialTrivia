@@ -8,9 +8,19 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', functi
          { field: "nickname", displayName: "Created By" }
       ],
       enableGridMenu: true,
+      enableRowSelection: true,
+      enableFullRowSelection: true,
+      enableSelectAll: true,
       onRegisterApi: function(gridApi) {
          $scope.gridApi = gridApi;
+         gridApi.selection.on.rowSelectionChanged($scope,function(row){
+            $scope.ques = gridApi.selection.getSelectedRows();
+         });
       }
+   };
+
+   $scope.clearAll = function() {
+      $scope.gridApi.selection.clearSelectedRows();
    };
 
    $scope.getQuestions = function(type){
@@ -23,6 +33,7 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', functi
       window.location.href = "/questions/add";
    }
 
+   $scope.selectedItems = 0;
    $scope.getQuestions('public');
 
 }]);

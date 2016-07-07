@@ -23,7 +23,7 @@ module.exports = function(io, mongodb, errors) {
       monDB.connect(mongodb.urlToDB, function(err, db){
          if(err){
             console.log("Error: "+err);
-            res.send({ });
+            res.send({error: errors.DB_CONNECT_ERROR});
          }else{
             console.log("Connected To DB!");
             var data = db.collection("games");

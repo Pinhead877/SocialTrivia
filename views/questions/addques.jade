@@ -5,6 +5,7 @@ block append head
 
 block main
    #que-add-wrap(ng-controller="que-add-ctrl", )
+      a(ng-click="back()") Back
       form(name="queForm", novalidate, ng-submit="addQuetion()")
          h2 Create Question
          .form-group(ng-class="{ 'has-error' : queForm.queText.$invalid && !queForm.queText.$pristine }")

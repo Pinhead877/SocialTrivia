@@ -9,6 +9,10 @@ angular.module("mainApp").controller('que-add-ctrl', ['$scope', '$http', functio
       $scope.queForm.$setPristine();
    }
 
+   $scope.back = function(){
+      window.location.href = "/questions/list";
+   }
+
    $scope.addQuetion = function(){
       if($scope.queForm.$valid){
          $http.post('/questions/create', $scope.queDetails).then(function(result){

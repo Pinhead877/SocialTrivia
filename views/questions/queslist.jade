@@ -1,12 +1,10 @@
 extends ../layoutlogin
 
 block append head
+   script(src="/javascripts/questions/quelistpage/controller.js")
    script(src="/javascripts/questions/quelist/controller.js")
+   script(src="/javascripts/questions/quelist/directive.js")
 
 block main
-   #ques-list-wrap(ng-controller="que-list-ctrl")
-      .listHeader
-         label Show only own questions?
-         input(type="checkbox", ng-model="showPrivate", ng-change="getQuestions(showPrivate)", ng-true-value="'private'", ng-false-value="'public'")
-         a(ng-click="goToAddQuestion()") Add a new question
-      .quesGrid(ui-grid="gridOptions")
+   ques-list(ques="questions")
+   #log selected: {{ questions.length }}

@@ -27,7 +27,7 @@ module.exports = function(mongodb, errors) {
             var quesCollection = db.collection('questions');
             var results;
             if(type == "public"){
-               results = quesCollection.find({isPrivate: false});
+               results = quesCollection.find({$or: [{userid: req.session.userid}, {isPrivate: false}]});
             }
             else if(type == "private"){
                results = quesCollection.find({userid: req.session.userid});
