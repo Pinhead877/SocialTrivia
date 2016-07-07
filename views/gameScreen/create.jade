@@ -1,7 +1,11 @@
 extends ../layoutlogin
 
 block head
-  script(src="/javascripts/game/create/controller.js")
+   script(src="/javascripts/questions/quelist/controller.js")
+   script(src="/javascripts/questions/addque/controller.js")
+   script(src="/javascripts/questions/quelist/directive.js")
+   script(src="/javascripts/questions/addque/directive.js")
+   script(src="/javascripts/game/create/controller.js")
 
 block append main
   #wrap(ng-controller="create-cont")
@@ -9,7 +13,8 @@ block append main
     h3#gamenumber(ng-bind="log")
     #ques(ng-show="dataRecieved")
       h2 Choose Questions
-      #quesList questions list
+      ques-list(ques="questions")
     input#name(placeholder="Game Name", ng-model="data.name", ng-hide="dataRecieved")
     button(ng-click="create()", ng-hide="dataRecieved") Create
     button(ng-click="continue()", ng-show="dataRecieved") Continue
+    #log {{ questions }}
