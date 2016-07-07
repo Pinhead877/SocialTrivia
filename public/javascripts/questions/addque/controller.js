@@ -19,6 +19,7 @@ angular.module("mainApp").controller('que-add-ctrl', ['$scope', '$http', functio
             if(result.data.error) alert(result.data.error.message);
             else{
                alert("Added!");
+               $scope.added = !$scope.added;
                $scope.clearQue();
             }
          });

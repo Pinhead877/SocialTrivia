@@ -4,6 +4,7 @@ link(rel="stylesheet", href="/stylesheets/questions/queslist.css")
       label
          input(type="checkbox", ng-model="showPrivate", ng-change="getQuestions(showPrivate)", ng-true-value="'private'", ng-false-value="'public'")
          | Show only own questions?
-   a.btn(ng-click="goToAddQuestion()") Add a new question
-   a.btn(ng-click="clearAll()") Clear Selection
+   a.btn(ng-click="toggleAddQues()") {{ addQuesText }}
+   add-ques(ng-show="showAddQue", added="addedQuestion")
    .quesGrid(ui-grid="gridOptions", ui-grid-selection)
+   a.btn(ng-click="clearAll()") Clear Selection

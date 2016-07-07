@@ -1,5 +1,8 @@
 angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', function($scope, $http){
-
+   $scope.showPrivate = 'public';
+   $scope.addedQuestion = false;
+   $scope.addQuesText = "Add New Question";
+   $scope.showAddQue = false;
    $scope.gridOptions = {
       columnDefs: [
          { field: "question", displayName: "Question" },
@@ -23,17 +26,25 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', functi
       $scope.gridApi.selection.clearSelectedRows();
    };
 
+   $scope.$watch('addedQuestion',function(newValue, oldValue){
+      $scope.getQuestions($scope.showPrivate);
+   })
+
    $scope.getQuestions = function(type){
       $http.get('/questions/list/'+type).then(function(result){
          $scope.gridOptions.data = result.data;
       });
    };
 
-   $scope.goToAddQuestion = function(){
-      window.location.href = "/questions/add";
+   $scope.toggleAddQues = function(){
+      $scope.showAddQue = !$scope.showAddQue;
+      if($scope.showAddQue){
+         $scope.addQuesText = "Close";
+      }else{
+         $scope.addQuesText = "Add New Question";
+      }
    }
 
-   $scope.selectedItems = 0;
    $scope.getQuestions('public');
 
 }]);
