@@ -20,7 +20,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users')(mongodb, errors);
 var gameScreen = require("./routes/gameScreen")();
 var templates = require('./routes/templates');
-var gamecont = require('./routes/gamecontroller');
+var gamecont = require('./routes/gamecontroller')(mongodb, errors);
 var services = require('./routes/services')(io, mongodb, errors);
 var questions = require('./routes/questions')(mongodb, errors);
 

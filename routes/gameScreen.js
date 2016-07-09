@@ -8,6 +8,11 @@ module.exports = function(){
       res.render('gameScreen/create');
    });
 
+   router.get('/gamestart',function(req, res){
+      console.log(req.session);
+      res.render('gameScreen/gameStart', { game: req.session.gameid });
+   });
+
    router.get('/:gameId', function(req, res, next) {
       res.render('gameScreen/gamescreen', {});
    });

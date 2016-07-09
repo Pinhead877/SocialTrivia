@@ -1,0 +1,12 @@
+extends ../layoutlogin
+
+block append head
+   script(src="/javascripts/game/gamestart/controller.js")
+   
+block append main
+   div(ng-controller="game-start-cont")
+      h2 Game ID: #{ game }
+      h2 Waiting for Players...
+      #namewrap(ng-repeat="player in playersLogged")
+         div {{ player.nickname }}
+   

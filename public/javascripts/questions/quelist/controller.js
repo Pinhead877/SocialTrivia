@@ -24,11 +24,12 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', functi
 
    $scope.clearAll = function() {
       $scope.gridApi.selection.clearSelectedRows();
+      $scope.ques = [];
    };
 
    $scope.$watch('addedQuestion',function(newValue, oldValue){
       $scope.getQuestions($scope.showPrivate);
-   })
+   });
 
    $scope.getQuestions = function(type){
       $http.get('/questions/list/'+type).then(function(result){

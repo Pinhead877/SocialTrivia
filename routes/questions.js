@@ -11,7 +11,7 @@ module.exports = function(mongodb, errors) {
 
 
    router.get('/list', function(req, res){
-      res.render('questions/queslist');
+      res.render('questions/queslistpage');
    });
 
    //function to get all the questions in the DB
@@ -20,7 +20,7 @@ module.exports = function(mongodb, errors) {
       var type = req.params.type;
       monDB.connect(mongodb.urlToDB, function(err, db){
          if(err){
-            res.send({error: errors.DB_CONNECT_ERROR });
+            res.send(errors.DB_CONNECT_ERROR);
             db.close();
          }else{
 
@@ -67,22 +67,22 @@ module.exports = function(mongodb, errors) {
    router.post('/create', function(req, res){
       var queObj = req.body;
       if(isTextInvalid(queObj.question, 6, 120)){
-         res.send({error: errors.BAD_QUE});
+         res.send(errors.BAD_QUE);
          return;
       }
       if(isTextInvalid(queObj.answer, 4, 10)){
-         res.send({error: errors.BAD_ANS});
+         res.send(errors.BAD_ANS);
          return;
       }
       var sess = req.session;
       if(!sess.userid){
-         res.send({error: errors.DEV_ERROR});
+         res.send(errors.DEV_ERROR);
          return;
       }
       monDB.connect(mongodb.urlToDB, function(err, db){
          if(err){
             console.error(err);
-            res.send({error: errors.DB_CONNECT_ERROR });
+            res.send(errors.DB_CONNECT_ERROR);
          }else{
             var quesCollection = db.collection('questions');
             queObj.userid = sess.userid;

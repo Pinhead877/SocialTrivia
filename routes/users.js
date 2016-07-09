@@ -8,8 +8,39 @@ module.exports = function(mongodb, errors) {
    });
 
    //TODO - send the userid and name of the requested ids
-   router.get('/list', function(req, res){
-      console.log(req.query);
+   //TODO - example on how to get the params from the url
+   router.get('/loggedToGameList', function(req, res){
+      // console.log(req.query); get variables from the url
+      var gameid = req.session.gameid;
+      mondb.connect(mongodb.urlToDB, function(err, db){
+         if(err){
+            res.send(errors.DB_CONNECT_ERROR);
+            return;
+         }else{
+            var gamesDB = db.collection('games');
+            var gamesFound = gamesDB.find({ _id: gameid});
+            gamesFound.toArray(function(err, games){
+               if(err){
+                  res.send(errors.UNKNOWN);
+               }else{
+                  if(games.length===0){
+                     res.send(errors.UNKNOWN);
+                  }else{
+                     var playersToSend = [];
+                     if(games[0].players){
+                        var playersInGame = games[0].players;
+                        for (var i = 0; i < playersInGame.length; i++) {
+                           playersToSend[i] = playersInGame[i];
+                        }
+                     }
+                     res.send(playersToSend);
+                  }
+               }
+               db.close();
+            });
+         }
+      });
+
    });
 
    router.post('/list', function(req, res){
@@ -20,12 +51,12 @@ module.exports = function(mongodb, errors) {
       //TODO - add validation check if empty and check length
       var userDetails = req.body;
       if(isObjectInvalid(userDetails)){
-         res.send({error: errors.DEV_ERROR});
+         res.send(errors.DEV_ERROR);
          return;
       }
       mondb.connect(mongodb.urlToDB, function(err, db){
          if(err){
-            res.send({error: errors.DB_CONNECT_ERROR});
+            res.send(errors.DB_CONNECT_ERROR);
          }else{
             var data = db.collection("users");
             var user = data.find({
@@ -33,7 +64,7 @@ module.exports = function(mongodb, errors) {
             });
             user.toArray(function(e,user){
                if(user.length>0){
-                  res.send({error: errors.USER_EXISTS});
+                  res.send(errors.USER_EXISTS);
                }else{
                   var ins = data.insert(userDetails);
                   res.sendStatus(200);
@@ -47,7 +78,7 @@ module.exports = function(mongodb, errors) {
    router.post('/login', function(req, res){
       mondb.connect(mongodb.urlToDB, function(err, db){
          if(err){
-            res.send({error: errors.DB_CONNECT_ERROR});
+            res.send(errors.DB_CONNECT_ERROR);
          }else{
             var data = db.collection("users");
             var user = data.find({
@@ -57,7 +88,7 @@ module.exports = function(mongodb, errors) {
             user.toArray(function(e,user) {
                if(e) console.log("error");
                if(user.length === 0){
-                  res.send({error: errors.BAD_LOGIN});
+                  res.send(errors.BAD_LOGIN);
                }else if(user.length===1){
                   var sess = req.session;
                   sess.nickname = user[0].nickname;

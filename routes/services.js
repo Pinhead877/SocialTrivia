@@ -18,19 +18,24 @@ module.exports = function(io, mongodb, errors) {
    //than creates random game id and checks that it dosent apear in the DB
    //saves and sends to the client the _id, as it apears in the DB, the game name and the creators id
    router.post('/create/game', function(req, res){
+      if(req.body.questions == null || req.body.questions.length==0){
+         res.send(errors.NO_QUES);
+         return;
+      }
       var gameName = req.body.name;
       var gameid;
       monDB.connect(mongodb.urlToDB, function(err, db){
          if(err){
             console.log("Error: "+err);
-            res.send({error: errors.DB_CONNECT_ERROR});
+            res.send(errors.DB_CONNECT_ERROR);
+            return;
          }else{
             console.log("Connected To DB!");
-            var data = db.collection("games");
+            var gamesDB = db.collection("games");
             //declare but not use! the async function
             //used to get the data from the DB
             var asyncFind = async(function(){
-               return await(data.find({}));
+               return await(gamesDB.find({}));
             });
             //check for duplicate game id
             asyncFind().then(function(dataReturned){
@@ -45,14 +50,21 @@ module.exports = function(io, mongodb, errors) {
                   var respond = {
                      _id: gameid,
                      name: gameName,
+                     questions: req.body.questions,
                      dateCreated: new Date(),
                      creator: {
                         userid: req.session.userid,
                         nickname: req.session.nickname
                      }
                   };
-                  data.insertOne(respond);
-                  res.send(respond);
+                  gamesDB.insertOne(respond);
+                  res.sendStatus(200);
+                  req.session.gameid = gameid;
+                  req.session.save(function(err){
+                     if(err){
+                        console.log("Error saving session!");
+                     }
+                  });
                   db.close();
                });
             }).catch(function(e) {
@@ -89,7 +101,7 @@ module.exports = function(io, mongodb, errors) {
       if(req.session.nickname){
          res.send(req.session);
       }else{
-         res.send({error: errors.NO_SESSION});
+         res.send(errors.NO_SESSION);
       }
    });
 

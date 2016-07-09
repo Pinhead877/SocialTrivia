@@ -19,7 +19,7 @@ angular.module('mainApp').controller('register',['$scope','$http', function($sco
                alert(result.data.error.message);
                window.location.reload();
             }else if(result.status===200){
-               window.location.href = "/";
+               window.location.href = "/login";
             }
          });
       }

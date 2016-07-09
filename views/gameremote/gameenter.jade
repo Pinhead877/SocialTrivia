@@ -1,0 +1,22 @@
+extends ../layoutlogin
+
+block title
+   title Enter The Game
+   
+block append head
+   script(src='/javascripts/gameremote/gameEnter/controller.js')
+
+   
+block append main
+   #main-wrap(ng-controller="game-enter-ctrl")   
+      form(name="gameNumber", novalidate, ng-submit="sendGameNumber()",ng-hide="numberEntered")
+         h2 Enter the Game
+         .form-group(ng-class="{ 'has-error' : gamenum.$invalid && !gamenum.$pristine }")
+            label(class='control-label col-sm-2', for='gamenum') Enter the game number:
+            .col-sm-10
+               input.form-control(type='number', name='gamenum', ng-model='gamenum', min='1', max='999999999', required)
+         button.btn(type="submit", ng-disabled="gameNumber.$invalid") Send
+      #wait(ng-show="numberEntered")
+         h1 Please wait for the game to start
+         
+      

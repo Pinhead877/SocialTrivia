@@ -8,13 +8,11 @@ block head
    script(src="/javascripts/game/create/controller.js")
 
 block append main
-  #wrap(ng-controller="create-cont")
-    h1 Create Game
-    h3#gamenumber(ng-bind="log")
-    #ques(ng-show="dataRecieved")
-      h2 Choose Questions
-      ques-list(ques="questions")
-    input#name(placeholder="Game Name", ng-model="data.name", ng-hide="dataRecieved")
-    button(ng-click="create()", ng-hide="dataRecieved") Create
-    button(ng-click="continue()", ng-show="dataRecieved") Continue
-    #log {{ questions }}
+   #wrap(ng-controller="create-cont")
+      #log {{ error }}
+      h1 Create Game
+      input#name(placeholder="Game Name", ng-model="gameDetails.name")
+      ques-list(ques="gameDetails.questions")
+      #grid-footer
+         label Selected: {{ gameDetails.questions.length }}
+      button(ng-click="create()") Create
