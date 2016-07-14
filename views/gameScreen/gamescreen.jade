@@ -2,16 +2,16 @@ extends ../layoutlogin
   
 block head
    link(href='/stylesheets/gamescreen.css', rel='stylesheet')
-   script(src="/javascripts/game/gamescreen/controller.min.js")
-   script(src="/javascripts/layout/filter.min.js")
-   script(src="/javascripts/game/gamescreen/directive.min.js")
-   script(src="/javascripts/game/gamescreen/game-socket.min.js")
+   script(src="/javascripts/game/gamescreen/controller.js")
+   script(src="/javascripts/layout/filter.js")
+   script(src="/javascripts/game/gamescreen/directive.js")
+   script(src="/javascripts/game/gamescreen/game-socket.js")
   
 
 block append main
    #game-container
-      h2#logo Game Screen
+      h2#logo #{ title }
       #upper-wrap
-         clock-div.upper-module
+         clock-div.upper-module(hours="#{ time.hours }", minutes="#{ time.minutes }", seconds="#{ time.seconds }")
          high-scores-div.upper-module
-      ques-div
+      ques-div(numofques="#{ quesNum }")

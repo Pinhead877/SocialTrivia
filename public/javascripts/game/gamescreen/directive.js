@@ -2,6 +2,11 @@ angular.module('mainApp').directive("clockDiv", function(){
   return {
     restrict: "E",
     controller: "game-screen-clock",
+    link: function(scope, element, attrs){
+      scope.time.hours = scope.$eval(attrs.hours);
+      scope.time.minutes = scope.$eval(attrs.minutes);
+      scope.time.seconds = scope.$eval(attrs.seconds);
+    },
     templateUrl: "/templates/gamescreen/clockview"
   }
 });
@@ -17,6 +22,9 @@ angular.module('mainApp').directive('highScoresDiv', function(){
 angular.module('mainApp').directive('quesDiv', function(){
   return {
     restrict: "E",
+    link: function(scope, element, attrs){
+      scope.numofques = scope.$eval(attrs.numofques);
+    },
     controller: "game-screen-ques",
     templateUrl: "/templates/gamescreen/quesview"
   }

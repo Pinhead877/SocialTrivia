@@ -30,7 +30,7 @@ angular.module('mainApp').controller('game-enter-ctrl', ['$scope', '$http', func
    }
 
    window.onbeforeunload = function(event){
-      $http.get('/services/exitGame');
-      return "Do you really want to leave?";
+      $http.get('/gamescreen/userexitgame/'+$scope.gamenum);
+      return "";
    }
 }]);

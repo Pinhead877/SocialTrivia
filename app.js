@@ -18,7 +18,7 @@ app.io = io;
 
 var routes = require('./routes/index');
 var users = require('./routes/users')(mongodb, errors);
-var gameScreen = require("./routes/gameScreen")();
+var gameScreen = require("./routes/gameScreen")(mongodb, errors);
 var templates = require('./routes/templates');
 var gamecont = require('./routes/gamecontroller')(mongodb, errors);
 var services = require('./routes/services')(io, mongodb, errors);

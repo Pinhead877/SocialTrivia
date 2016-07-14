@@ -1,4 +1,4 @@
-
+// BASE /services
 module.exports = function(io, mongodb, errors) {
    var app = require('express');
    var router = app.Router();
@@ -55,7 +55,8 @@ module.exports = function(io, mongodb, errors) {
                      creator: {
                         userid: req.session.userid,
                         nickname: req.session.nickname
-                     }
+                     },
+                     gameLength: req.body.minutes
                   };
                   gamesDB.insertOne(respond);
                   res.sendStatus(200);

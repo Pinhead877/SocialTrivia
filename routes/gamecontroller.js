@@ -1,5 +1,5 @@
-
 // BASE /gamecontroller
+
 module.exports = function(mongodb, errors) {
    var express = require('express');
    var router = express.Router();
