@@ -2,10 +2,11 @@ angular.module('mainApp').controller('create-cont', ['$scope', '$http', function
 
    $scope.gameDetails = {
       questions: [],
-      name: ""
+      name: "",
+      minutes: 60
    };
    $scope.dataRecieved = false;
-   $scope.error =
+   $scope.error = "";
 
    $scope.create = function(){
       $http.post("/services/create/game", $scope.gameDetails).then(function(result){
@@ -14,22 +15,13 @@ angular.module('mainApp').controller('create-cont', ['$scope', '$http', function
             return;
          }
          if(result.status===200){
-            window.location.href = "/gameScreen/gamestart"
+            window.location.href = "/gameScreen/gamestartscreen"
          }else{
             $scope.error = result.data;
          }
       }, function(err){
          $scope.error = err;
       })
-   }
-
-   window.onbeforeunload = function(event) {
-      //TODO - exit game function.
-      // needs to be timed for the user to have time to return to the game.
-   }
-
-   $scope.continue = function(){
-
    }
 
 }]);

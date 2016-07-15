@@ -8,7 +8,7 @@ block title
   title Pick a Question
   
 block main
-      #quespick(ng-controller="remote-cont")
+      #quespick(ng-controller="remote-cont", ng-init="gameid= #{ gameid }")
         h1 Pick a Question
         input#in(type='text', ng-model='numin')
         button#pick(ng-click="sendnum()") Send

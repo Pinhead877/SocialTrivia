@@ -9,7 +9,7 @@ block head
   
 
 block append main
-   #game-container
+   #game-container(ng-controller="main-game-ctrl", ng-init="gameid= #{ gameid };")
       h2#logo #{ title }
       #upper-wrap
          clock-div.upper-module(hours="#{ time.hours }", minutes="#{ time.minutes }", seconds="#{ time.seconds }")

@@ -1,4 +1,11 @@
 angular.module('mainApp').controller('game-enter-ctrl', ['$scope', '$http', function($scope, $http){
+   socket = io();
+
+   socket.on('startgame', function(num){
+      $scope.gameStarted = true;
+      window.location.href = "/gamecontroller/quepick/"+$scope.gamenum;
+   });
+
    $scope.numberEntered = false;
    $scope.gamenum = "";
 
@@ -11,6 +18,7 @@ angular.module('mainApp').controller('game-enter-ctrl', ['$scope', '$http', func
             }
             if(result.status===200){
                $scope.numberEntered = true;
+               socket.emit('room', $scope.gamenum);
             }
          });
       }
@@ -30,7 +38,9 @@ angular.module('mainApp').controller('game-enter-ctrl', ['$scope', '$http', func
    }
 
    window.onbeforeunload = function(event){
-      $http.get('/gamescreen/userexitgame/'+$scope.gamenum);
-      return "";
+      if(!$scope.gameStarted){
+         $http.get('/gamescreen/userexitgame/'+$scope.gamenum);
+         return "";
+      }
    }
 }]);

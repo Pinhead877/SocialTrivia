@@ -9,9 +9,8 @@ module.exports = function(mongodb, errors) {
       res.render('gameremote/gameenter', {});
    });
 
-   // TODO - delete this!!! Changes
-   router.get('/', function(req, res, next) {
-      res.render('gameremote/qpick', {});
+   router.get('/quepick/:gameId', function(req, res, next) {
+      res.render('gameremote/qpick', {gameid: req.params.gameId});
    });
 
 
@@ -55,14 +54,20 @@ module.exports = function(mongodb, errors) {
                      res.send(errors.CREATOR_IS_PLAYER);
                      return;
                   }
-                  games[0].players.push({_id: req.session.userid, nickname: req.session.nickname});
+                  games[0].players.push({
+                     _id: req.session.userid,
+                     nickname: req.session.nickname,
+                     points: 0
+                  });
                   gamesDB.updateOne(
                      { _id: games[0]._id },
-                     { $set: { players: games[0].players } }
+                     { $set: { players: games[0].players } },
+                     function(err, result){
+                        db.close();
+                     }
                   );
                   res.sendStatus(200);
                }
-               db.close();
             });
          }
       });

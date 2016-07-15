@@ -5,7 +5,7 @@ angular.module('mainApp').controller('quescreen-cont',["$scope","$location", "$h
   $scope.sendok = function(){
     //TODO maybe post that sends the user details
     $scope.answer = 1;
-    $http.get("/services/answers/"+$scope.params.gameId+"/"+$scope.params.queId+"/"+$scope.answer).then(function(res){
+    $http.get("/gamescreen/answers/"+$scope.params.gameId+"/"+$scope.params.queId+"/"+$scope.answer).then(function(res){
       $scope.respond = res.data;
       back = true;
       goBack();
@@ -13,14 +13,14 @@ angular.module('mainApp').controller('quescreen-cont',["$scope","$location", "$h
   };
   $scope.sendno = function(){
     $scope.answer = 0;
-    $http.get("/services/answers/"+$scope.params.gameId+"/"+$scope.params.queId+"/"+$scope.answer).then(function(res){
+    $http.get("/gamescreen/answers/"+$scope.params.gameId+"/"+$scope.params.queId+"/"+$scope.answer).then(function(res){
       $scope.respond = res.data;
       back = true;
       goBack();
     });
   };
   window.onbeforeunload = function(event) {
-    $http.get('/services/back/'+$scope.params.gameId+'/'+$scope.params.queId);
+    $http.get('/gamescreen/back/'+$scope.params.gameId+'/'+$scope.params.queId);
     if(!back)
       return "Do you really want to leave?";
   }

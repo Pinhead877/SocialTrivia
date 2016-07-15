@@ -1,6 +1,41 @@
+angular.module('mainApp').controller('main-game-ctrl', ["$scope", function($scope){
+   socket = io();
+
+   window.onload = function(){
+      console.log($scope.gameid);
+      socket.emit('room', $scope.gameid);
+   }
+
+   socket.on('selected', function(num){
+     console.log('selected: '+num);
+     $('#num'+num).removeClass("unanswered");
+     $('#num'+num).addClass("selected");
+   });
+
+   socket.on('unanswered', function(num){
+     console.log("unanswered: "+num);
+     $('#num'+num).removeClass("selected");
+     $('#num'+num).addClass("unanswered");
+   });
+
+    socket.on('correct', function(num){
+      console.log("correct: "+num);
+      $('#num'+num).removeClass("selected");
+      $('#num'+num).addClass("correct");
+    });
+
+    socket.on('wrong', function(num){
+      console.log("wrong: "+num);
+      $('#num'+num).removeClass("selected");
+      $('#num'+num).addClass("wrong");
+    });
+
+}]);
 
 angular.module('mainApp').controller('game-screen-clock', ["$scope", function($scope){
    var timer;
+
+   $scope.timeOver = false;
 
    $scope.time = {
       hours: 1,
@@ -24,6 +59,7 @@ angular.module('mainApp').controller('game-screen-clock', ["$scope", function($s
                $scope.time.hours--;
                if($scope.time.hours<0){
                   clearInterval(timer);
+                  $scope.timeOver = true;
                   return;
                }
             }
@@ -32,17 +68,24 @@ angular.module('mainApp').controller('game-screen-clock', ["$scope", function($s
       },1000);
    }
    startTimeUpdate();
+
+   window.onbeforeunload = function(event) {
+      if(!$scope.timeOver)
+         return "The game isn't over yet. Do you really want to go back?"
+   }
 }]);
 
-angular.module('mainApp').controller('game-screen-high', ["$scope", "$log", function($scope, $log){
-   $scope.players = [
-      {  name: "Alex", points: 90  },
-      {  name: "Alex2", points: 50  },
-      {  name: "Alex3", points: 30  }
-   ];
+angular.module('mainApp').controller('game-screen-high', ["$scope", "$http", function($scope, $http){
+   $scope.getPlayers = function(){
+      $http.get('/gamescreen/gethighscores').then(function(result){
+         $scope.players = result.data;
+      });
+   }
+   $scope.getPlayers();
+
 }]);
 
-angular.module('mainApp').controller('game-screen-ques', ["$scope", "$log", function($scope, $log){
+angular.module('mainApp').controller('game-screen-ques', ["$scope", function($scope){
    $scope.numofques = 0;
 
 }]);
