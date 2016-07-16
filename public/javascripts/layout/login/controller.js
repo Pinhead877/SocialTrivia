@@ -45,7 +45,7 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$window',
       $http.get("/users/logout").then(function(result){
          if(result.status===200){
             // $window.location.reload();
-            $window.location.href = '/';
+            $window.location = '/';
          }
       });
    }

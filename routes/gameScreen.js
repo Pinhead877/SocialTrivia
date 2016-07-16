@@ -14,7 +14,7 @@ module.exports = function(io, mongodb, errors){
    });
 
    router.get('/create',function(req, res){
-      res.render('gameScreen/create');
+      res.render('gameScreen/create', {});
    });
 
    router.get('/gamestartscreen',function(req, res){
