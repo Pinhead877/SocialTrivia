@@ -15,16 +15,30 @@ module.exports = function(mongodb, errors) {
 
 
    router.get('/quescreen/:gameId/:queId', function(req, res){
-      //TODO get the question from the DB or the server
-
-      var params = {
-         gameId: req.params.gameId,
-         queId: req.params.queId,
-         count: 5,
-         que: "What is called a cat?"
-      };
-
-      res.render('gameremote/quescreen',{params: params});
+      mongo.connect(mongodb.urlToDB, function(err, db){
+         if(err){
+            res.send(errors.DB_CONNECT_ERROR);
+            return;
+         }
+         else{
+            var gamesDB = db.collection("games");
+            var gamesFound = gamesDB.find({_id:parseInt(req.params.gameId)});
+            gamesFound.toArray(function(err, result){
+               if(err){
+                  res.send(errors.UNKNOWN);
+               }else{
+                  var params = {
+                     gameId: req.params.gameId,
+                     queId: req.params.queId,
+                     count: result[0].questions[req.params.queId-1].question.length,
+                     que: result[0].questions[req.params.queId-1].question
+                  };
+                  res.render('gameremote/quescreen',{params: params});
+               }
+               db.close();
+            });
+         }
+      });
    });
 
    router.post('/entergame', function(req,res){

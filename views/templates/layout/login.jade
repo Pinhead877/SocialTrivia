@@ -11,3 +11,4 @@ link(rel='stylesheet', href="/stylesheets/templates/login.css")
          input.form-control(type="password", name="password", placeholder="Password", ng-model="unprotectedPassword" ng-minlength="4", ng-max-length="10", required)
       #login-butt(ng-class="{'upper-div': upper}")
          button.btn(type="submit", ng-disabled="loginForm.$invalid") Login
+         button.btn(type="button", ng-click="goToRegisterPage()") Register

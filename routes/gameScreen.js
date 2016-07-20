@@ -4,6 +4,7 @@ module.exports = function(io, mongodb, errors){
    var express = require('express');
    var router = express.Router();
    var mongo = mongodb.MongoClient;
+   var _ = require('lodash');
 
    io.on('connection', function(socket){
       console.log("Connected");
@@ -89,26 +90,36 @@ module.exports = function(io, mongodb, errors){
                if(err){
                   res.send(errors.UNKNOWN);
                }else{
-                  gamesDB.updateOne({
-                     _id: parseInt(req.session.gameid)
-                  },
-                  {
-                     $set: {
-                        isStarted: true,
-                        startedOn: new Date(),
-                        ending: new Date().addMinutes(gameSelected[0].gameLength)
-                     }
-                  }, function(err, result){
-                     if(err){
-                        res.send(errors.UNKNOWN);
-                     }else if(result.result.n==0){
-                        res.send(errors.DB_OPERATION);
-                     }else{
+                  if(gameSelected[0].isStarted){
+                     if(gameSelected[0].ending - new Date() > 0) {
                         res.sendStatus(200);
-                        io.sockets.in(req.session.gameid).emit('startgame');
+                     }else{
+                        res.send(errors.GAME_ENDED);
                      }
                      db.close();
-                  });
+                     return;
+                  }else{
+                     gamesDB.updateOne({
+                        _id: parseInt(req.session.gameid)
+                     },
+                     {
+                        $set: {
+                           isStarted: true,
+                           startedOn: new Date(),
+                           ending: new Date().addMinutes(gameSelected[0].gameLength)
+                        }
+                     }, function(err, result){
+                        if(err){
+                           res.send(errors.UNKNOWN);
+                        }else if(result.result.n==0){
+                           res.send(errors.DB_OPERATION);
+                        }else{
+                           res.sendStatus(200);
+                           io.sockets.in(req.session.gameid).emit('startgame');
+                        }
+                        db.close();
+                     });
+                  }
                }
             });
          }
@@ -162,28 +173,130 @@ module.exports = function(io, mongodb, errors){
    });
 
    router.get('/:gameId/:queId',function(req, res){
-      io.sockets.in(req.params.gameId).emit('selected', req.params.queId);
-      res.sendStatus(200);
+      var gameID = parseInt(req.params.gameId), queID = parseInt(req.params.queId)-1;
+      mongo.connect(mongodb.urlToDB, function(err, db){
+         if(err){
+            res.send(errors.DB_CONNECT_ERROR);
+            return;
+         }
+         else{
+            var gamesDB = db.collection("games");
+            var gamesFound = gamesDB.find({_id: gameID});
+            gamesFound.toArray(function(err, result){
+               if(err){
+                  res.send(errors.UNKNOWN);
+               }else{
+                  var question = result[0].questions[queID];
+                  if(question.isAnswered){
+                     res.send(errors.QUE_ANSWERED); //code: 3001
+                  }else if(question.playersTried != null && _.findIndex(question.playersTried, {_id: req.session.userid}) != -1){
+                     res.send(errors.QUE_TRIED);
+                  }else{
+                     io.sockets.in(gameID).emit('selected', queID+1);
+                     res.sendStatus(200);
+                  }
+               }
+               db.close();
+            });
+         }
+      });
    });
 
-   //TODO change to POST because of the many parameters
+
+   //Go over this method!!!
    router.get('/answers/:gameId/:queId/:answer',function(req, res){
-      if(req.params.answer==1){
-         res.send("Correct Answer");
-         io.sockets.in(req.params.gameId).emit('correct', req.params.queId);
-      }else{
-         res.send("Wrong Answer");
-         io.sockets.in(req.params.gameId).emit('wrong', req.params.queId);
+      var gameID = parseInt(req.params.gameId), queID = parseInt(req.params.queId)-1;
+      mongo.connect(mongodb.urlToDB, function(err, db){
+         if(err){
+            res.send(errors.DB_CONNECT_ERROR);
+            return;
+         }
+         else{
+            var gamesDB = db.collection("games");
+            var gamesFound = gamesDB.find({_id:parseInt(gameID)});
+            if(req.params.answer==1){
+               res.send("Correct Answer");
+               io.sockets.in(gameID).emit('correct', queID+1);
+               gamesFound.toArray(function(err, result){
+                  if(err){
+                     console.log(errors.UNKNOWN);
+                  }
+                  else
+                  {
+                     var questionsToSave = result[0].questions;
+                     questionsToSave[queID].isAnswered = true;
+                     questionsToSave[queID].answeredBy = req.session.userid;
+                     if(questionsToSave[queID].playersTried==null){
+                        questionsToSave[queID].playersTried = [];
+                     }
+                     questionsToSave[queID].playersTried.push({_id: req.session.userid});
+                     gamesDB.updateOne(
+                        {
+                           _id: parseInt(gameID)
+                        },
+                        {
+                           $set: {
+                              questions: questionsToSave
+                           }
+                        }, function(err, result){
+                           if(err){
+                              console.log(errors.UNKNOWN);
+                              console.log(err);
+                           }else if(result.result.n==0){
+                              console.log(errors.DB_OPERATION);
+                              console.log(result.result);
+                           }
+                           db.close();
+                        });
+                     }
+                  }
+               );
+            }else{
+               res.send("Wrong Answer");
+               io.sockets.in(gameID).emit('wrong', queID+1);
+               gamesFound.toArray(function(err, result){
+                  if(err){
+                     console.log(errors.UNKNOWN);
+                  }else{
+                     var questionsToSave = result[0].questions;
+                     questionsToSave[queID].isAnswered = false;
+                     if(questionsToSave[queID].playersTried==null){
+                        questionsToSave[queID].playersTried = [];
+                     }
+                     questionsToSave[queID].playersTried.push({_id: req.session.userid});
+                     gamesDB.updateOne({
+                        _id: parseInt(gameID)
+                     },
+                     {
+                        $set: {
+                           questions: questionsToSave
+                        }
+                     }, function(err, result){
+                        if(err){
+                           console.log(errors.UNKNOWN);
+                           console.log(err);
+                        }else if(result.result.n==0){
+                           console.log(errors.DB_OPERATION);
+                           console.log(result.result);
+                        }
+                        db.close();
+                     });
+                  }
+               });
+            }
+         }
       }
-   });
-
-   router.get('/back/:gameId/:queId', function(req, res){
-      io.sockets.in(req.params.gameId).emit('unanswered', req.params.queId);
-   });
+   )
+});
 
 
+router.get('/back/:gameId/:queId', function(req, res){
+   io.sockets.in(req.params.gameId).emit('unanswered', req.params.queId);
+});
 
-   return router;
+
+
+return router;
 };
 
 /* ========== Private Methods ========== */

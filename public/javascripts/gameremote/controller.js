@@ -4,7 +4,10 @@ angular.module('mainApp').controller('remote-cont', ["$scope", "$location", "$ht
     console.log("Clicked: "+$scope.numin);
     $http.get('/gamescreen/'+$scope.gameid+'/'+$scope.numin)
     .then(function(res){
-      if(res.status===200){
+      if(res.data.error){
+            alert(res.data.error.message);
+      }
+      else if(res.status===200){
         window.location = "/gamecontroller/quescreen/"+$scope.gameid+"/"+$scope.numin;
       }
     }, function(res){

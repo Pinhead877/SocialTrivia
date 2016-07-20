@@ -22,6 +22,10 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$window',
       }
    });
 
+   $scope.goToRegisterPage = function(){
+      $window.location.href = "/register";
+   }
+
    $scope.login = function(){
       if($scope.loginForm.$valid){
          var encPass = $scope.enc($scope.unprotectedPassword, { outputLength: 256 });
