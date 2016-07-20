@@ -99,26 +99,32 @@ module.exports = function(io, mongodb, errors){
                      db.close();
                      return;
                   }else{
-                     gamesDB.updateOne({
-                        _id: parseInt(req.session.gameid)
-                     },
-                     {
-                        $set: {
-                           isStarted: true,
-                           startedOn: new Date(),
-                           ending: new Date().addMinutes(gameSelected[0].gameLength)
-                        }
-                     }, function(err, result){
-                        if(err){
-                           res.send(errors.UNKNOWN);
-                        }else if(result.result.n==0){
-                           res.send(errors.DB_OPERATION);
-                        }else{
-                           res.sendStatus(200);
-                           io.sockets.in(req.session.gameid).emit('startgame');
-                        }
+                     if(gameSelected[0].players == null || gameSelected[0].players.length < 2){
+                        res.send(errors.NO_PLAYERS);
                         db.close();
-                     });
+                        return;
+                     }else{
+                        gamesDB.updateOne({
+                           _id: parseInt(req.session.gameid)
+                        },
+                        {
+                           $set: {
+                              isStarted: true,
+                              startedOn: new Date(),
+                              ending: new Date().addMinutes(gameSelected[0].gameLength)
+                           }
+                        }, function(err, result){
+                           if(err){
+                              res.send(errors.UNKNOWN);
+                           }else if(result.result.n==0){
+                              res.send(errors.DB_OPERATION);
+                           }else{
+                              res.sendStatus(200);
+                              io.sockets.in(req.session.gameid).emit('startgame');
+                           }
+                           db.close();
+                        });
+                     }
                   }
                }
             });
