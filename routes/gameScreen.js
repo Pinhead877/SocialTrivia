@@ -1,5 +1,7 @@
 // BASE /gamescreen
 
+var CORRECT_ANSWER_POINTS = 5;
+
 module.exports = function(io, mongodb, errors){
    var express = require('express');
    var router = express.Router();
@@ -208,10 +210,9 @@ module.exports = function(io, mongodb, errors){
       });
    });
 
-
-   //Go over this method!!!
    router.get('/answers/:gameId/:queId/:answer',function(req, res){
-      var gameID = parseInt(req.params.gameId), queID = parseInt(req.params.queId)-1;
+      var gameID = parseInt(req.params.gameId), queID = parseInt(req.params.queId)-1,
+      answer = req.params.answer, isCorrect, userID = req.session.userid;
       mongo.connect(mongodb.urlToDB, function(err, db){
          if(err){
             res.send(errors.DB_CONNECT_ERROR);
@@ -220,89 +221,53 @@ module.exports = function(io, mongodb, errors){
          else{
             var gamesDB = db.collection("games");
             var gamesFound = gamesDB.find({_id:parseInt(gameID)});
-            if(req.params.answer==1){
-               res.send("Correct Answer");
-               io.sockets.in(gameID).emit('correct', queID+1);
-               gamesFound.toArray(function(err, result){
-                  if(err){
-                     console.log(errors.UNKNOWN);
+            gamesFound.toArray(function(err, result){
+               if(err){
+                  res.send(errors.UNKNOWN);
+                  return;
+               }else{
+                  var isCorrect = (answer===result[0].questions[queID].answer);
+                  res.send(isCorrect);
+                  io.sockets.in(gameID).emit((isCorrect)?'correct':'wrong', queID+1);
+                  var questionsToSave = result[0].questions;
+                  questionsToSave[queID].isAnswered = isCorrect;
+                  questionsToSave[queID].answeredBy = (isCorrect)?userID:null;
+                  if(questionsToSave[queID].playersTried==null){
+                     questionsToSave[queID].playersTried = [];
                   }
-                  else
-                  {
-                     var questionsToSave = result[0].questions;
-                     questionsToSave[queID].isAnswered = true;
-                     questionsToSave[queID].answeredBy = req.session.userid;
-                     if(questionsToSave[queID].playersTried==null){
-                        questionsToSave[queID].playersTried = [];
+                  questionsToSave[queID].playersTried.push({_id: userID});
+                  var playersToSave = result[0].players;
+                  let playerIndex = _.findIndex(result[0].players, {_id: userID});
+                  let pointsMulti = CORRECT_ANSWER_POINTS*result[0].questions[queID].playersTried.length;
+                  playersToSave[playerIndex].points += (isCorrect)?pointsMulti:0;
+                  gamesDB.updateOne(
+                     {_id: parseInt(gameID)},
+                     {$set: {
+                        questions: questionsToSave,
+                        players: playersToSave
                      }
-                     questionsToSave[queID].playersTried.push({_id: req.session.userid});
-                     gamesDB.updateOne(
-                        {
-                           _id: parseInt(gameID)
-                        },
-                        {
-                           $set: {
-                              questions: questionsToSave
-                           }
-                        }, function(err, result){
-                           if(err){
-                              console.log(errors.UNKNOWN);
-                              console.log(err);
-                           }else if(result.result.n==0){
-                              console.log(errors.DB_OPERATION);
-                              console.log(result.result);
-                           }
-                           db.close();
-                        });
+                  }, function(err, result){
+                     if(err){
+                        console.log(errors.UNKNOWN);
+                        console.log(err);
+                     }else if(result.result.n==0){
+                        console.log(errors.DB_OPERATION);
+                        console.log(result.result);
                      }
-                  }
-               );
-            }else{
-               res.send("Wrong Answer");
-               io.sockets.in(gameID).emit('wrong', queID+1);
-               gamesFound.toArray(function(err, result){
-                  if(err){
-                     console.log(errors.UNKNOWN);
-                  }else{
-                     var questionsToSave = result[0].questions;
-                     questionsToSave[queID].isAnswered = false;
-                     if(questionsToSave[queID].playersTried==null){
-                        questionsToSave[queID].playersTried = [];
-                     }
-                     questionsToSave[queID].playersTried.push({_id: req.session.userid});
-                     gamesDB.updateOne({
-                        _id: parseInt(gameID)
-                     },
-                     {
-                        $set: {
-                           questions: questionsToSave
-                        }
-                     }, function(err, result){
-                        if(err){
-                           console.log(errors.UNKNOWN);
-                           console.log(err);
-                        }else if(result.result.n==0){
-                           console.log(errors.DB_OPERATION);
-                           console.log(result.result);
-                        }
-                        db.close();
-                     });
-                  }
-               });
-            }
+                     db.close();
+                     io.sockets.in(req.params.gameId).emit('pointsUpdated');
+                  });
+               }
+            });
          }
-      }
-   )
-});
+      });
+   });
 
+   router.get('/back/:gameId/:queId', function(req, res){
+      io.sockets.in(req.params.gameId).emit('unanswered', req.params.queId);
+   });
 
-router.get('/back/:gameId/:queId', function(req, res){
-   io.sockets.in(req.params.gameId).emit('unanswered', req.params.queId);
-});
-
-
-
-return router;
+   return router;
 };
 
 /* ========== Private Methods ========== */

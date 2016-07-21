@@ -9,9 +9,8 @@ block title
 block main
   div(ng-controller="quescreen-cont", ng-init="params= #{ JSON.stringify(params) } " )
     h1 The Question
-    h1(ng-bind="respond")
+    h1 {{ respond }}
     h2= params.que
-    h3 Number of letters is #{params.count}
-    
-    button(ng-click="sendok()") Yes
-    button(ng-click="sendno()") No
+    h3 Number of letters is {{ params.count }}
+    input(type="text" ng-model="answer")
+    button(ng-click="sendAnswer()") Send Answer

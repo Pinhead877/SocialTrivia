@@ -1,30 +1,30 @@
+socket = io();
 angular.module('mainApp').controller('main-game-ctrl', ["$scope", function($scope){
-   socket = io();
 
    window.onload = function(){
       socket.emit('room', $scope.gameid);
    }
 
    socket.on('selected', function(num){
-     $('#num'+num).removeClass("unanswered");
-     $('#num'+num).addClass("selected");
+      $('#num'+num).removeClass("unanswered");
+      $('#num'+num).addClass("selected");
    });
 
    socket.on('unanswered', function(num){
-     $('#num'+num).removeClass("selected");
-     $('#num'+num).addClass("unanswered");
+      $('#num'+num).removeClass("selected");
+      $('#num'+num).addClass("unanswered");
    });
 
-    socket.on('correct', function(num){
+   socket.on('correct', function(num){
       $('#num'+num).removeClass("selected");
       $('#num'+num).removeClass("wrong");
       $('#num'+num).addClass("correct");
-    });
+   });
 
-    socket.on('wrong', function(num){
+   socket.on('wrong', function(num){
       $('#num'+num).removeClass("selected");
       $('#num'+num).addClass("wrong");
-    });
+   });
 
 }]);
 
@@ -67,7 +67,7 @@ angular.module('mainApp').controller('game-screen-clock', ["$scope", function($s
 
    window.onbeforeunload = function(event) {
       if(!$scope.timeOver)
-         return "The game isn't over yet. Do you really want to go back?"
+      return "The game isn't over yet. Do you really want to go back?"
    }
 }]);
 
@@ -77,8 +77,10 @@ angular.module('mainApp').controller('game-screen-high', ["$scope", "$http", fun
          $scope.players = result.data;
       });
    }
+   socket.on('pointsUpdated', function(){
+      $scope.getPlayers();
+   });
    $scope.getPlayers();
-
 }]);
 
 angular.module('mainApp').controller('game-screen-ques', ["$scope", function($scope){

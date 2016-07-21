@@ -30,7 +30,7 @@ module.exports = function(mongodb, errors) {
                   var params = {
                      gameId: req.params.gameId,
                      queId: req.params.queId,
-                     count: result[0].questions[req.params.queId-1].question.length,
+                     count: result[0].questions[req.params.queId-1].answer.length,
                      que: result[0].questions[req.params.queId-1].question
                   };
                   res.render('gameremote/quescreen',{params: params});
