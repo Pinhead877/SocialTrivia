@@ -1,5 +1,7 @@
 socket = io();
-angular.module('mainApp').controller('main-game-ctrl', ["$scope", function($scope){
+angular.module('mainApp').controller('main-game-ctrl', ["$scope","$window","$http", function($scope, $window, $http){
+
+   $scope.showEnd = false;
 
    window.onload = function(){
       socket.emit('room', $scope.gameid);
@@ -25,6 +27,17 @@ angular.module('mainApp').controller('main-game-ctrl', ["$scope", function($scop
       $('#num'+num).removeClass("selected");
       $('#num'+num).addClass("wrong");
    });
+
+   $scope.showEndGame = function(){
+      $scope.$apply(function(){
+         $scope.showEnd = true;
+      });
+      $http.get("/services/endgame/"+$scope.gameid);
+   }
+
+   $scope.goToResultsPage = function(){
+      $window.location.href = "/gamescreen/results/"+$scope.gameid;
+   }
 
 }]);
 
@@ -54,9 +67,12 @@ angular.module('mainApp').controller('game-screen-clock', ["$scope", function($s
                $scope.time.minutes=59;
                $scope.time.hours--;
                if($scope.time.hours<0){
+                  $scope.time.hours = 0;
+                  $scope.time.minutes = 0;
+                  $scope.time.seconds = 0;
                   clearInterval(timer);
                   $scope.timeOver = true;
-                  return;
+                  $scope.endGame();
                }
             }
          }
@@ -67,7 +83,7 @@ angular.module('mainApp').controller('game-screen-clock', ["$scope", function($s
 
    window.onbeforeunload = function(event) {
       if(!$scope.timeOver)
-      return "The game isn't over yet. Do you really want to go back?"
+         return "The game isn't over yet. Do you really want to go back?"
    }
 }]);
 

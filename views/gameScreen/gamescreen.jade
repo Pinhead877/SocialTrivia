@@ -4,14 +4,15 @@ block head
    link(href='/stylesheets/gamescreen.css', rel='stylesheet')
    script(src="/javascripts/game/gamescreen/controller.js")
    script(src="/javascripts/layout/filter.js")
-   script(src="/javascripts/game/gamescreen/directive.js")
-   script(src="/javascripts/game/gamescreen/game-socket.js")
-  
+   script(src="/javascripts/game/gamescreen/directive.js")  
 
 block append main
    #game-container(ng-controller="main-game-ctrl", ng-init="gameid= #{ gameid };")
       h2#logo #{ title }
       #upper-wrap
-         clock-div.upper-module(hours="#{ time.hours }", minutes="#{ time.minutes }", seconds="#{ time.seconds }")
+         clock-div.upper-module(hours="#{ time.hours }", minutes="#{ time.minutes }", seconds="#{ time.seconds }", on-time-over="showEndGame()")
          high-scores-div.upper-module
-      ques-div(numofques="#{ quesNum }")
+      ques-div(numofques="#{ quesNum }", ng-hide="showEnd")
+      #game-end(ng-show="showEnd")
+         h2 Game Ended!
+         button.btn(ng-click="goToResultsPage()") See Results

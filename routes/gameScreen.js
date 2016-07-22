@@ -16,6 +16,11 @@ module.exports = function(io, mongodb, errors){
       });
    });
 
+   router.get('/results/:gameid',function(req, res){
+      res.render('gameScreen/results', {});
+   });
+
+
    router.get('/create',function(req, res){
       res.render('gameScreen/create', {});
    });
@@ -148,7 +153,10 @@ module.exports = function(io, mongodb, errors){
                if(err){
                   res.send(errors.UNKNOWN);
                }else{
-                  if(result[0]){
+                  if(result[0].isEnded===true){
+                     res.render('gameScreen/results', {});
+                  }
+                  else if(result[0]){
                      //extract the time from the milliseconds of the differance
                      var diff = result[0].ending - new Date();
                      var timeLeft = [];
@@ -273,11 +281,11 @@ module.exports = function(io, mongodb, errors){
 /* ========== Private Methods ========== */
 
 Date.prototype.addHours = function(h) {
-   this.setTime(this.getTime() + (h*60*60*1000) + (60*1000));
+   this.setTime(this.getTime() + (h*60*60*1000) + (10*1000));
    return this;
 };
 
 Date.prototype.addMinutes = function(m) {
-   this.setTime(this.getTime() + (m*60*1000) + (60*1000));
+   this.setTime(this.getTime() + (m*60*1000) + (10*1000));
    return this;
 };

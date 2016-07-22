@@ -4,16 +4,7 @@ module.exports = function(io, mongodb, errors) {
    var router = app.Router();
    var async = require('asyncawait/async');
    var await = require('asyncawait/await');
-   var monDB = mongodb.MongoClient;
-   // var screenSocket;
-
-   // io.on('connection', function(socket){
-   //    // screenSocket = socket;
-   //    socket.on('room', function(gameId){
-   //       socket.join(gameId);
-   //    });
-   //
-   // });
+   var mongo = mongodb.MongoClient;
 
    //Create new game - recieve a name from the client
    //than creates random game id and checks that it dosent apear in the DB
@@ -25,7 +16,7 @@ module.exports = function(io, mongodb, errors) {
       }
       var gameName = req.body.name;
       var gameid;
-      monDB.connect(mongodb.urlToDB, function(err, db){
+      mongo.connect(mongodb.urlToDB, function(err, db){
          if(err){
             console.log(err);
             res.send(errors.DB_CONNECT_ERROR);
@@ -72,6 +63,32 @@ module.exports = function(io, mongodb, errors) {
                console.log(e);
                res.send(e);
             });
+         }
+      });
+   });
+
+   router.get('/endgame/:gameid', function(req, res){
+      var gameID = parseInt(req.params.gameid);
+      mongo.connect(mongodb.urlToDB, function(err, db){
+         if(err){
+            res.send(errors.DB_CONNECT_ERROR);
+            return;
+         }
+         else{
+            var gamesDB = db.collection('games');
+            gamesDB.updateOne({_id: gameID},
+               {$set: {isEnded: true} },
+               function(err, result){
+                  if(err){
+                     console.log(errors.UNKNOWN);
+                     console.log(err);
+                  }else if(result.result.n==0){
+                     console.log(errors.DB_OPERATION);
+                     console.log(result.result);
+                  }
+                  db.close();
+               }
+            );
          }
       });
    });
