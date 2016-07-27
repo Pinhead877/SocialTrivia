@@ -7,7 +7,7 @@ block title
   title Question Screen
 
 block main
-  div(ng-controller="quescreen-cont", ng-init="params= #{ JSON.stringify(params) } " )
+  div(ng-controller="quescreen-cont", ng-init="init(#{ JSON.stringify(params) })" )
     h1 The Question
     h1 {{ respond }}
     h2= params.que

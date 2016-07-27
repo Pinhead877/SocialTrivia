@@ -17,6 +17,9 @@ angular.module('mainApp').directive("clockDiv", function(){
 angular.module('mainApp').directive('highScoresDiv', function(){
    return {
       restrict: "E",
+      scope: {
+         gameId: '@'
+      },
       controller: "game-screen-high",
       templateUrl: "/templates/gamescreen/highview"
    }
@@ -25,8 +28,8 @@ angular.module('mainApp').directive('highScoresDiv', function(){
 angular.module('mainApp').directive('quesDiv', function(){
    return {
       restrict: "E",
-      link: function(scope, element, attrs){
-         scope.numofques = scope.$eval(attrs.numofques);
+      scope: {
+         gameId: '@'
       },
       controller: "game-screen-ques",
       templateUrl: "/templates/gamescreen/quesview"

@@ -5,6 +5,7 @@ module.exports = function(io, mongodb, errors) {
    var async = require('asyncawait/async');
    var await = require('asyncawait/await');
    var mongo = mongodb.MongoClient;
+   var _ = require('lodash');
 
    //Create new game - recieve a name from the client
    //than creates random game id and checks that it dosent apear in the DB
@@ -99,6 +100,60 @@ module.exports = function(io, mongodb, errors) {
       }else{
          res.send(errors.NO_SESSION);
       }
+   });
+
+   router.get('/gethighscores/:gameId', function(req, res){
+      var gameID = parseInt(req.params.gameId);
+      mongo.connect(mongodb.urlToDB, function(err, db){
+         if(err){
+            res.send(errors.DB_CONNECT_ERROR);
+            return;
+         }
+         else{
+            var gamesDB = db.collection('games');
+            var gamesFound = gamesDB.find({_id: gameID});
+            gamesFound.toArray(function(err, result){
+               if(err){
+                  res.send(errors.UNKNOWN);
+               }else{
+                  if(result.length==0){
+                     res.send(errors.UNKNOWN);
+                  }else{
+                     result[0].players.sort(function(a,b){
+                        return b.points - a.points;
+                     });
+                     res.send(result[0].players);
+                  }
+               }
+               db.close();
+            });
+         }
+      });
+   });
+
+   router.get('/getQuestionsStatuses/:gameId',function(req, res){
+      var gameID = parseInt(req.params.gameId);
+      mongo.connect(mongodb.urlToDB, function(err, db){
+         if(err){
+            res.send(errors.DB_CONNECT_ERROR);
+            return;
+         }
+         else{
+            var gamesDB = db.collection('games');
+            var gamesFound = gamesDB.find({_id: gameID});
+            gamesFound.toArray(function(err, result){
+               if(err){
+                  res.send(errors.UNKNOWN);
+               }else{
+                  res.send(_.map(result[0].questions, function(stat){
+                     if(stat.statusColor) return stat.statusColor;
+                     else return 'unanswered';
+                  }));
+               }
+               db.close();
+            });
+         }
+      });
    });
 
    return router;

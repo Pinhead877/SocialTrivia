@@ -13,6 +13,36 @@ module.exports = function(mongodb, errors) {
       res.render('gameremote/qpick', {gameid: req.params.gameId});
    });
 
+   router.get('/:gameId/:queId',function(req, res){
+      var gameID = parseInt(req.params.gameId), queID = parseInt(req.params.queId)-1;
+      mongo.connect(mongodb.urlToDB, function(err, db){
+         if(err){
+            res.send(errors.DB_CONNECT_ERROR);
+            return;
+         }
+         else{
+            var gamesDB = db.collection("games");
+            var gamesFound = gamesDB.find({_id: gameID});
+            gamesFound.toArray(function(err, result){
+               if(err){
+                  res.send(errors.UNKNOWN);
+               }else{
+                  var question = result[0].questions[queID];
+                  if(question==null){
+                     res.send(errors.QUE_NOT_EXISTS);
+                  }else if(question.isAnswered){
+                     res.send(errors.QUE_ANSWERED);
+                  }else if(question.playersTried != null && _.findIndex(question.playersTried, {_id: req.session.userid}) != -1){
+                     res.send(errors.QUE_TRIED);
+                  }else{
+                     res.sendStatus(200);
+                  }
+               }
+               db.close();
+            });
+         }
+      });
+   });
 
    router.get('/quescreen/:gameId/:queId', function(req, res){
       mongo.connect(mongodb.urlToDB, function(err, db){

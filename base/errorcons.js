@@ -18,5 +18,6 @@ errors.NO_PLAYERS = {error: {code: 2005, message: "You need atleast 2 players to
 errors.GAME_ENDED = { error: {code: 2010, message: "Game Ended!"} };
 errors.QUE_ANSWERED = { error: {code: 3001, message: "Question already answered"} };
 errors.QUE_TRIED = { error: {code: 3002, message: "You've already tried to answer this question"} };
+errors.QUE_NOT_EXISTS = { error: {code: 3003, message: "The Question you entered does not exists"} };
 
 module.exports =  errors;

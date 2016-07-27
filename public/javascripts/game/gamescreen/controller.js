@@ -3,10 +3,6 @@ angular.module('mainApp').controller('main-game-ctrl', ["$scope","$window","$htt
 
    $scope.showEnd = false;
 
-   window.onload = function(){
-      socket.emit('room', $scope.gameid);
-   }
-
    socket.on('selected', function(num){
       $('#num'+num).removeClass("unanswered");
       $('#num'+num).addClass("selected");
@@ -37,6 +33,11 @@ angular.module('mainApp').controller('main-game-ctrl', ["$scope","$window","$htt
 
    $scope.goToResultsPage = function(){
       $window.location.href = "/gamescreen/results/"+$scope.gameid;
+   }
+
+   $scope.init = function(gameID){
+      $scope.gameid = gameID;
+      socket.emit('room', $scope.gameid);
    }
 
 }]);
@@ -83,14 +84,18 @@ angular.module('mainApp').controller('game-screen-clock', ["$scope", function($s
 
    window.onbeforeunload = function(event) {
       if(!$scope.timeOver)
-         return "The game isn't over yet. Do you really want to go back?"
+      return "The game isn't over yet. Do you really want to go back?"
    }
 }]);
 
 angular.module('mainApp').controller('game-screen-high', ["$scope", "$http", function($scope, $http){
    $scope.getPlayers = function(){
-      $http.get('/gamescreen/gethighscores').then(function(result){
-         $scope.players = result.data;
+      $http.get('/services/gethighscores/'+$scope.gameId).then(function(result){
+         if(result.data.error){
+            alert(result.data.error.massege);
+         }else{
+            $scope.players = result.data;
+         }
       });
    }
    socket.on('pointsUpdated', function(){
@@ -99,7 +104,12 @@ angular.module('mainApp').controller('game-screen-high', ["$scope", "$http", fun
    $scope.getPlayers();
 }]);
 
-angular.module('mainApp').controller('game-screen-ques', ["$scope", function($scope){
-   $scope.numofques = 0;
-
+angular.module('mainApp').controller('game-screen-ques', ["$scope","$http", function($scope, $http){
+   $http.get('/services/getQuestionsStatuses/'+$scope.gameId).then(function(result){
+      if(result.data.error){
+         alert(result.data.error.massege);
+      }else{
+         $scope.questionsStatuses = result.data;
+      }
+   });
 }]);

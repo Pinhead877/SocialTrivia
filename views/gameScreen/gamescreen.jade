@@ -7,12 +7,12 @@ block head
    script(src="/javascripts/game/gamescreen/directive.js")  
 
 block append main
-   #game-container(ng-controller="main-game-ctrl", ng-init="gameid= #{ gameid };")
+   #game-container(ng-controller="main-game-ctrl", ng-init="init(#{ gameid });")
       h2#logo #{ title }
       #upper-wrap
          clock-div.upper-module(hours="#{ time.hours }", minutes="#{ time.minutes }", seconds="#{ time.seconds }", on-time-over="showEndGame()")
-         high-scores-div.upper-module
-      ques-div(numofques="#{ quesNum }", ng-hide="showEnd")
+         high-scores-div.upper-module(game-id="#{ gameid }")
+      ques-div(game-id="#{ gameid }", ng-hide="showEnd")
       #game-end(ng-show="showEnd")
          h2 Game Ended!
          button.btn(ng-click="goToResultsPage()") See Results
