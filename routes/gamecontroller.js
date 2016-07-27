@@ -78,58 +78,6 @@ module.exports = function(mongodb, errors) {
       });
    });
 
-   router.post('/entergame', function(req,res){
-      var gameID = parseInt(req.body.gamenum), playerID = req.session.userid;
-      if(gameID==null){
-         res.sendStatus(400);
-         return;
-      }
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            res.send(errors.DB_CONNECT_ERROR);
-            return;
-         }else{
-            var gamesDB = db.collection('games');
-            var findResult = gamesDB.find({ _id: gameID });
-            findResult.toArray(function(err, games){
-               if(err){
-                  console.log(err);
-                  res.send(errors.UNKNOWN);
-                  db.close();
-               }else if(games.length===0){
-                  res.send(errors.GAME_NUM_ERROR);
-                  db.close();
-               }else if(!isGameActive(games[0])){
-                  res.send(errors.GAME_ENDED);
-               }else{
-                  games[0].players = (games[0].players == null) ? [] : games[0].players;
-                  if(playerID === parseInt(games[0].creator.userid)){
-                     res.send(errors.CREATOR_IS_PLAYER);
-                     db.close();
-                  }else if(_.find(games[0].players,{_id: playerID })){
-                     res.send(errors.USER_EXITS_IN_GAME);
-                     db.close();
-                  }else{
-                     res.sendStatus(200);
-                     games[0].players.push({
-                        _id: playerID,
-                        nickname: req.session.nickname,
-                        points: 0
-                     });
-                     gamesDB.updateOne(
-                        { _id: games[0]._id },
-                        { $set: { players: games[0].players } },
-                        function(err, result){
-                           db.close();
-                        }
-                     );
-                  }
-               }
-            });
-         }
-      });
-
-   });
    return router;
 }
 

@@ -11,7 +11,7 @@ angular.module('mainApp').controller('game-enter-ctrl', ['$scope', '$http', func
 
    $scope.sendGameNumber = function(){
       if($scope.gameNumber.$valid){
-         $http.post('/gamecontroller/entergame',{gamenum: $scope.gamenum}).then(function(result){
+         $http.post('/gamescreen/entergame',{gamenum: $scope.gamenum}).then(function(result){
             if(result.data.error){
                alert(result.data.error.message);
                return;

@@ -46,11 +46,6 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$window',
       }
    }
    $scope.logout = function(){
-      $http.get("/users/logout").then(function(result){
-         if(result.status===200){
-            // $window.location.reload();
-            $window.location = '/';
-         }
-      });
+      $window.location.href = "/users/logout";
    }
 }]);

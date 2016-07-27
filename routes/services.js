@@ -51,10 +51,13 @@ module.exports = function(io, mongodb, errors) {
                      gameLength: req.body.minutes
                   };
                   gamesDB.insertOne(gameToCreate, function(err, result){
-                     console.log(err);
-                     console.log(result);
+                     if(err){
+                        console.error(err);
+                        res.send(errors.CREATING_GAME);
+                     }else{
                      db.close();
                      res.sendStatus(200);
+                  }
                   });
                   req.session.gameid = gameid;
                   req.session.save(function(err){

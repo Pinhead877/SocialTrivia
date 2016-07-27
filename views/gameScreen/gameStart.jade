@@ -4,7 +4,7 @@ block append head
    script(src="/javascripts/game/gamestart/controller.js")
    
 block append main
-   div(ng-controller="game-start-cont", ng-init="gameid= #{ game }")
+   div(ng-controller="game-start-cont", ng-init="init(#{ game })")
       h2 Game ID:
       h2(ng-bind="gameid")
       h3 Waiting for Players...

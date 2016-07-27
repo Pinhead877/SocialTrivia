@@ -6,7 +6,7 @@ var request = require('request');
 module.exports = function(mongodb, errors) {
    var app = require('express');
    var router = app.Router();
-   var monDB = mongodb.MongoClient;
+   var mongo = mongodb.MongoClient;
    var ObjectID = require('mongodb').ObjectID
 
 
@@ -18,7 +18,7 @@ module.exports = function(mongodb, errors) {
    //that PUBLIC!
    router.get('/list/:type', function(req, res){
       var type = req.params.type;
-      monDB.connect(mongodb.urlToDB, function(err, db){
+      mongo.connect(mongodb.urlToDB, function(err, db){
          if(err){
             res.send(errors.DB_CONNECT_ERROR);
             db.close();
@@ -79,7 +79,7 @@ module.exports = function(mongodb, errors) {
          res.send(errors.DEV_ERROR);
          return;
       }
-      monDB.connect(mongodb.urlToDB, function(err, db){
+      mongo.connect(mongodb.urlToDB, function(err, db){
          if(err){
             console.error(err);
             res.send(errors.DB_CONNECT_ERROR);

@@ -16,6 +16,7 @@ errors.GAME_NUM_ERROR = {error: {code: 2002, message: "The game number you enter
 errors.USER_EXITS_IN_GAME = { error: {code: 2003, message: "This user are already in this game"} };
 errors.CREATOR_IS_PLAYER = {error: {code: 2004, message: "You cant enter a game you created as a player"} };
 errors.NO_PLAYERS = {error: {code: 2005, message: "You need atleast 2 players to start a game"} };
+errors.CREATING_GAME = { error: {code: 2006, message: "Error creating new Game.\nPlease try again later."} };
 errors.GAME_ENDED = { error: {code: 2010, message: "Game Ended!"} };
 errors.QUE_ANSWERED = { error: {code: 3001, message: "Question already answered"} };
 errors.QUE_TRIED = { error: {code: 3002, message: "You've already tried to answer this question"} };

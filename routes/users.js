@@ -3,46 +3,12 @@
 module.exports = function(mongodb, errors) {
    var express = require('express');
    var router = express.Router();
-   var mondb = mongodb.MongoClient;
+   var mongo = mongodb.MongoClient;
 
-   router.get('/profile', function(req, res, next) {
-      res.render('profile/profilescreen');
-   });
-
-   //TODO - send the userid and name of the requested ids
    //TODO - example on how to get the params from the url
-   router.get('/loggedToGameList', function(req, res){
+   router.get('/profile', function(req, res, next) {
       // console.log(req.query); get variables from the url
-      var gameid = req.session.gameid;
-      mondb.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            res.send(errors.DB_CONNECT_ERROR);
-            return;
-         }else{
-            var gamesDB = db.collection('games');
-            var gamesFound = gamesDB.find({ _id: gameid});
-            gamesFound.toArray(function(err, games){
-               if(err){
-                  res.send(errors.UNKNOWN);
-               }else{
-                  if(games.length===0){
-                     res.send(errors.UNKNOWN);
-                  }else{
-                     var playersToSend = [];
-                     if(games[0].players){
-                        var playersInGame = games[0].players;
-                        for (var i = 0; i < playersInGame.length; i++) {
-                           playersToSend[i] = playersInGame[i];
-                        }
-                     }
-                     res.send(playersToSend);
-                  }
-               }
-               db.close();
-            });
-         }
-      });
-
+      res.render('profile/profilescreen');
    });
 
    router.post('/list', function(req, res){
@@ -56,7 +22,7 @@ module.exports = function(mongodb, errors) {
          res.send(errors.DEV_ERROR);
          return;
       }
-      mondb.connect(mongodb.urlToDB, function(err, db){
+      mongo.connect(mongodb.urlToDB, function(err, db){
          if(err){
             res.send(errors.DB_CONNECT_ERROR);
          }else{
@@ -78,7 +44,7 @@ module.exports = function(mongodb, errors) {
    });
 
    router.post('/login', function(req, res){
-      mondb.connect(mongodb.urlToDB, function(err, db){
+      mongo.connect(mongodb.urlToDB, function(err, db){
          if(err){
             res.send(errors.DB_CONNECT_ERROR);
          }else{
@@ -107,11 +73,11 @@ module.exports = function(mongodb, errors) {
    router.get('/logout', function(req, res){
       req.session.destroy(function(err){
          if(err){
-            res.sendStatus(500);
+            console.error(err);
             return;
          }
       });
-      res.sendStatus(200);
+      res.render('mainScreen/index');
    });
 
    return router;
