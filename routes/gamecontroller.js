@@ -4,6 +4,7 @@ module.exports = function(mongodb, errors) {
    var express = require('express');
    var router = express.Router();
    var mongo = mongodb.MongoClient;
+   var _ = require('lodash');
 
    router.get('/', function(req, res, next) {
       res.render('gameremote/gameenter', {});
@@ -30,6 +31,10 @@ module.exports = function(mongodb, errors) {
                   var question = result[0].questions[queID];
                   if(question==null){
                      res.send(errors.QUE_NOT_EXISTS);
+                  }else if(!isGameActive(result[0])){
+                     res.send(errors.GAME_ENDED);
+                  }else if(question.statusColor === 'selected'){
+                     res.send(errors.QUE_OCCIPIED);
                   }else if(question.isAnswered){
                      res.send(errors.QUE_ANSWERED);
                   }else if(question.playersTried != null && _.findIndex(question.playersTried, {_id: req.session.userid}) != -1){
@@ -56,6 +61,8 @@ module.exports = function(mongodb, errors) {
             gamesFound.toArray(function(err, result){
                if(err){
                   res.send(errors.UNKNOWN);
+               }else if(!isGameActive(result[0])){
+                  res.send(errors.GAME_ENDED);
                }else{
                   var params = {
                      gameId: req.params.gameId,
@@ -72,7 +79,8 @@ module.exports = function(mongodb, errors) {
    });
 
    router.post('/entergame', function(req,res){
-      if(req.body.gamenum==null){
+      var gameID = parseInt(req.body.gamenum), playerID = req.session.userid;
+      if(gameID==null){
          res.sendStatus(400);
          return;
       }
@@ -82,35 +90,40 @@ module.exports = function(mongodb, errors) {
             return;
          }else{
             var gamesDB = db.collection('games');
-            var findResult = gamesDB.find({ _id: req.body.gamenum });
+            var findResult = gamesDB.find({ _id: gameID });
             findResult.toArray(function(err, games){
                if(err){
                   console.log(err);
-                  res.send(errors.UNKNOWN)
-               }
-               if(games.length===0){
+                  res.send(errors.UNKNOWN);
+                  db.close();
+               }else if(games.length===0){
                   res.send(errors.GAME_NUM_ERROR);
+                  db.close();
+               }else if(!isGameActive(games[0])){
+                  res.send(errors.GAME_ENDED);
                }else{
-                  if(games[0].players == null){
-                     games[0].players = [];
-                  }
-                  if(req.session.userid == games[0].creator.userid){
+                  games[0].players = (games[0].players == null) ? [] : games[0].players;
+                  if(playerID === parseInt(games[0].creator.userid)){
                      res.send(errors.CREATOR_IS_PLAYER);
-                     return;
+                     db.close();
+                  }else if(_.find(games[0].players,{_id: playerID })){
+                     res.send(errors.USER_EXITS_IN_GAME);
+                     db.close();
+                  }else{
+                     res.sendStatus(200);
+                     games[0].players.push({
+                        _id: playerID,
+                        nickname: req.session.nickname,
+                        points: 0
+                     });
+                     gamesDB.updateOne(
+                        { _id: games[0]._id },
+                        { $set: { players: games[0].players } },
+                        function(err, result){
+                           db.close();
+                        }
+                     );
                   }
-                  games[0].players.push({
-                     _id: req.session.userid,
-                     nickname: req.session.nickname,
-                     points: 0
-                  });
-                  gamesDB.updateOne(
-                     { _id: games[0]._id },
-                     { $set: { players: games[0].players } },
-                     function(err, result){
-                        db.close();
-                     }
-                  );
-                  res.sendStatus(200);
                }
             });
          }
@@ -118,4 +131,10 @@ module.exports = function(mongodb, errors) {
 
    });
    return router;
+}
+
+/* ========== Private Methods ========== */
+
+function isGameActive(game){
+   return (game.ending - new Date() > 0 || game.isEnded===false);
 }

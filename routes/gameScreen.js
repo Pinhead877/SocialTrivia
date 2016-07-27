@@ -18,7 +18,6 @@ module.exports = function(io, mongodb, errors){
       res.render('gameScreen/results', {});
    });
 
-
    router.get('/create',function(req, res){
       res.render('gameScreen/create', {});
    });
@@ -64,7 +63,7 @@ module.exports = function(io, mongodb, errors){
                   res.send(errors.UNKNOWN);
                }else{
                   if(gameSelected[0].isStarted){
-                     if(gameSelected[0].ending - new Date() > 0) {
+                     if(isGameActive(gameSelected[0])) {
                         res.sendStatus(200);
                      }else{
                         res.send(errors.GAME_ENDED);
@@ -105,7 +104,6 @@ module.exports = function(io, mongodb, errors){
       });
    })
 
-
    router.get('/:gameId', function(req, res) {
       mongo.connect(mongodb.urlToDB, function(err, db){
          if(err){
@@ -119,7 +117,8 @@ module.exports = function(io, mongodb, errors){
                if(err){
                   res.send(errors.UNKNOWN);
                }else{
-                  if(result[0].isEnded===true){
+                  console.log(result[0]);
+                  if(!isGameActive(result[0])){
                      res.render('gameScreen/results', {});
                   }
                   else if(result[0]){
@@ -176,6 +175,11 @@ module.exports = function(io, mongodb, errors){
                   res.send(errors.UNKNOWN);
                   return;
                }else{
+                  if(!isGameActive(result[0])){
+                     res.send(errors.GAME_ENDED);
+                     db.close();
+                     return;
+                  }
                   var isCorrect = (answer===result[0].questions[queID].answer);
                   res.send(isCorrect);
                   io.sockets.in(gameID).emit((isCorrect)?'correct':'wrong', queID+1);
@@ -288,6 +292,10 @@ return router;
 };
 
 /* ========== Private Methods ========== */
+
+function isGameActive(game){
+   return (game.ending - new Date() > 0 || game.isEnded===false);
+}
 
 Date.prototype.addHours = function(h) {
    this.setTime(this.getTime() + (h*60*60*1000) + (10*1000));

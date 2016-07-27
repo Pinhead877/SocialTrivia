@@ -39,7 +39,7 @@ module.exports = function(io, mongodb, errors) {
                         checkID = false;
                      }
                   }
-                  var respond = {
+                  var gameToCreate = {
                      _id: gameid,
                      name: gameName,
                      questions: req.body.questions,
@@ -50,15 +50,18 @@ module.exports = function(io, mongodb, errors) {
                      },
                      gameLength: req.body.minutes
                   };
-                  gamesDB.insertOne(respond);
-                  res.sendStatus(200);
+                  gamesDB.insertOne(gameToCreate, function(err, result){
+                     console.log(err);
+                     console.log(result);
+                     db.close();
+                     res.sendStatus(200);
+                  });
                   req.session.gameid = gameid;
                   req.session.save(function(err){
                      if(err){
                         console.log("Error saving session!");
                      }
                   });
-                  db.close();
                });
             }).catch(function(e) {
                console.log(e);

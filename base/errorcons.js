@@ -13,11 +13,13 @@ errors.BAD_ANS = {error: {code: 1014, message: "Please check your answer"} };
 errors.DEV_ERROR = {error: {code: 1111, message: "Dev - Change needed!"} };
 errors.NO_QUES = {error: {code: 2001, message: "Cant create a game without questions"} };
 errors.GAME_NUM_ERROR = {error: {code: 2002, message: "The game number you entered doesnt exists!"} };
+errors.USER_EXITS_IN_GAME = { error: {code: 2003, message: "This user are already in this game"} };
 errors.CREATOR_IS_PLAYER = {error: {code: 2004, message: "You cant enter a game you created as a player"} };
 errors.NO_PLAYERS = {error: {code: 2005, message: "You need atleast 2 players to start a game"} };
 errors.GAME_ENDED = { error: {code: 2010, message: "Game Ended!"} };
 errors.QUE_ANSWERED = { error: {code: 3001, message: "Question already answered"} };
 errors.QUE_TRIED = { error: {code: 3002, message: "You've already tried to answer this question"} };
 errors.QUE_NOT_EXISTS = { error: {code: 3003, message: "The Question you entered does not exists"} };
+errors.QUE_OCCIPIED = { error: {code: 3004, message: "The Question you entered is being answered by other player"} };
 
 module.exports =  errors;
