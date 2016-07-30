@@ -1,30 +1,11 @@
-angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', function($scope, $http){
+angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', '_', function($scope, $http, _){
    $scope.showPrivate = 'public';
    $scope.addedQuestion = false;
    $scope.addQuesText = "Add New Question";
-   $scope.showAddQue = false;
-   $scope.gridOptions = {
-      columnDefs: [
-         { field: "question", displayName: "Question" },
-         { field: "answer", displayName: "Answer" },
-         { field: "isPrivate", displayName: "Public" },
-         { field: "nickname", displayName: "Created By" }
-      ],
-      enableGridMenu: true,
-      enableRowSelection: true,
-      enableFullRowSelection: true,
-      enableSelectAll: true,
-      onRegisterApi: function(gridApi) {
-         $scope.gridApi = gridApi;
-         gridApi.selection.on.rowSelectionChanged($scope,function(row){
-            $scope.ques = gridApi.selection.getSelectedRows();
-         });
-      }
-   };
+   $scope.showAddQue = false
 
    $scope.clearAll = function() {
-      $scope.gridApi.selection.clearSelectedRows();
-      $scope.ques = [];
+
    };
 
    $scope.$watch('addedQuestion',function(newValue, oldValue){
@@ -33,7 +14,24 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', functi
 
    $scope.getQuestions = function(type){
       $http.get('/questions/list/'+type).then(function(result){
-         $scope.gridOptions.data = result.data;
+         if(result.data.error){
+            alert(result.data.error.message);
+         }else{
+            $scope.questionsList = result.data;
+         }
+      });
+   };
+
+   $scope.addQuestionToGame = function(row){
+      debugger;
+      row.isSelected = true;
+      $scope.ques.push(row);
+   };
+
+   $scope.removeFromGame = function(row){
+      row.isSelected = false;
+      _.remove($scope.ques, function(que){
+         return que._id==row._id;
       });
    };
 
@@ -44,7 +42,7 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', functi
       }else{
          $scope.addQuesText = "Add New Question";
       }
-   }
+   };
 
    $scope.getQuestions('public');
 

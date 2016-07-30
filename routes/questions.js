@@ -8,7 +8,7 @@ module.exports = function(mongodb, errors) {
    var router = app.Router();
    var mongo = mongodb.MongoClient;
    var ObjectID = require('mongodb').ObjectID
-
+   var _ = require('lodash');
 
    router.get('/list', function(req, res){
       res.render('questions/queslistpage');
@@ -90,6 +90,27 @@ module.exports = function(mongodb, errors) {
             res.sendStatus(200);
          }
          db.close();
+      });
+   });
+
+   router.get('/getCategories',function(req, res){
+      mongo.connect(mongodb.urlToDB, function(err, db){
+         if(err){
+            res.send(errors.DB_CONNECT_ERROR);
+            return;
+         }
+         else{
+            var categoryDB = db.collection("categories");
+            var categoriesFound = categoryDB.find({});
+            categoriesFound.toArray(function(err, result){
+               if(err || result.length==0){
+                  res.send(errors.UNKNOWN);
+               }else{
+                  res.send(_.orderBy(result, ['name']));
+               }
+               db.close();
+            });
+         }
       });
    });
 

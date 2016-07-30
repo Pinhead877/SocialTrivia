@@ -1,4 +1,4 @@
-angular.module('mainApp').controller('create-cont', ['$scope', '$http', function($scope, $http){
+angular.module('mainApp').controller('create-cont', ['$scope', '$http', '_', function($scope, $http, _){
 
    $scope.gameDetails = {
       questions: [],
@@ -9,6 +9,11 @@ angular.module('mainApp').controller('create-cont', ['$scope', '$http', function
    $scope.error = "";
 
    $scope.create = function(){
+      _.forEach($scope.gameDetails.questions, function(que){
+         debugger;
+         delete que.$$hashKey;
+         delete que.isSelected;
+      });
       $http.post("/services/create/game", $scope.gameDetails).then(function(result){
          if(result.data.error!=null){
             $scope.error = result.data.error.message;

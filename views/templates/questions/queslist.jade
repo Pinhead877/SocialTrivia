@@ -6,5 +6,27 @@ link(rel="stylesheet", href="/stylesheets/questions/queslist.css")
       label
          input(type="checkbox", ng-model="showPrivate", ng-change="getQuestions(showPrivate)", ng-true-value="'private'", ng-false-value="'public'")
          | Show only own questions?
-   .quesGrid(ui-grid="gridOptions", ui-grid-selection)
+   table.table.table-striped(st-table='questionsList')
+    thead
+        tr
+          th Question
+          th Answer
+          th Created By
+          th Private Question
+          th Category
+          th 
+      tbody
+        tr(ng-repeat='question in questionsList')
+          td {{question.question}}
+          td {{question.answer}}
+          td {{question.nickname}}
+          td {{question.isPrivate}}
+          td {{question.category.name}}
+          td 
+            a(ng-click="addQuestionToGame(question)", ng-if="!question.isSelected")
+               i.fa.fa-plus(aria-hidden='true')
+               |  Add To Game
+            a(ng-click="removeFromGame(question)", ng-if="question.isSelected")
+               i.fa.fa-times(aria-hidden='true')
+               |  Remove
    a.btn(ng-click="clearAll()") Clear Selection
