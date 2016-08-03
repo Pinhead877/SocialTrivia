@@ -2,14 +2,25 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', '_', f
    $scope.showPrivate = 'public';
    $scope.addedQuestion = false;
    $scope.addQuesText = "Add New Question";
-   $scope.showAddQue = false
+   $scope.showAddQue = false;
 
    $scope.clearAll = function() {
 
    };
 
    $scope.$watch('addedQuestion',function(newValue, oldValue){
-      $scope.getQuestions($scope.showPrivate);
+      if($scope.ques == null){
+         $scope.getQuestions('public');
+         if($scope.filterQuestions != null){
+            var filter = eval($scope.filterQuestions);
+            $scope.questionsList = _.filter($scope.questionsList, function(question){
+               return _.includes(filter, question);
+            });
+            debugger;
+         }
+      }else{
+         $scope.questionsList = $scope.ques;
+      }
    });
 
    $scope.getQuestions = function(type){
@@ -42,7 +53,5 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', '_', f
          $scope.addQuesText = "Add New Question";
       }
    };
-
-   $scope.getQuestions('public');
 
 }]);

@@ -1,7 +1,8 @@
 link(rel="stylesheet", href="/stylesheets/questions/queslist.css")
 #ques-list-wrap
-   a.btn(ng-click="toggleAddQues()") {{ addQuesText }}
-   add-ques(ng-show="showAddQue", added="addedQuestion")
+   div(ng-show="isAddQueVisible")
+      a.btn(ng-click="toggleAddQues()") {{ addQuesText }}
+      add-ques(ng-show="showAddQue", added="addedQuestion")
    .checkbox 
       label
          input(type="checkbox", ng-model="showPrivate", ng-change="getQuestions(showPrivate)", ng-true-value="'private'", ng-false-value="'public'")
@@ -16,7 +17,7 @@ link(rel="stylesheet", href="/stylesheets/questions/queslist.css")
           th Category
           th 
       tbody
-        tr(ng-repeat='question in questionsList')
+        tr(ng-repeat='question in questionsList track by $index')
           td {{question.question}}
           td {{question.answer}}
           td {{question.nickname}}
