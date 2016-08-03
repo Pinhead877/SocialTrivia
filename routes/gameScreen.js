@@ -1,5 +1,5 @@
 // BASE /gamescreen
-"use strict"; 
+"use strict";
 var CORRECT_ANSWER_POINTS = 5;
 
 module.exports = function(io, mongodb, errors){
@@ -62,8 +62,8 @@ module.exports = function(io, mongodb, errors){
       });
 
       //TODO - send the userid and name of the requested ids
-      router.get('/loggedToGameList', function(req, res){
-         var gameid = parseInt(req.session.gameid);
+      router.get('/loggedToGameList/:gameid', function(req, res){
+         var gameid = parseInt(req.params.gameid);
          mongo.connect(mongodb.urlToDB, function(err, db){
             if(err){
                res.send(errors.DB_CONNECT_ERROR);
@@ -202,6 +202,7 @@ module.exports = function(io, mongodb, errors){
       });
 
       router.get('/:gameId', function(req, res) {
+         var gameId = parseInt(req.params.gameId);
          mongo.connect(mongodb.urlToDB, function(err, db){
             if(err){
                res.send(errors.DB_CONNECT_ERROR);
@@ -209,7 +210,7 @@ module.exports = function(io, mongodb, errors){
             }
             else{
                var gamesDB = db.collection("games");
-               var gamesFound = gamesDB.find({ _id: parseInt(req.session.gameid) });
+               var gamesFound = gamesDB.find({ _id: gameId });
                gamesFound.toArray(function(err, result){
                   if(err){
                      res.send(errors.UNKNOWN);

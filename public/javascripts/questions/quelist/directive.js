@@ -3,7 +3,8 @@ angular.module('mainApp').directive("quesList", function(){
       restrict: "E",
       controller: "que-list-ctrl",
       scope: {
-         ques: "="
+         quesOutput: "=?",
+         quesInput: "=?"
       },
       templateUrl: "/templates/questions/queslist"
    }

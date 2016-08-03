@@ -10,7 +10,6 @@ angular.module('mainApp').controller('create-cont', ['$scope', '$http', '_', fun
 
    $scope.create = function(){
       _.forEach($scope.gameDetails.questions, function(que){
-         debugger;
          delete que.$$hashKey;
          delete que.isSelected;
       });
@@ -18,11 +17,8 @@ angular.module('mainApp').controller('create-cont', ['$scope', '$http', '_', fun
          if(result.data.error!=null){
             $scope.error = result.data.error.message;
             return;
-         }
-         if(result.status===200){
-            window.location.href = "/gameScreen/gamestartscreen"
          }else{
-            $scope.error = result.data;
+             window.location.href = "/gameScreen/gamestartscreen"+result.data.gameid;
          }
       }, function(err){
          $scope.error = err;

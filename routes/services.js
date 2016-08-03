@@ -56,14 +56,8 @@ module.exports = function(io, mongodb, errors) {
                         res.send(errors.CREATING_GAME);
                      }else{
                      db.close();
-                     res.sendStatus(200);
+                     res.send({gameid: gameid});
                   }
-                  });
-                  req.session.gameid = gameid;
-                  req.session.save(function(err){
-                     if(err){
-                        console.log("Error saving session!");
-                     }
                   });
                });
             }).catch(function(e) {

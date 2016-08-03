@@ -12,7 +12,7 @@ angular.module('mainApp').controller('game-start-cont', ['$scope', '$http', '$in
    }
 
    $scope.getPlayers = function(){
-      $http.get('/gamescreen/loggedToGameList').then(function(result){
+      $http.get('/gamescreen/loggedToGameList/'+$scope.gameid).then(function(result){
          if(result.data.error){
             alert(result.data.error.message);
             return;
@@ -23,7 +23,7 @@ angular.module('mainApp').controller('game-start-cont', ['$scope', '$http', '$in
    }
 
    $scope.startGame = function(){
-      $http.get('/gamescreen/startgame').then(function(result){
+      $http.get('/gamescreen/startgame/'+$scope.gameid).then(function(result){
          if(result.data.error){
                alert(result.data.error.message);
                return;
@@ -33,7 +33,6 @@ angular.module('mainApp').controller('game-start-cont', ['$scope', '$http', '$in
          }
       });
    }
-
    // var updatePlayersInterval = $interval(function(){
    //    $scope.getPlayers();
    // } ,5000);

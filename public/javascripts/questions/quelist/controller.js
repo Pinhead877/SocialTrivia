@@ -23,7 +23,6 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', '_', f
    };
 
    $scope.addQuestionToGame = function(row){
-      debugger;
       row.isSelected = true;
       $scope.ques.push(row);
    };

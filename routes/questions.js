@@ -23,7 +23,6 @@ module.exports = function(mongodb, errors) {
             res.send(errors.DB_CONNECT_ERROR);
             db.close();
          }else{
-
             var quesCollection = db.collection('questions');
             var results;
             if(type == "public"){
