@@ -10,7 +10,6 @@ angular.module('mainApp').controller('create-cont', ['$scope', '$http', '_', fun
 
    $scope.create = function(){
       _.forEach($scope.gameDetails.questions, function(que){
-         debugger;
          delete que.$$hashKey;
          delete que.isSelected;
       });
