@@ -1,5 +1,5 @@
 // BASE /gamescreen
-
+"use strict"; 
 var CORRECT_ANSWER_POINTS = 5;
 
 module.exports = function(io, mongodb, errors){
