@@ -5,21 +5,24 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', '_', f
    $scope.showAddQue = false;
 
    $scope.clearAll = function() {
-
+      if($scope.isLocalMode!=null){
+         $scope.ques = [];
+      }else{
+         _.forEach($scope.questionsList, function(que){
+            $scope.removeFromGame(que);
+         });
+      }
    };
 
+   $scope.$watch('ques', function(){
+      $scope.questionsList = $scope.ques;
+   });
+
    $scope.$watch('addedQuestion',function(newValue, oldValue){
-      if($scope.ques == null){
-         $scope.getQuestions('public');
-         if($scope.filterQuestions != null){
-            var filter = eval($scope.filterQuestions);
-            $scope.questionsList = _.filter($scope.questionsList, function(question){
-               return _.includes(filter, question);
-            });
-            debugger;
-         }
+      if($scope.isLocalMode!=null){
+         $scope.questionsList = $scope.ques
       }else{
-         $scope.questionsList = $scope.ques;
+         $scope.getQuestions(($scope.quesType==null)?'public':$scope.quesType);
       }
    });
 
@@ -29,6 +32,13 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', '_', f
             alert(result.data.error.message);
          }else{
             $scope.questionsList = result.data;
+            if($scope.ques != null){
+               _.forEach($scope.questionsList, function(que){
+                  _.forEach($scope.ques, function(localQue){
+                     if(que._id==localQue._id) que.isSelected = true;
+                  });
+               });
+            }
          }
       });
    };
@@ -53,5 +63,20 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', '_', f
          $scope.addQuesText = "Add New Question";
       }
    };
+
+   $scope.deleteQuestion = function(question){
+      $http.post('/questions/delete', question).then(function(result){
+         if(result.data.error){
+            alert(result.data.error.message);
+         }else{
+            $scope.getQuestions(($scope.quesType==null)?'public':$scope.quesType);
+            alert("Question Deleted Successfully!");
+         }
+      });
+   }
+
+   $scope.editQuestion = function(question){
+
+   }
 
 }]);

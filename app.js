@@ -23,6 +23,7 @@ var templates = require('./routes/templates');
 var gamecont = require('./routes/gamecontroller')(mongodb, errors);
 var services = require('./routes/services')(io, mongodb, errors);
 var questions = require('./routes/questions')(mongodb, errors);
+var profile = require('./routes/profile')(mongodb, errors);
 
 // view engine setup
 //TODO - change the view engine to pug
@@ -65,6 +66,7 @@ app.use(function(req, res, next){
       res.redirect('/login?last='+req.originalUrl);
    }
 });
+app.use('/profile', profile);
 app.use('/questions', questions);
 app.use('/gamescreen', gameScreen);
 app.use('/gamecontroller', gamecont);

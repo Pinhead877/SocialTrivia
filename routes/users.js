@@ -11,9 +11,13 @@ module.exports = function(mongodb, errors) {
       res.render('profile/profilescreen');
    });
 
+   router.get('/gamelist/', function(){
+      res.render('profile/usergames');
+   });
+
    router.post('/list', function(req, res){
       console.log(req.body);
-   })
+   });
 
    router.post('/create', function(req, res){
       //TODO - add validation check if empty and check length
@@ -88,6 +92,7 @@ function generateRegExp(text) {
    return new RegExp(["^",text,"$"].join(""), "i");
 }
 
+//TODO - send errors with the right info to the client
 function isObjectInvalid(obj) {
    if(!isNicknameValid(obj.nickname)) return true;
    if(!isStringValid(obj.password)) return true;

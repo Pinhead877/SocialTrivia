@@ -5,7 +5,11 @@ angular.module('mainApp').directive("quesList", function(){
       scope: {
          ques: '=?',
          isAddQueVisible: "@?",
-         filterQuestions: "=?"
+         isClearAllVisible: "@?",
+         isShowPrivateQuesVisible: "@?",
+         isLocalMode: "@?",
+         filterQuestions: "=?",
+         quesType: "@?"
       },
       templateUrl: "/templates/questions/queslist"
    }

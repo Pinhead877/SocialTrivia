@@ -43,6 +43,8 @@ module.exports = function(io, mongodb, errors) {
                      _id: gameid,
                      name: gameName,
                      questions: req.body.questions,
+                     isStarted: false,
+                     isEnded: false,
                      dateCreated: new Date(),
                      creator: {
                         userid: req.session.userid,

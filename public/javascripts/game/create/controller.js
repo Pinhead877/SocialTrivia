@@ -1,4 +1,4 @@
-angular.module('mainApp').controller('create-cont', ['$scope', '$http', '_', '$uibModal', function($scope, $http, _, $uibModal){
+angular.module('mainApp').controller('create-cont', ['$scope', '$http', '_', '$uibModal', '$window', function($scope, $http, _, $uibModal, $window){
 
    $scope.gameDetails = {
       questions: [],
@@ -21,8 +21,7 @@ angular.module('mainApp').controller('create-cont', ['$scope', '$http', '_', '$u
          }
       });
       quesPopup.result.then(function(questions){
-         $scope.gameDetails.questions = questions;
-         $scope.$spply();
+            $scope.gameDetails.questions = questions;
       });
 };
 
@@ -37,7 +36,8 @@ angular.module('mainApp').controller('create-cont', ['$scope', '$http', '_', '$u
             $scope.error = result.data.error.message;
             return;
          }else{
-             window.location.href = "/gameScreen/gamestartscreen"+result.data.gameid;
+            //  window.location.href = "/gameScreen/gamestartscreen/"+result.data.gameid;
+            $window.location = "/profile/games";
          }
       }, function(err){
          $scope.error = err;

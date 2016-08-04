@@ -1,0 +1,38 @@
+
+#game-list-wrap
+   table.table.table-striped(st-table='displayGames', st-safe-src='gamesList')
+      thead
+         tr
+            th Name
+            th Date Created
+            th Length (minutes)
+            th No' of questions
+            th Status
+            th
+         tr
+            th(colspan='6')
+               input.form-control(st-search='', placeholder='Search...', type='text')
+      tbody
+         tr(ng-repeat='game in displayGames track by $index')
+            td {{ game.name }}
+            td {{ game.dateCreated }}
+            td {{ game.gameLength }}
+            td {{ game.questions.length }}
+            td
+               span(ng-if="!game.isStarted") Not Played Yet
+               span(ng-if="game.isStarted && game.Ended") Ended
+               span(ng-if="game.isStarted && !game.Ended") In Progress
+            td
+               a(ng-click="startGame(game)", ng-if="!game.isStarted")
+                  i.fa.fa-play(aria-hidden='true')
+                  |  Start Game
+               a(ng-click="seeResults(game)", ng-if="game.isStarted && game.Ended")
+                  i.fa.fa-trophy(aria-hidden='true')
+                  |  See Results
+               a(ng-click="goToGame(game)", ng-if="game.isStarted && !game.Ended")
+                  i.fa.fa-gamepad(aria-hidden='true')
+                  |  Go to Game
+      tfoot
+         tr
+            td.text-center(colspan='6')
+               div(st-pagination='', st-items-by-page='15', st-displayed-pages='5')

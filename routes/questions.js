@@ -59,6 +59,39 @@ module.exports = function(mongodb, errors) {
       });
    });
 
+   router.post('/delete', function (req, res) {
+      var userID = req.session.userid, questionToDelete = req.body;
+      mongo.connect(mongodb.urlToDB, function(err, db){
+         if(err){
+            res.send(errors.DB_CONNECT_ERROR);
+            return;
+         }
+         else{
+            var quesDB = db.collection('questions');
+            var quesFound = quesDB.find({_id: new ObjectID(questionToDelete._id)});
+            quesFound.toArray(function(err, result){
+               if(err){
+                  res.send(errors.UNKNOWN);
+                  db.close();
+               }else{
+                  if(result[0].userid==userID){
+                     quesDB.deleteOne({_id: new ObjectID(questionToDelete._id)}, function(err, result){
+                        if(err){
+                           console.log(err);
+                        }else {
+                           res.sendStatus(200);
+                        }
+                        db.close();
+                     });
+                  }else{
+                     db.close();
+                  }
+               }
+            });
+         }
+      });
+   });
+
    router.get('/add',function(req, res){
       res.render('questions/addques');
    })

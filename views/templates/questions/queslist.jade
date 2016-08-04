@@ -3,31 +3,49 @@ link(rel="stylesheet", href="/stylesheets/questions/queslist.css")
    div(ng-show="isAddQueVisible")
       a.btn(ng-click="toggleAddQues()") {{ addQuesText }}
       add-ques(ng-show="showAddQue", added="addedQuestion")
-   .checkbox 
+   .checkbox(ng-show="isShowPrivateQuesVisible")
       label
          input(type="checkbox", ng-model="showPrivate", ng-change="getQuestions(showPrivate)", ng-true-value="'private'", ng-false-value="'public'")
          | Show only own questions?
-   table.table.table-striped(st-table='questionsList')
-    thead
-        tr
-          th Question
-          th Answer
-          th Created By
-          th Private Question
-          th Category
-          th 
+   table.table.table-striped(st-table='displayQuestions', st-safe-src='questionsList')
+      thead
+         tr
+            th Question
+            th Answer
+            th Created By
+            th Private Question
+            th Category
+            th
+         tr
+            th(colspan='6')
+               input.form-control(st-search='', placeholder='Search...', type='text')
       tbody
-        tr(ng-repeat='question in questionsList track by $index')
-          td {{question.question}}
-          td {{question.answer}}
-          td {{question.nickname}}
-          td {{question.isPrivate}}
-          td {{question.category.name}}
-          td 
-            a(ng-click="addQuestionToGame(question)", ng-if="!question.isSelected")
-               i.fa.fa-plus(aria-hidden='true')
-               |  Add To Game
-            a(ng-click="removeFromGame(question)", ng-if="question.isSelected")
-               i.fa.fa-times(aria-hidden='true')
-               |  Remove
-   a.btn(ng-click="clearAll()") Clear Selection
+         tr(ng-repeat='question in displayQuestions track by $index')
+            td {{question.question}}
+            td {{question.answer}}
+            td {{question.nickname}}
+            td
+               i.fa.fa-thumbs-down(aria-hidden='true', ng-if="!question.isPrivate")
+               i.fa.fa-thumbs-up(aria-hidden='true', ng-if="question.isPrivate")
+            td {{question.category.name}}
+            td
+               div(ng-if="quesType==null")
+                  a(ng-click="addQuestionToGame(question)", ng-if="!question.isSelected")
+                     i.fa.fa-plus(aria-hidden='true')
+                     | Add To Game
+                  a(ng-click="removeFromGame(question)", ng-if="question.isSelected")
+                     i.fa.fa-times(aria-hidden='true')
+                     | Remove
+               div(ng-if="quesType=='private'")
+                  a(ng-click="editQuestion(question)")
+                     i.fa.fa-pencil(aria-hidden='true')
+                     | Edit 
+                  a(ng-click="deleteQuestion(question)")
+                     i.fa.fa-trash(aria-hidden='true')
+                     | Delete
+      tfoot
+         tr
+            td.text-center(colspan='6')
+               div(st-pagination='', st-items-by-page='15', st-displayed-pages='7')
+
+   a.btn(ng-click="clearAll()", ng-show="isClearAllVisible") Clear Selection

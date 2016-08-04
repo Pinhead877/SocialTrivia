@@ -22,8 +22,9 @@ module.exports = function(io, mongodb, errors){
       res.render('gameScreen/create', {});
    });
 
-   router.get('/gamestartscreen',function(req, res){
-      res.render('gameScreen/gameStart', { game: req.session.gameid });
+   router.get('/gamestartscreen/:gameId',function(req, res){
+      var gameID = parseInt(req.params.gameId);
+      res.render('gameScreen/gameStart', { game: gameID });
    });
 
    router.get('/userexitgame/:gameId', function(req, res){
@@ -54,54 +55,55 @@ module.exports = function(io, mongodb, errors){
                            io.sockets.in(gameID).emit('playersLogged');
                         }
                         db.close();
-                     });
-                  }
-               });
-            }
-         });
+                  });
+               }
+            });
+         }
       });
+   });
 
       //TODO - send the userid and name of the requested ids
-      router.get('/loggedToGameList/:gameid', function(req, res){
-         var gameid = parseInt(req.params.gameid);
-         mongo.connect(mongodb.urlToDB, function(err, db){
-            if(err){
-               res.send(errors.DB_CONNECT_ERROR);
-               return;
-            }else{
-               var gamesDB = db.collection('games');
-               var gamesFound = gamesDB.find({ _id: gameid});
-               gamesFound.toArray(function(err, games){
-                  if(err){
+   router.get('/loggedToGameList/:gameid', function(req, res){
+      var gameid = parseInt(req.params.gameid);
+      mongo.connect(mongodb.urlToDB, function(err, db){
+         if(err){
+            res.send(errors.DB_CONNECT_ERROR);
+            return;
+         }else{
+            var gamesDB = db.collection('games');
+            var gamesFound = gamesDB.find({ _id: gameid});
+            gamesFound.toArray(function(err, games){
+               if(err){
+                  res.send(errors.UNKNOWN);
+               }else{
+                  if(games.length===0){
                      res.send(errors.UNKNOWN);
                   }else{
-                     if(games.length===0){
-                        res.send(errors.UNKNOWN);
-                     }else{
-                        var playersToSend = [];
-                        if(games[0].players){
-                           var playersInGame = games[0].players;
-                           for (var i = 0; i < playersInGame.length; i++) {
-                              playersToSend[i] = playersInGame[i];
-                           }
+                     var playersToSend = [];
+                     if(games[0].players){
+                        var playersInGame = games[0].players;
+                        for (var i = 0; i < playersInGame.length; i++) {
+                           playersToSend[i] = playersInGame[i];
                         }
-                        res.send(playersToSend);
                      }
+                     res.send(playersToSend);
                   }
-                  db.close();
-               });
-            }
-         });
+               }
+               db.close();
+            });
+         }
       });
+   });
 
-      router.get('/startgame', function(req, res){
+      router.get('/startgame/:gameId', function(req, res){
+         var gameID = parseInt(req.params.gameId);
          mongo.connect(mongodb.urlToDB, function(err, db){
             if(err){
                res.send(errors.DB_CONNECT_ERROR);
                return;
             }else{
                var gamesDB = db.collection('games');
-               var gamesFound = gamesDB.find({ _id: parseInt(req.session.gameid)});
+               var gamesFound = gamesDB.find({ _id: gameID});
                gamesFound.toArray(function(err, gameSelected){
                   if(err){
                      res.send(errors.UNKNOWN);
@@ -121,7 +123,7 @@ module.exports = function(io, mongodb, errors){
                            return;
                         }else{
                            gamesDB.updateOne({
-                              _id: parseInt(req.session.gameid)
+                              _id: gameID
                            },
                            {
                               $set: {
@@ -136,7 +138,7 @@ module.exports = function(io, mongodb, errors){
                                  res.send(errors.DB_OPERATION);
                               }else{
                                  res.sendStatus(200);
-                                 io.sockets.in(req.session.gameid).emit('startgame');
+                                 io.sockets.in(gameID).emit('startgame');
                               }
                               db.close();
                            });
@@ -345,6 +347,40 @@ module.exports = function(io, mongodb, errors){
                            console.log(result.result);
                         }
                         db.close();
+                     });
+                  }
+               });
+            }
+         });
+      });
+
+      router.get('/select/:gameId/:queId', function(req, res){
+         var gameID = parseInt(req.params.gameId), queID = parseInt(req.params.queId)-1;
+         io.sockets.in(gameID).emit('selected', queID+1);
+         mongo.connect(mongodb.urlToDB, function(err, db){
+            if(err){
+               res.send(errors.DB_CONNECT_ERROR);
+               return;
+            }
+            else{
+               var gamesDB = db.collection('games');
+               var gamesFound = gamesDB.find({_id: gameID});
+               gamesFound.toArray(function(err, result){
+                  if(err){
+                     res.send(errors.UNKNOWN);
+                  }else{
+                     result[0].questions[queID].statusColor = 'selected';
+                     gamesDB.updateOne({_id: gameID}, {$set:{
+                        questions: result[0].questions
+                     }}, function(err, result){
+                        if(err){
+                           console.log(errors.UNKNOWN);
+                           console.log(err);
+                        }else if(result.result.n===0){
+                           console.log(errors.DB_OPERATION);
+                           console.log(result.result);
+                        }
+                        db.close();
                      }
                   )
                }
@@ -353,42 +389,7 @@ module.exports = function(io, mongodb, errors){
       });
    });
 
-   router.get('/select/:gameId/:queId', function(req, res){
-      var gameID = parseInt(req.params.gameId), queID = parseInt(req.params.queId)-1;
-      io.sockets.in(gameID).emit('selected', queID+1);
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            res.send(errors.DB_CONNECT_ERROR);
-            return;
-         }
-         else{
-            var gamesDB = db.collection('games');
-            var gamesFound = gamesDB.find({_id: gameID});
-            gamesFound.toArray(function(err, result){
-               if(err){
-                  res.send(errors.UNKNOWN);
-               }else{
-                  result[0].questions[queID].statusColor = 'selected';
-                  gamesDB.updateOne({_id: gameID}, {$set:{
-                     questions: result[0].questions
-                  }}, function(err, result){
-                     if(err){
-                        console.log(errors.UNKNOWN);
-                        console.log(err);
-                     }else if(result.result.n===0){
-                        console.log(errors.DB_OPERATION);
-                        console.log(result.result);
-                     }
-                     db.close();
-                  }
-               )
-            }
-         });
-      }
-   });
-});
-
-return router;
+   return router;
 };
 
 /* ========== Private Methods ========== */

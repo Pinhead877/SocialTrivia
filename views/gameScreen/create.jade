@@ -14,7 +14,7 @@ block append main
       h1 Create Game
       input#name(placeholder="Game Name", ng-model="gameDetails.name", type="text")
       button.btn(ng-click="openQuestionsList()") Add Questions
-      ques-list(ques="gameDetails.questions")
+      ques-list(ques="gameDetails.questions", is-local-mode="true", is-clear-all-visible="true")
       .form-group
          label.col-xs-4.text-right(for="minutes") Enter game length in minutes: 
          .col-xs-8
