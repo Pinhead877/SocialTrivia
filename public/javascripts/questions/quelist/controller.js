@@ -1,4 +1,4 @@
-angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', '_', function($scope, $http, _){
+angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', '_', '$uibModal', function($scope, $http, _, $uibModal){
    $scope.showPrivate = 'public';
    $scope.addedQuestion = false;
    $scope.addQuesText = "Add New Question";
@@ -22,7 +22,8 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', '_', f
       if($scope.isLocalMode!=null){
          $scope.questionsList = $scope.ques
       }else{
-         $scope.getQuestions(($scope.quesType==null)?'public':$scope.quesType);
+         // $scope.getQuestions(($scope.quesType==null)?'public':$scope.quesType);
+         $scope.refreshGrid();
       }
    });
 
@@ -69,14 +70,33 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', '_', f
          if(result.data.error){
             alert(result.data.error.message);
          }else{
-            $scope.getQuestions(($scope.quesType==null)?'public':$scope.quesType);
+            // $scope.getQuestions(($scope.quesType==null)?'public':$scope.quesType);
+            $scope.refreshGrid();
             alert("Question Deleted Successfully!");
          }
       });
    }
 
    $scope.editQuestion = function(question){
-
+      var queEditPopup = $uibModal.open({
+         animation: true,
+         templateUrl: '/templates/questions/questionedit',
+         controller: 'que-edit-ctrl',
+         size: "lg",
+         resolve: {
+            que: function(){
+               return question;
+            }
+         }
+      });
+      queEditPopup.result.then(function(result){
+         if(result){
+            // $scope.getQuestions(($scope.quesType==null)?'public':$scope.quesType);
+            $scope.refreshGrid();
+         }
+      });
    }
-
+   $scope.refreshGrid = function(){
+      $scope.getQuestions(($scope.quesType==null)?'public':$scope.quesType);
+   }
 }]);

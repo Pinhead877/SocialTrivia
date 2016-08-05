@@ -125,6 +125,44 @@ module.exports = function(mongodb, errors) {
       });
    });
 
+   router.post('/update', function(req, res){
+      var que = req.body;
+      if(isTextInvalid(que.question, 6, 120)){
+         res.send(errors.BAD_QUE);
+         return;
+      }
+      if(isTextInvalid(que.answer, 4, 10)){
+         res.send(errors.BAD_ANS);
+         return;
+      }
+      var sess = req.session;
+      if(!sess.userid){
+         res.sendStatus(403);
+         return;
+      }
+      mongo.connect(mongodb.urlToDB, function(err, db){
+         if(err){
+            console.error(err);
+            res.send(errors.DB_CONNECT_ERROR);
+         }else{
+            var quesCollection = db.collection('questions');
+            var queID = que._id;
+            delete que._id;
+            quesCollection.updateOne({_id: new ObjectID(queID)}, que, function(err, result){
+               if(err){
+                  res.send(errors.UNKNOWN);
+                  console.log(err);
+               }else if(result.result.n==0){
+                  console.log(result);
+               }else{
+                  res.sendStatus(200);
+               }
+               db.close();
+            });
+         }
+      });
+   });
+
    router.get('/getCategories',function(req, res){
       mongo.connect(mongodb.urlToDB, function(err, db){
          if(err){

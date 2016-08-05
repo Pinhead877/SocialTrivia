@@ -3,11 +3,7 @@ angular.module('mainApp').controller('que-list-popup-ctrl',['$scope', '$http', '
 
    $scope.questions = ques;
 
-   $scope.ok = function () {
-      $uibModalInstance.close($scope.questions);
-    };
-
-   $scope.cancel = function () {
+   $scope.close = function () {
       $uibModalInstance.dismiss('cancel');
    };
 

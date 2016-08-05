@@ -13,7 +13,7 @@ link(rel="stylesheet", href="/stylesheets/questions/queslist.css")
             th Question
             th Answer
             th Created By
-            th Private Question
+            th Public Question
             th Category
             th
          tr
@@ -25,8 +25,8 @@ link(rel="stylesheet", href="/stylesheets/questions/queslist.css")
             td {{question.answer}}
             td {{question.nickname}}
             td
-               i.fa.fa-thumbs-down(aria-hidden='true', ng-if="!question.isPrivate")
-               i.fa.fa-thumbs-up(aria-hidden='true', ng-if="question.isPrivate")
+               i.fa.fa-check(aria-hidden='true', ng-if="!question.isPrivate")
+               i.fa.fa-minus(aria-hidden='true', ng-if="question.isPrivate")
             td {{question.category.name}}
             td
                div(ng-if="quesType==null")

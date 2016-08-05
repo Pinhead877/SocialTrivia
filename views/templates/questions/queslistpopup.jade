@@ -1,9 +1,3 @@
-script(src="/javascripts/questions/quelist/controller.js")
-script(src="/javascripts/questions/addque/controller.js")
-script(src="/javascripts/questions/quelist/directive.js")
-script(src="/javascripts/questions/addque/directive.js")
-
 ques-list(is-add-que-visible="true", ques="questions", is-clear-all-visible="true", is-show-private-ques-visible="true")
 .modal-footer
-  button.btn.btn-primary(type='button', ng-click='ok()') OK
-  button.btn.btn-warning(type='button', ng-click='cancel()') Cancel
+  button.btn.btn-warning(type='button', ng-click='close()') Close

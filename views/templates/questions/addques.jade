@@ -9,11 +9,9 @@
          input.form-control(name="ansText", type="text", ng-model="queDetails.answer", required, ng-minlength="4", ng-maxlength="10")
       .form-group(ng-class="{ 'has-error' : queForm.ansText.$invalid && !queForm.ansText.$pristine }")
          label Pick a Category
-         select.form-control(ng-model="queDetails.category")
-            option Please Select
-            option(ng-repeat="cat in categoriesList", value="{{ cat }}") {{ cat.name }}
+         select.form-control(ng-options="cat.name for cat in categoriesList track by cat._id", ng-model="queDetails.category")
       #public-check
          label Do you wish this question to be Private? (Other users will not see it)
          input(type='checkbox', name="isPrivate", ng-model='queDetails.isPrivate' checked='false')
-      button.btn(type="submit", ng-disabled="queForm.$invalid") Add Question
+      button.btn(type="submit", ng-disabled="queForm.$invalid") {{ submitText }}
       button.btn(type="button", ng-click="clearQue()") Reset

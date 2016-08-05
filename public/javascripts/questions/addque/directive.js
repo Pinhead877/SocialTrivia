@@ -4,7 +4,8 @@ angular.module('mainApp').directive('addQues', function(){
       controller: "que-add-ctrl",
       scope: {
          added: "=",
-         question: "=?"
+         question: "@?",
+         onUpdate: "&?"
       },
       templateUrl: "/templates/questions/addques"
    }
