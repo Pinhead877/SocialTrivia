@@ -3,7 +3,8 @@ angular.module('mainApp').directive('addQues', function(){
       restrict: "E",
       controller: "que-add-ctrl",
       scope: {
-         added: "="
+         added: "=",
+         question: "=?"
       },
       templateUrl: "/templates/questions/addques"
    }

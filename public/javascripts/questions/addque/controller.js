@@ -1,4 +1,4 @@
-angular.module("mainApp").controller('que-add-ctrl', ['$scope', '$http', function($scope, $http){
+angular.module("mainApp").controller('que-add-ctrl', ['$scope', '$http','$q', function($scope, $http, $q){
    $scope.queDetails = {
       isPrivate: false
    };
@@ -27,13 +27,34 @@ angular.module("mainApp").controller('que-add-ctrl', ['$scope', '$http', functio
       }
    };
 
-   $http.get('/questions/getCategories').then(function(result){
+   // $http.get('/questions/getCategories').then(function(result){
+   //
+   //    if(result.data.error){
+   //       alert(result.data.error.message);
+   //    }else{
+   //       $scope.categoriesList = result.data;
+   //    }
+   // });
 
-      if(result.data.error){
-         alert(result.data.error.message);
-      }else{
-         $scope.categoriesList = result.data;
-      }
-   });
+   $scope.getCategories = function(){
+      var defered = $q.defer();
+      $http.get('/questions/getCategories').then(function(result){
+         if(result.data.error){
+            alert(result.data.error.message);
+         }else{
+            // $scope.categoriesList = result.data;
+            defered.resolve(result.data);
+         }
+      });
+      return defered.promise;
+   }
+
+   $scope.init = function(){
+      $scope.getCategories().then(function(categories){
+         debugger;
+      });
+   }
+
+   $scope.init();
 
 }]);
