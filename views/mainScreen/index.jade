@@ -1,7 +1,114 @@
 extends ../layoutlogin
 
-block append main
-  script(src="/javascripts/mainscreen/main.js")
-  h1 Welcome
-  button(onclick="create()") Start a new Game
-  button(onclick="join()") Join a Game
+block append head
+   script(src='/javascripts/mainscreen/index.js')
+
+block b-main    
+  header#intro
+    .container
+      .table
+        .header-text
+          .row
+            .col-md-12.text-center
+               h1.light.white Battle Smart
+               h3.white.typed Competition for the Fastest and the Smartest!
+               span.typed-cursor |
+  section
+    .cut.cut-top
+    .container
+      .row.intro-tables
+        .col-md-4
+          .intro-table.intro-table-first
+            h5.white.heading Today's Schedule
+            .owl-carousel.owl-schedule.bottom
+              .item
+                .schedule-row.row
+                  .col-xs-6
+                    h5.regular.white Early Exercise
+                  .col-xs-6.text-right
+                    h5.white 8:30 - 10:00
+                .schedule-row.row
+                  .col-xs-6
+                    h5.regular.white Muscle Building
+                  .col-xs-6.text-right
+                    h5.white 8:30 - 10:00
+                .schedule-row.row
+                  .col-xs-6
+                    h5.regular.white Cardio
+                  .col-xs-6.text-right
+                    h5.white 8:30 - 10:00
+              .item
+                .schedule-row.row
+                  .col-xs-6
+                    h5.regular.white Early Exercise
+                  .col-xs-6.text-right
+                    h5.white 8:30 - 10:00
+                .schedule-row.row
+                  .col-xs-6
+                    h5.regular.white Muscle Building
+                  .col-xs-6.text-right
+                    h5.white 8:30 - 10:00
+                .schedule-row.row
+                  .col-xs-6
+                    h5.regular.white Cardio
+                  .col-xs-6.text-right
+                    h5.white 8:30 - 10:00
+              .item
+                .schedule-row.row
+                  .col-xs-6
+                    h5.regular.white Early Exercise
+                  .col-xs-6.text-right
+                    h5.white 8:30 - 10:00
+                .schedule-row.row
+                  .col-xs-6
+                    h5.regular.white Muscle Building
+                  .col-xs-6.text-right
+                    h5.white 8:30 - 10:00
+                .schedule-row.row
+                  .col-xs-6
+                    h5.regular.white Cardio
+                  .col-xs-6.text-right
+                    h5.white 8:30 - 10:00
+        .col-md-4
+          .intro-table.intro-table-hover
+            h5.white.heading.hide-hover Create new games out of the thousands of questions
+            .bottom
+              h4.white.heading.small-heading.no-margin.regular See your games
+              a.btn.btn-white-fill.expand(onclick='games()') Games
+        .col-md-4
+           .intro-table.intro-table-third.intro-table-hover
+             h5.white.heading.hide-hover Contribute to the community by writing new questions for other players to play
+             .bottom
+               h4.white.heading.small-heading.no-margin.regular Manage your question
+               a.btn.btn-white-fill.expand(onclick='questions()') Questions
+               
+block main
+   section#services.section.section-padded
+      .container
+          .row.text-center.title
+            h2 Services
+            h4.light.muted Achieve the best results with our wide variety of training options!
+          .row.services
+            .col-md-4
+              .service
+                .icon-holder
+                  img.icon(src='template/img/icons/heart-blue.png', alt='')
+                h4.heading Cardio Training
+                p.description
+                  | A elementum ligula lacus ac quam ultrices a scelerisque praesent vel suspendisse scelerisque a aenean hac montes.
+            .col-md-4
+              .service
+                .icon-holder
+                  img.icon(src='template/img/icons/guru-blue.png', alt='')
+                h4.heading Yoga Pilates
+                p.description
+                  | A elementum ligula lacus ac quam ultrices a scelerisque praesent vel suspendisse scelerisque a aenean hac montes.
+            .col-md-4
+              .service
+                .icon-holder
+                  img.icon(src='template/img/icons/weight-blue.png', alt='')
+                h4.heading Power Training
+                p.description
+                  | A elementum ligula lacus ac quam ultrices a scelerisque praesent vel suspendisse scelerisque a aenean hac montes.
+         .cut.cut-bottom   
+                 

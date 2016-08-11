@@ -7,18 +7,32 @@ block head
    script(src="/javascripts/questions/addque/directive.js")
    script(src="/javascripts/game/create/controller.js")
    script(src="/javascripts/questions/quelistpage/controller.js")
+   link(rel='stylesheet', href='/stylesheets/create/create.css')
 
 block append main
-   #wrap(ng-controller="create-cont")
-      #log {{ error }}
-      h1 Create Game
-      input#name(placeholder="Game Name", ng-model="gameDetails.name", type="text")
-      button.btn(ng-click="openQuestionsList()") Add Questions
-      ques-list(ques="gameDetails.questions", is-local-mode="true", is-clear-all-visible="true")
-      .form-group
-         label.col-xs-4.text-right(for="minutes") Enter game length in minutes: 
-         .col-xs-8
-            input#minutes(placeholder="Default: 60 minutes", name="minutes", ng-model="gameDetails.minutes")
-      #grid-footer
-         label Selected: {{ gameDetails.questions.length }}
-      button(ng-click="create()") Create
+   section.section.section-padded
+      .container(ng-controller="create-cont")
+         h2.text-center Create Game
+         #messages.col-sm-offset-8.col-sm-4(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')", close="closeMsg($index)") {{message.msg}}
+         form(name="creategame", novalidate, ng-submit="create()", class="form-horizontal")
+            .row.bottom-margin
+               .col-sm-2
+                  button.btn.btn-blue(type="button", ng-click="openQuestionsList()") Add Questions
+               .col-sm-offset-10
+                  button.btn.btn-blue(type="submit") Create Game
+            .row
+               .col-sm-6
+                  .form-group.form-group-lg
+                     label.control-label.col-md-4(for='name') Game Name:
+                     .col-md-8
+                        input#name.form-control(placeholder='Required',name='name', ng-model="gameDetails.name", type="text", required)
+               .col-sm-6
+                  .form-group.form-group-lg
+                     label.control-label.col-md-4(for="minutes") Length in minutes: 
+                     .col-md-8
+                        input#minutes.form-control(placeholder="Optional", name="minutes", ng-model="gameDetails.minutes")
+            .row
+               ques-list(ques="gameDetails.questions", is-local-mode="true", is-clear-all-visible="true")
+            .row
+               .col-sm-offset-1
+                  label.margin-bottom Questions Selected: {{ gameDetails.questions.length }}

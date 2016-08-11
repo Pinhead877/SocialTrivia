@@ -11,6 +11,7 @@ errors.BAD_LOGIN = {error: {code: 1012, message: "Incorrect Username or Password
 errors.BAD_QUE = {error: {code: 1013, message: "Please check your question"} };
 errors.BAD_ANS = {error: {code: 1014, message: "Please check your answer"} };
 errors.DEV_ERROR = {error: {code: 1111, message: "Dev - Change needed!"} };
+errors.NO_GAME_NAME = {error: {code: 2000, message: "Cant create a game without a name"} };
 errors.NO_QUES = {error: {code: 2001, message: "Cant create a game without questions"} };
 errors.GAME_NUM_ERROR = {error: {code: 2002, message: "The game number you entered doesnt exists!"} };
 errors.USER_EXITS_IN_GAME = { error: {code: 2003, message: "This user are already in this game"} };

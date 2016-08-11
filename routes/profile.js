@@ -5,6 +5,10 @@ module.exports = function(mongodb, errors) {
    var _ = require('lodash');
    var ObjectID = require('mongodb').ObjectID
 
+   router.get('/', function(req, res){
+      res.render('profile/profilescreen');
+   });
+
    router.get('/games/', function(req, res){
       res.render('profile/usergames');
    });

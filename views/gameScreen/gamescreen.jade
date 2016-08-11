@@ -1,18 +1,20 @@
 extends ../layout
   
 block head
-   link(href='/stylesheets/gamescreen.css', rel='stylesheet')
+   link(href='/stylesheets/gamescreen/gamescreen.css', rel='stylesheet')
    script(src="/javascripts/game/gamescreen/controller.js")
    script(src="/javascripts/layout/filter.js")
    script(src="/javascripts/game/gamescreen/directive.js")  
 
 block append main
-   #game-container(ng-controller="main-game-ctrl", ng-init="init(#{ gameid });")
-      h2#logo #{ title }
-      #upper-wrap
-         clock-div.upper-module(hours="#{ time.hours }", minutes="#{ time.minutes }", seconds="#{ time.seconds }", on-time-over="showEndGame()")
-         high-scores-div.upper-module(game-id="#{ gameid }")
-      ques-div(game-id="#{ gameid }", ng-hide="showEnd")
-      #game-end(ng-show="showEnd")
+   .container-fluid.text-center(ng-controller="main-game-ctrl", ng-init="init(#{ gameid });")
+      .row
+         h2 #{ title }
+      .row
+         clock-div.col-sm-6(hours="#{ time.hours }", minutes="#{ time.minutes }", seconds="#{ time.seconds }", on-time-over="showEndGame()")
+         high-scores-div.col-sm-6(game-id="#{ gameid }")
+      .row
+         ques-div(game-id="#{ gameid }", ng-hide="showEnd")
+      .row(ng-show="showEnd")
          h2 Game Ended!
          button.btn(ng-click="goToResultsPage()") See Results

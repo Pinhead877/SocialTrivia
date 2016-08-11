@@ -7,10 +7,12 @@ block title
   title Question Screen
 
 block main
-  div(ng-controller="quescreen-cont", ng-init="init(#{ JSON.stringify(params) })" )
-    h1 The Question
-    h1 {{ respond }}
-    h2= params.que
-    h3 Number of letters is {{ params.count }}
-    input(type="text" ng-model="answer")
-    button(ng-click="sendAnswer()") Send Answer
+   section.section.section-padded
+      .container.text-center(ng-controller="quescreen-cont", ng-init="init(#{ JSON.stringify(params) })" )
+         h2 The Question
+         h2= params.que
+         h3 Number of letters is {{ params.count }}
+         input.form-control(type="text" ng-model="answer",ng-hide="answered")
+         button.btn.btn-blue(ng-click="sendAnswer()",ng-hide="answered") Send Answer
+         #messages-wrap
+            #messages.col-xs-12(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')") {{message.msg}}

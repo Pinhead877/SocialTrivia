@@ -2,12 +2,15 @@ extends ../layoutlogin
 
 block append head
    script(src="/javascripts/game/gamestart/controller.js")
+   link(rel="stylesheet", href="/stylesheets/gamescreen/gamestart.css")
    
 block append main
-   div(ng-controller="game-start-cont", ng-init="init(#{ game })")
-      h2 Game ID:
-      h2(ng-bind="gameid")
-      h3 Waiting for Players...
-      #namewrap(ng-repeat="player in playersLogged")
-         div {{ player.nickname }}
-      button.btn(ng-click="startGame()") Start Game
+   section.section.section-padded
+      .container(ng-controller="game-start-cont", ng-init="init(#{ game })")
+         #messages.col-sm-offset-8.col-sm-4(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')", close="closeMsg($index)") {{message.msg}}
+         h2 Game ID: {{ gameid }}
+         h3 Waiting for Players...
+         .row
+            .namewrap(ng-repeat="player in playersLogged", style='background-color: {{ player.color }}') {{ player.nickname }}
+         .row 
+            button.btn.btn-blue(ng-click="startGame()") Start Game

@@ -1,9 +1,48 @@
 extends layout
 
-block login
-   login-div(upper="true")
-   #profile(ng-show="loggedin")
-      h3 Hello, 
-         span(ng-bind="user.nickname")
-         span= " - "
-         a(href="", ng-click="logout()")  Logout
+block navbar
+   .container-fluid
+      .row
+         .col-md-12
+            nav.navbar.navbar-fixed-top
+               .navbar-header
+                  button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
+                     span.sr-only Toggle navigation
+                     span.icon-bar
+                     span.icon-bar
+                     span.icon-bar
+                  a.navbar-brand(onclick="home()")
+                     img(src='template/img/logo.png', data-active-url='template/img/logo-active.png', alt='')
+               #bs-example-navbar-collapse-1.collapse.navbar-collapse
+                  .nav.navbar-nav.navbar-right.main-nav
+                     login-div(upper="true")
+                     #profile(ng-show="loggedin", style="margin-right: 40px;")
+                        .row
+                           .col-sm-2
+                           .col-sm-2
+                              h3 {{user.nickname}}
+                           .col-sm-2
+                              button.btn.btn-blue(ng-click="goToProfilePage()") Profile
+                           .col-sm-2
+                              button.btn.btn-blue(ng-click="logout()") Logout
+                           .col-sm-2
+                              button.btn.btn-red(onclick="create()") Create
+                           .col-sm-2
+                              button.btn.btn-green(onclick="join()") Join
+
+   .mobile-nav
+      ul
+         login-div(upper="true")
+         #profile(ng-show="loggedin")
+            h4 {{user.nickname}}
+            a.btn.btn-blue(href="", ng-click="goToProfilePage()") Profile
+            a.btn.btn-blue(href="", ng-click="logout()") Logout
+      a.close-link(href='#')
+         i.fa.fa-arrow-up
+block footer
+   footer
+     .container
+      .row
+         .col-sm-6.text-center-mobile
+            p 
+               | © 2016 Battle Smart 

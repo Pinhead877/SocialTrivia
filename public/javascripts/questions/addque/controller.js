@@ -3,6 +3,16 @@ angular.module("mainApp").controller('que-add-ctrl', ['$scope', '$http','$q', fu
    //    isPrivate: false
    // };
 
+   $scope.messages = [];
+
+   $scope.addMsg = function(msg, type) {
+      $scope.messages.push({show: true, type:(type==null)?'danger':type, msg: msg});
+   };
+
+   $scope.closeMsg = function(index) {
+      $scope.messages[index].show = false;
+   };
+
    $scope.clearQue = function(){
       $scope.queDetails.question = "";
       $scope.queDetails.answer = "";
@@ -18,10 +28,12 @@ angular.module("mainApp").controller('que-add-ctrl', ['$scope', '$http','$q', fu
       if($scope.queForm.$valid){
          $scope.queDetails.category = (typeof($scope.queDetails.category)=="string")?JSON.parse($scope.queDetails.category):$scope.queDetails.category;
          $http.post(($scope.question==null)?'/questions/create':'/questions/update', $scope.queDetails).then(function(result){
-            if(result.data.error) alert(result.data.error.message);
+            if(result.data.error){
+               $scope.addMsg(result.data.error.message);
+            }
             else{
                if($scope.question==null){
-                  alert("Added!");
+                  $scope.addMsg("Question added successfully!", 'success');
                   $scope.added = !$scope.added;
                   $scope.clearQue();
                }else{
@@ -36,7 +48,7 @@ angular.module("mainApp").controller('que-add-ctrl', ['$scope', '$http','$q', fu
       var defered = $q.defer();
       $http.get('/questions/getCategories').then(function(result){
          if(result.data.error){
-            alert(result.data.error.message);
+            $scope.addMsg(result.data.error.message);
          }else{
             defered.resolve(result.data);
          }

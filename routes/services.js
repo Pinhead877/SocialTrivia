@@ -11,11 +11,19 @@ module.exports = function(io, mongodb, errors) {
    //than creates random game id and checks that it dosent apear in the DB
    //saves and sends to the client the _id, as it apears in the DB, the game name and the creators id
    router.post('/create/game', function(req, res){
+      var gameName = req.body.name;
+      var gameLength = req.body.minutes;
       if(req.body.questions == null || req.body.questions.length==0){
          res.send(errors.NO_QUES);
          return;
       }
-      var gameName = req.body.name;
+      if(gameName==null || gameName==""){
+         res.send(errors.NO_GAME_NAME);
+         return;
+      }
+      if(gameLength==null || gameLength<=0){
+         gameLength = 3*req.body.questions.length;
+      }
       var gameid;
       mongo.connect(mongodb.urlToDB, function(err, db){
          if(err){
@@ -50,7 +58,7 @@ module.exports = function(io, mongodb, errors) {
                         userid: req.session.userid,
                         nickname: req.session.nickname
                      },
-                     gameLength: req.body.minutes
+                     gameLength: gameLength
                   };
                   gamesDB.insertOne(gameToCreate, function(err, result){
                      if(err){
@@ -124,7 +132,7 @@ module.exports = function(io, mongodb, errors) {
                      result[0].players.sort(function(a,b){
                         return b.points - a.points;
                      });
-                     res.send(result[0].players);
+                     res.send(result[0].players.slice(0,5));
                   }
                }
                db.close();

@@ -4,11 +4,14 @@ link(rel='stylesheet', href="/stylesheets/templates/login.css")
 #wrap(ng-hide="loggedin", ng-class="{'upper-div': upper}")
    form(name="loginForm", novalidate, ng-submit="login()")
       .form-group(ng-class="{ 'has-error' : loginForm.nickname.$invalid && !loginForm.nickname.$pristine, 'upper-div': upper }")
-         Label(ng-class="{'upper-div': upper}") Nickname
+         //- Label(ng-class="{'upper-div': upper}") Nickname
          input.form-control(type="text", name="nickname", placeholder="Nickname", ng-model="userDetails.nickname" ng-minlength="4", ng-max-length="10", required)
       .form-group(ng-class="{ 'has-error' : loginForm.password.$invalid && !loginForm.password.$pristine, 'upper-div': upper }")
-         Label(ng-class="{'upper-div': upper}") Password
+         //- Label(ng-class="{'upper-div': upper}") Password
          input.form-control(type="password", name="password", placeholder="Password", ng-model="unprotectedPassword" ng-minlength="4", ng-max-length="10", required)
       #login-butt(ng-class="{'upper-div': upper}")
-         button.btn(type="submit", ng-disabled="loginForm.$invalid") Login
-         button.btn(type="button", ng-click="goToRegisterPage()") Register
+         button.btn.btn-blue(type="submit") Login
+         button.btn.btn-blue(type="button", ng-click="goToRegisterPage()") Register
+         div(ng-show="upper")
+            button.btn.btn-red(type="button", onclick="create()") Create
+            button.btn.btn-green(type="button", onclick="join()") Join

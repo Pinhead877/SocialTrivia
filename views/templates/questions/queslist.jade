@@ -1,34 +1,31 @@
 link(rel="stylesheet", href="/stylesheets/questions/queslist.css")
 #ques-list-wrap
-   div(ng-show="isAddQueVisible")
-      a.btn(ng-click="toggleAddQues()") {{ addQuesText }}
+   #messages.col-sm-offset-8.col-sm-4(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')", close="closeMsg($index)") {{message.msg}}
+   .addques(ng-show="isAddQueVisible")
+      a.btn.btn-blue(ng-click="toggleAddQues()") {{ addQuesText }}
       add-ques(ng-show="showAddQue", added="addedQuestion")
+      a.btn.btn-blue(ng-click="clearAll()", ng-show="isClearAllVisible") Clear Selection
    .checkbox(ng-show="isShowPrivateQuesVisible")
-      label
-         input(type="checkbox", ng-model="showPrivate", ng-change="getQuestions(showPrivate)", ng-true-value="'private'", ng-false-value="'public'")
-         | Show only own questions?
+         input#showPrivate(type="checkbox", ng-model="showPrivate", ng-change="getQuestions(showPrivate)", ng-true-value="'private'", ng-false-value="'public'")
+         label(for="showPrivate") Show only own questions?
    table.table.table-striped(st-table='displayQuestions', st-safe-src='questionsList')
       thead
          tr
-            th Question
-            th Answer
-            th Created By
-            th Public Question
-            th Category
-            th
+            th.col-xs-3 Question
+            th.col-xs-3 Answer
+            th.col-xs-2 Created By
+            th.col-xs-2 Category
+            th.col-xs-2
          tr
             th(colspan='6')
                input.form-control(st-search='', placeholder='Search...', type='text')
       tbody
          tr(ng-repeat='question in displayQuestions track by $index')
-            td {{question.question}}
-            td {{question.answer}}
-            td {{question.nickname}}
-            td
-               i.fa.fa-check(aria-hidden='true', ng-if="!question.isPrivate")
-               i.fa.fa-minus(aria-hidden='true', ng-if="question.isPrivate")
-            td {{question.category.name}}
-            td
+            td.col-xs-3 {{question.question}}
+            td.col-xs-3 {{question.answer}}
+            td.col-xs-2 {{question.nickname}}
+            td.col-xs-2 {{question.category.name}}
+            td.col-xs-2
                div(ng-if="quesType==null")
                   a(ng-click="addQuestionToGame(question)", ng-if="!question.isSelected")
                      i.fa.fa-plus(aria-hidden='true')
@@ -46,6 +43,4 @@ link(rel="stylesheet", href="/stylesheets/questions/queslist.css")
       tfoot
          tr
             td.text-center(colspan='6')
-               div(st-pagination='', st-items-by-page='15', st-displayed-pages='7')
-
-   a.btn(ng-click="clearAll()", ng-show="isClearAllVisible") Clear Selection
+               div(st-pagination='', st-items-by-page='10', st-displayed-pages='7')

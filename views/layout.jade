@@ -1,37 +1,109 @@
 doctype html
-html
+html(lang='en')
 
    head
-
-      block title
-         title Social Gaming
-         
-      link(rel='stylesheet', href='/stylesheets/style.css')
+      
       base(href="#{ baseurl }")
+      
+      meta(charset='UTF-8')
+      meta(http-equiv='X-UA-Compatible', content='IE=edge')
+      meta(name='viewport', content='width=device-width, initial-scale=1')
+      meta(name='description', content='Battle Smart is an online multiplayer trivia competion game')
+      meta(name='keywords', content='trivia game, trivia, free, game, fun, multiplayer, co-op')
+      meta(name='author', content='Alexander Apchiory and Yael Dodeles')
+      
+      block title 
+         title Battle Smart!
+      
+      link(rel='apple-touch-icon', sizes='57x57', href='template/img/favicons/apple-touch-icon-57x57.png')
+      link(rel='apple-touch-icon', sizes='60x60', href='template/img/favicons/apple-touch-icon-60x60.png')
+      link(rel='icon', type='image/png', href='template/img/favicons/favicon-32x32.png', sizes='32x32')
+      link(rel='icon', type='image/png', href='template/img/favicons/favicon-16x16.png', sizes='16x16')
+      link(rel='manifest', href='template/img/favicons/manifest.json')
+      link(rel='shortcut icon', href='template/img/favicons/favicon.ico')
+      link(rel='stylesheet', href='/stylesheets/style.css')
+      
+      meta(name='msapplication-TileColor', content='#00a8ff')
+      meta(name='msapplication-config', content='template/img/favicons/browserconfig.xml')
+      meta(name='theme-color', content='#ffffff')
+      
       script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js")
       script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.js")
       script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.js")
       script(src="/components/jquery/dist/jquery.min.js")
+      
+      link(rel='stylesheet', href='/stylesheets/layout/normalize.css')
       link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap.min.css')
       link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap-theme.min.css')
+      link(rel='stylesheet', href='/stylesheets/layout/owl.css')
+      link(rel='stylesheet', href='/stylesheets/layout/animate.css')
       link(rel='stylesheet', href='/components/font-awesome/css/font-awesome.min.css')
-      meta(name='viewport', content='width=device-width, initial-scale=1')
+      link(rel='stylesheet', href='/stylesheets/layout/et-icons.css')
+      link(rel='stylesheet', href='/stylesheets/layout/cardio.css')
+      
       script(src="/components/angular-smart-table/dist/smart-table.min.js")
       script(src="/components/lodash/dist/lodash.min.js")
       script(src="/javascripts/base/ui-bootstrap-tpls-2.0.0.min.js")
       script(src="/components/crypto-js/crypto-js.min.js") //- if file has errors minify it
       script(src="/javascripts/base/moment.min.js")
       script(src='/socket.io/socket.io.js')
+      
       block basescripts
+      
       script(src="/javascripts/layout/module.js")
       script(src="/javascripts/layout/lodash/lodashFactory.js")
       script(src="/javascripts/layout/login/controller.js")
       script(src="/javascripts/layout/login/directive.js")
 
+      script(src="/javascripts/base/jquery-1.11.1.min.js")
+      script(src="/javascripts/base/jquery-2.2.1.min.js")
+
+      script(src="/javascripts/layout/template/owl.carousel.min.js")  
+      //- script(src="javascripts/base/bootstrap/js/bootstrap.min.js")
+      script(src="/javascripts/layout/template/wow.min.js") 
+      script(src="/javascripts/layout/template/typewriter.js") 
+      script(src="/javascripts/base/jquery.onepagenav.js") 
+      script(src="/javascripts/layout/template/main.js")  
+      script(src="/javascripts/layout/template/typed.js") 
+
       block head
 
    body(ng-app="mainApp")
-            
-      block login
+      .preloader
+         img(src='template/img/loader.gif', alt='Preloader image')
+      block navbar
+      
+      block b-main       
       
       block main
+      
+      //- #modal1.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+      //-   .modal-dialog
+      //-    .modal-content.modal-popup
+      //-       a.close-link(href='#')
+      //-         i.icon_close_alt2
+      //-       h3.white Sign Up
+      //-       form.popup-form(action='')
+      //-         input.form-control.form-white(type='text', placeholder='Full Name')
+      //-         input.form-control.form-white(type='text', placeholder='Email Address')
+      //-         .dropdown
+      //-           button#dLabel.form-control.form-white.dropdown(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+      //-             | Pricing Plan
+      //-           ul.dropdown-menu.animated.fadeIn(role='menu', aria-labelledby='dLabel')
+      //-             li.animated.lightSpeedIn
+      //-               a(href='#') 1 month membership ($150)
+      //-             li.animated.lightSpeedIn
+      //-               a(href='#') 3 month membership ($350)
+      //-             li.animated.lightSpeedIn
+      //-               a(href='#') 1 year membership ($1000)
+      //-             li.animated.lightSpeedIn
+      //-               a(href='#') Free trial class
+      //-         .checkbox-holder.text-left
+      //-           .checkbox
+      //-             input#squaredOne(type='checkbox', value='None', name='check')
+      //-             label(for='squaredOne')
+      //-               span
+      //-                 | I Agree to the 
+      //-                 strong Terms & Conditions
+      //-         button.btn.btn-submit(type='submit') Submit
+      block footer

@@ -1,6 +1,7 @@
 #high-wrap
-  h2 High Scores
-  table.table
-    tr(ng-repeat="player in players")
-      td= "{{ player.nickname }}"
-      td= "{{ player.points }}"
+  h3 High Scores
+  .table-responsive
+     table.table.table-condensed 
+       tr(ng-repeat="player in players")
+         td= "{{ player.nickname }}"
+         td= "{{ player.points }}"

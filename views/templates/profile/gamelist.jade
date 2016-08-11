@@ -1,35 +1,35 @@
-
+#messages.col-sm-offset-8.col-sm-4(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')", close="closeMsg($index)") {{message.msg}}
 #game-list-wrap
    table.table.table-striped(st-table='displayGames', st-safe-src='gamesList')
       thead
          tr
-            th Name
-            th Date Created
-            th Length (minutes)
-            th No' of questions
-            th Status
-            th
+            th.col-xs-2 Name
+            th.col-xs-2 Date Created
+            th.col-xs-2 Length (minutes)
+            th.col-xs-2 No' of questions
+            th.col-xs-2 Status
+            th.col-xs-2
          tr
             th(colspan='6')
                input.form-control(st-search='', placeholder='Search...', type='text')
       tbody
          tr(ng-repeat='game in displayGames track by $index')
-            td {{ game.name }}
-            td {{ game.dateCreated }}
-            td {{ game.gameLength }}
-            td {{ game.questions.length }}
-            td
+            td.col-xs-2 {{ game.name }}
+            td.col-xs-2 {{ game.dateCreated | date:"dd/MM/yyyy" }}
+            td.col-xs-2 {{ game.gameLength }}
+            td.col-xs-2 {{ game.questions.length }}
+            td.col-xs-2
                span(ng-if="!game.isStarted") Not Played Yet
-               span(ng-if="game.isStarted && game.Ended") Ended
-               span(ng-if="game.isStarted && !game.Ended") In Progress
-            td
+               span(ng-if="game.isStarted && game.isEnded") Ended
+               span(ng-if="game.isStarted && !game.isEnded") In Progress
+            td.col-xs-2
                a(ng-click="startGame(game)", ng-if="!game.isStarted")
                   i.fa.fa-play(aria-hidden='true')
                   |  Start Game
-               a(ng-click="seeResults(game)", ng-if="game.isStarted && game.Ended")
+               a(ng-click="seeResults(game)", ng-if="game.isStarted && game.isEnded")
                   i.fa.fa-trophy(aria-hidden='true')
                   |  See Results
-               a(ng-click="goToGame(game)", ng-if="game.isStarted && !game.Ended")
+               a(ng-click="goToGame(game)", ng-if="game.isStarted && !game.isEnded")
                   i.fa.fa-gamepad(aria-hidden='true')
                   |  Go to Game
       tfoot

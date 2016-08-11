@@ -4,6 +4,16 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', '_', '
    $scope.addQuesText = "Add New Question";
    $scope.showAddQue = false;
 
+   $scope.messages = [];
+
+   $scope.addMsg = function(msg, type) {
+      $scope.messages.push({show: true, type:(type==null)?'danger':type, msg: msg});
+   };
+
+   $scope.closeMsg = function(index) {
+      $scope.messages[index].show = false;
+   };
+
    $scope.clearAll = function() {
       if($scope.isLocalMode!=null){
          $scope.ques = [];
@@ -70,7 +80,6 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', '_', '
          if(result.data.error){
             alert(result.data.error.message);
          }else{
-            // $scope.getQuestions(($scope.quesType==null)?'public':$scope.quesType);
             $scope.refreshGrid();
             alert("Question Deleted Successfully!");
          }
@@ -91,8 +100,8 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', '_', '
       });
       queEditPopup.result.then(function(result){
          if(result){
-            // $scope.getQuestions(($scope.quesType==null)?'public':$scope.quesType);
             $scope.refreshGrid();
+            $scope.addMsg("Question updated successfully!", 'success');
          }
       });
    }

@@ -12,6 +12,9 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$window',
       }else if(result.data.nickname){
          $scope.user.nickname = result.data.nickname;
          $scope.loggedin = true;
+         if($scope.upper==false){
+            $window.location = "/";
+         }
       }else{
          console.log("Unknown server response");
       }
@@ -43,9 +46,15 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$window',
                }
             }
          });
+      }else{
+         
       }
    }
    $scope.logout = function(){
       $window.location.href = "/users/logout";
+   }
+
+   $scope.goToProfilePage = function () {
+      $window.location.href = "/profile";
    }
 }]);

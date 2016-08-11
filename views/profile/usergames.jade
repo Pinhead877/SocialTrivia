@@ -6,6 +6,7 @@ block append head
    script(src="/javascripts/profile/usergames/controller.js")
 
 block main
-   div(ng-controller="user-games-ctrl")
-      h1 User Games
-      game-list
+   section.section.section-padded
+      .container(ng-controller="user-games-ctrl")
+         h2 User Games
+         game-list

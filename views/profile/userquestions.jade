@@ -9,5 +9,7 @@ block append head
    script(src="/javascripts/questions/editque/controller.js")
    
 block main
-   h1 User Questions
-   ques-list(is-add-que-visible="true", ques-type="private")
+   section.section.section-padded
+      .container
+         h2 User Questions
+         ques-list(is-add-que-visible="true", ques-type="private")

@@ -1,17 +1,25 @@
-#que-add-wrap
-   form(name="queForm", novalidate, ng-submit="addQuetion()")
-      h3 Add Question
-      .form-group(ng-class="{ 'has-error' : queForm.queText.$invalid && !queForm.queText.$pristine }")
-         label Enter your question
-         input.form-control(name="queText", type="text", ng-model="queDetails.question", required, ng-minlength="6", ng-maxlength="120")
-      .form-group(ng-class="{ 'has-error' : queForm.ansText.$invalid && !queForm.ansText.$pristine }")
-         label Enter the answer
-         input.form-control(name="ansText", type="text", ng-model="queDetails.answer", required, ng-minlength="4", ng-maxlength="10")
-      .form-group(ng-class="{ 'has-error' : queForm.ansText.$invalid && !queForm.ansText.$pristine }")
-         label Pick a Category
-         select.form-control(ng-options="cat.name for cat in categoriesList track by cat._id", ng-model="queDetails.category")
-      #public-check
-         label Do you wish this question to be Private? (Other users will not see it)
-         input(type='checkbox', name="isPrivate", ng-model='queDetails.isPrivate' checked='false')
-      button.btn(type="submit", ng-disabled="queForm.$invalid") {{ submitText }}
-      button.btn(type="button", ng-click="clearQue()") Reset
+link(rel='stylesheet', href='/stylesheets/questions/addques.css')
+section.section
+   #messages.col-sm-offset-8.col-sm-4(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')", close="closeMsg($index)") {{message.msg}}
+   .container
+      form(name="queForm", novalidate, ng-submit="addQuetion()", class="form-horizontal")
+         h3 Add Question
+         .form-group(ng-class="{ 'has-error' : queForm.queText.$invalid && !queForm.queText.$pristine }")
+            label.control-label.col-md-3 Enter your question
+            .col-md-8
+               input.form-control(name="queText", type="text", ng-model="queDetails.question", required, ng-minlength="6", ng-maxlength="120")
+         .form-group(ng-class="{ 'has-error' : queForm.ansText.$invalid && !queForm.ansText.$pristine }")
+            label.control-label.col-md-3 Enter the answer
+            .col-md-8
+               input.form-control.col-md-8(name="ansText", type="text", ng-model="queDetails.answer", required, ng-minlength="4", ng-maxlength="10")
+         .form-group(ng-class="{ 'has-error' : queForm.ansText.$invalid && !queForm.ansText.$pristine }")
+            label.control-label.col-md-3 Pick a Category
+            .col-md-8
+               select.form-control.col-md-8(ng-options="cat.name for cat in categoriesList track by cat._id", ng-model="queDetails.category")
+         .form-group
+            .col-sm-3
+            .col-md-8
+               input(type='checkbox',id="isPrivate", name="isPrivate", ng-model='queDetails.isPrivate' checked='false')
+               label(for="isPrivate") Keep question private? 
+         button.btn.btn-blue(type="submit", ng-disabled="queForm.$invalid") {{ submitText }}
+         button.btn.btn-blue(type="button", ng-click="clearQue()") Reset

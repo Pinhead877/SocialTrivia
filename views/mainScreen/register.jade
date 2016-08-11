@@ -1,6 +1,4 @@
-extends ../layout
-
-doctype html
+extends ../layoutlogin
 
 block title
    title Social Trivia - Register
@@ -13,39 +11,55 @@ block append head
    script(src="/javascripts/layout/filter.js")
    
 block main
-   #register-form(ng-controller="register")
-      h1 Register
-      form(name="registerForm", novalidate, ng-submit="registerUser()", class="form-horizontal")
-         .form-group(ng-class="{ 'has-error' : registerForm.nickname.$invalid && !registerForm.nickname.$pristine }")
-            label(class='control-label col-sm-2', for='nickname') Nickname
-            .col-sm-10
-               input.form-control(type="text",id='nickname', name="nickname",  ng-model="userDetails.nickname", ng-minlength="4", ng-maxlength="10", required)
-         .form-group(ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine }")   
-            label(class='control-label col-sm-2', for='password') Password
-            .col-sm-10
-               input.form-control(type='password',id='password', name="password" ng-model="userDetails.password" ng-minlength="4", ng-maxlength="10", required)
-         .form-group(ng-class="{ 'has-error' : registerForm.gender.$invalid && !registerForm.gender.$pristine }")
-            label(class='control-label col-sm-2', for='gender') Gender
-            .col-sm-10
-               select.form-control(name="gender",id='gender', ng-model="userDetails.gender", required)
-                  option Male
-                  option Female
-         h4 Birthday
-         .form-group(ng-class="{ 'has-error' : registerForm.day.$invalid && !registerForm.day.$pristine }")
-            label(class='control-label col-sm-2', for='day') Day
-            .col-sm-10
-               select.form-control(name="day",id='day', ng-model="userDetails.birthday.day", required)
-                  option(ng-repeat="num in [] | range: 31") {{num}}
-         .form-group(ng-class="{ 'has-error' : registerForm.month.$invalid && !registerForm.month.$pristine }")
-            label(class='control-label col-sm-2', for='month') Month
-            .col-sm-10
-               select.form-control(name="month",id='month', ng-model="userDetails.birthday.month", required)
-                  option(ng-repeat="num in [] | range: 12") {{num}}
-         .form-group(ng-class="{ 'has-error' : registerForm.year.$invalid && !registerForm.year.$pristine }")
-            label(class='control-label col-sm-2', for='year') Year
-            .col-sm-10
-               select.form-control(name="year",id='year', ng-model="userDetails.birthday.year", required)
-                  option(ng-repeat="num in [] | rangeFromTO:currentYear:1900") {{num}}
-         #register-butt
-            button.btn(type="submit", ng-disabled="registerForm.$invalid") Submit
-            button.btn(type="button", ng-click="clearFields()") Clear
+   section.section.section-padded
+      .container(ng-controller="register")
+         h1 Register
+         form(name="registerForm", novalidate, ng-submit="registerUser()", class="form-horizontal")
+            .form-group(ng-class="{ 'has-error' : registerForm.nickname.$invalid && !registerForm.nickname.$pristine }")
+               label(class='control-label col-sm-3', for='nickname') Nickname
+               .col-sm-6
+                  input.form-control(type="text",id='nickname', name="nickname",  ng-model="userDetails.nickname", ng-minlength="4", ng-maxlength="10", required)
+               .col-md-3
+            .form-group(ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine }")   
+               label(class='control-label col-sm-3', for='password') Password
+               .col-sm-6
+                  input.form-control(type='password',id='password', name="password" ng-model="passwordform" ng-minlength="4", ng-maxlength="10", required)
+               .col-md-3
+            .form-group(ng-class="{ 'has-error' : registerForm.gender.$invalid && !registerForm.gender.$pristine }")
+               label(class='control-label col-sm-3', for='gender') Gender
+               .col-sm-6
+                  select.form-control(name="gender",id='gender', ng-model="userDetails.gender", required)
+                     option Male
+                     option Female
+               .col-md-3
+            .row
+               label.col-md-3.control-label Birthday
+               .col-md-2
+               .col-md-2
+               .col-md-2
+               .col-md-3
+            .row
+               .col-md-3
+               .col-md-2
+                  .form-group(ng-class="{ 'has-error' : registerForm.day.$invalid && !registerForm.day.$pristine }")
+                     label.control-label.col-sm-4(for='day') Day
+                     .col-md-8
+                        select.form-control(name="day",id='day', ng-model="birthday.day", required)
+                           option(ng-repeat="num in [] | range: 31") {{num}}
+               .col-md-2
+                  .form-group(ng-class="{ 'has-error' : registerForm.month.$invalid && !registerForm.month.$pristine }")
+                     label.control-label.col-sm-4(for='month') Month
+                     .col-md-8
+                        select.form-control(name="month",id='month', ng-model="birthday.month", required)
+                           option(ng-repeat="num in [] | range: 12") {{num}}
+               .col-md-2
+                  .form-group(ng-class="{ 'has-error' : registerForm.year.$invalid && !registerForm.year.$pristine }")
+                     label.control-label.col-sm-4(for='year') Year
+                     .col-md-8
+                        select.form-control(name="year",id='year', ng-model="birthday.year", required)
+                           option(ng-repeat="num in [] | rangeFromTO:currentYear:1900") {{num}}
+               .col-md-6
+            .row
+               .col-md-offset-7
+                  button.btn.btn-blue(type="submit", ng-disabled="registerForm.$invalid") Submit
+                  button.btn.btn-blue(type="button", ng-click="clearFields()") Clear

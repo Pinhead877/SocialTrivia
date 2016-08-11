@@ -7,10 +7,10 @@ angular.module('mainApp').controller('register',['$scope','$http', function($sco
 
    $scope.registerUser = function(){
       if($scope.registerForm.$valid){
-         var encPass = $scope.enc($scope.userDetails.password, { outputLength: 256 });
+         var encPass = $scope.enc($scope.passwordform, { outputLength: 256 });
          $scope.userDetails.password = encPass.toString();
 
-         var bday = moment($scope.userDetails.birthday.year+"-"+$scope.userDetails.birthday.month+"-"+$scope.userDetails.birthday.day, "YYYY-MM-DD");
+         var bday = moment($scope.birthday.year+"-"+$scope.birthday.month+"-"+$scope.birthday.day, "YYYY-MM-DD");
          $scope.userDetails.birthday = bday.toString();
          $scope.userDetails.createdOn = new Date(moment().toString());
          $http.post('/users/create',$scope.userDetails).then(function(result){

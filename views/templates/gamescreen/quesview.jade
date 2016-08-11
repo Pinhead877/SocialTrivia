@@ -1,5 +1,5 @@
 link(rel='stylesheet', href='/stylesheets/templates/quesdiv.css')
 #ques-wrap
-  h2 Available Questions
+  h3 Available Questions
   .numwrap(ng-repeat="stat in questionsStatuses track by $index")
     div(id="num{{ $index+1 }}", class="{{stat}}")= "{{ $index+1 }}"

@@ -8,7 +8,14 @@ block title
   title Pick a Question
   
 block main
-      #quespick(ng-controller="remote-cont", ng-init="gameid= #{ gameid }")
-        h1 Pick a Question
-        input#in(type='text', ng-model='numin')
-        button#pick(ng-click="sendnum()") Send
+   section.section.section-padded
+      .container.text-center(ng-controller="remote-cont", ng-init="gameid= #{ gameid }")
+         h2 Pick a Question
+         .row
+            .col-sm-12
+               input.form-control(type='text', ng-model='numin')
+         .row
+            .col-sm-12
+               button.btn.btn-blue(ng-click="sendnum()") Send
+         #messages-wrap
+            #messages.col-xs-12(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')", close="closeMsg($index)") {{message.msg}}
