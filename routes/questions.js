@@ -98,12 +98,23 @@ module.exports = function(mongodb, errors) {
 
    router.post('/create', function(req, res){
       var queObj = req.body;
-      if(isTextInvalid(queObj.question, 6, 120)){
+      if(isTextInvalid(queObj.question, 6, 60)){
          res.send(errors.BAD_QUE);
          return;
       }
-      if(isTextInvalid(queObj.answer, 4, 10)){
+      if(isTextInvalid(queObj.answer, 2, 14)){
          res.send(errors.BAD_ANS);
+         return;
+      }
+      var words = queObj.answer.split(" ");
+      for(var i=0;i<words.length;i++){
+         if(words[i].length>7){
+            res.send(errors.WORD_LENGTH);
+            return;
+         }
+      }
+      if(queObj.category == null || queObj.category=={}){
+         res.send(errors.NO_CATEGORY);
          return;
       }
       var sess = req.session;

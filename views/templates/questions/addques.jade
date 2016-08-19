@@ -7,11 +7,11 @@ section.section
          .form-group(ng-class="{ 'has-error' : queForm.queText.$invalid && !queForm.queText.$pristine }")
             label.control-label.col-md-3 Enter your question
             .col-md-8
-               input.form-control(name="queText", type="text", ng-model="queDetails.question", required, ng-minlength="6", ng-maxlength="120")
+               input.form-control(placeholder="Min length: 6, Max Length: 60", name="queText", type="text", ng-model="queDetails.question", required, ng-minlength="6", ng-maxlength="60")
          .form-group(ng-class="{ 'has-error' : queForm.ansText.$invalid && !queForm.ansText.$pristine }")
             label.control-label.col-md-3 Enter the answer
             .col-md-8
-               input.form-control.col-md-8(name="ansText", type="text", ng-model="queDetails.answer", required, ng-minlength="4", ng-maxlength="10")
+               input.form-control.col-md-8(tooltip-popup-close-delay='1500', uib-tooltip='Max sentence length: 15, Max word length: 7', placeholder="Max sentence length: 15, Max word length: 7", name="ansText", type="text", ng-model="queDetails.answer", required, ng-minlength="2", ng-maxlength="14")
          .form-group(ng-class="{ 'has-error' : queForm.ansText.$invalid && !queForm.ansText.$pristine }")
             label.control-label.col-md-3 Pick a Category
             .col-md-8

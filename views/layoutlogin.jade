@@ -35,13 +35,24 @@ block navbar
          login-div(upper="true")
          #profile(ng-show="loggedin")
             h4 {{user.nickname}}
-            a.btn.btn-blue(href="", ng-click="goToProfilePage()") Profile
-            a.btn.btn-blue(href="", ng-click="logout()") Logout
+            .row
+               .col-xs-2
+               .col-xs-4
+                  button.btn.btn-blue(href="", ng-click="goToProfilePage()") Profile
+               .col-xs-4
+                  button.btn.btn-blue(href="", ng-click="logout()") Logout
+               .col-xs-2
+            .row
+               .col-xs-2
+               .col-xs-4
+                  button.btn.btn-red(onclick="create()") Create
+               .col-xs-4
+                  button.btn.btn-green(onclick="join()") Join
+               .col-xs-2
       a.close-link(href='#')
          i.fa.fa-arrow-up
 block footer
    footer
-     .container
       .row
          .col-sm-6.text-center-mobile
             p 

@@ -3,7 +3,8 @@ angular.module('mainApp').directive("clockDiv", function(){
       restrict: "E",
       controller: "game-screen-clock",
       scope: {
-         endGame: '&onTimeOver'
+         endGame: '&onTimeOver',
+         isGameOver: "=?"
       },
        link: function(scope, element, attrs){
          scope.time.hours = scope.$eval(attrs.hours);

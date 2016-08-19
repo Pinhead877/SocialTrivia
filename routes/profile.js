@@ -32,7 +32,7 @@ module.exports = function(mongodb, errors) {
                   res.send(errors.UNKNOWN);
                }else{
                   _.sortBy(result, ['isStarted']);
-                  res.send(result);
+                  res.send(result.reverse());
                }
                db.close();
             });

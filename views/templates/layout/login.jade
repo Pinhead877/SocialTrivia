@@ -10,8 +10,8 @@ link(rel='stylesheet', href="/stylesheets/templates/login.css")
          //- Label(ng-class="{'upper-div': upper}") Password
          input.form-control(type="password", name="password", placeholder="Password", ng-model="unprotectedPassword" ng-minlength="4", ng-max-length="10", required)
       #login-butt(ng-class="{'upper-div': upper}")
-         button.btn.btn-blue(type="submit") Login
-         button.btn.btn-blue(type="button", ng-click="goToRegisterPage()") Register
-         div(ng-show="upper")
-            button.btn.btn-red(type="button", onclick="create()") Create
-            button.btn.btn-green(type="button", onclick="join()") Join
+         .row
+            .col-xs-6
+               button.btn.btn-blue(type="submit") Login
+            .col-xs-6
+               button.btn.btn-blue(type="button", ng-click="goToRegisterPage()") Register

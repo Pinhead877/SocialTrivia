@@ -2,6 +2,8 @@ extends ../layoutmobile
 
 block append head 
   script(src='/javascripts/gameremote/quescreen/controller.js')
+  script(src="/javascripts/layout/filter.js")
+  link(rel='stylesheet' href='/stylesheets/gameremote/quescreen.css')
 
 block title
   title Question Screen
@@ -9,10 +11,14 @@ block title
 block main
    section.section.section-padded
       .container.text-center(ng-controller="quescreen-cont", ng-init="init(#{ JSON.stringify(params) })" )
-         h2 The Question
-         h2= params.que
-         h3 Number of letters is {{ params.count }}
-         input.form-control(type="text" ng-model="answer",ng-hide="answered")
-         button.btn.btn-blue(ng-click="sendAnswer()",ng-hide="answered") Send Answer
+         .row
+            h2= params.que
+         .row  
+            .row(ng-repeat="word in answers")
+               span.btn.btn-blue.answer(ng-repeat="letter in word", ng-model="letter.value", ng-click="letter.value = null;") {{ letter.value }}
+         .row(ng-repeat="possibleLetters in params.possibleLetters track by $index")
+            button.btn.btn-green.letters(ng-repeat="letter in possibleLetters track by $index", ng-click="chooseLetter(letter)") {{ letter }}
+         .row
+            button.btn.btn-red(ng-click="sendAnswer()",ng-hide="answered") Send Answer
          #messages-wrap
             #messages.col-xs-12(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')") {{message.msg}}

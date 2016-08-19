@@ -25,9 +25,9 @@ angular.module('mainApp').controller('main-game-ctrl', ["$scope","$window","$htt
    });
 
    $scope.showEndGame = function(){
-      $scope.$apply(function(){
+      // $scope.$apply(function(){
          $scope.showEnd = true;
-      });
+      // });
       $http.get("/services/endgame/"+$scope.gameid);
    }
 
@@ -60,24 +60,31 @@ angular.module('mainApp').controller('game-screen-clock', ["$scope", function($s
    function startTimeUpdate(){
 
       timer = setInterval(function(){
-         $scope.time.seconds--;
-         if($scope.time.seconds<0){
-            $scope.time.seconds=59;
-            $scope.time.minutes--;
-            if($scope.time.minutes<0){
-               $scope.time.minutes=59;
-               $scope.time.hours--;
-               if($scope.time.hours<0){
-                  $scope.time.hours = 0;
-                  $scope.time.minutes = 0;
-                  $scope.time.seconds = 0;
-                  clearInterval(timer);
-                  $scope.timeOver = true;
-                  $scope.endGame();
+         if($scope.isGameOver===true){
+            clearInterval(timer);
+            $scope.timeOver = true;
+            $scope.endGame();
+            $scope.$apply();
+         }else{
+            $scope.time.seconds--;
+            if($scope.time.seconds<0){
+               $scope.time.seconds=59;
+               $scope.time.minutes--;
+               if($scope.time.minutes<0){
+                  $scope.time.minutes=59;
+                  $scope.time.hours--;
+                  if($scope.time.hours<0){
+                     $scope.time.hours = 0;
+                     $scope.time.minutes = 0;
+                     $scope.time.seconds = 0;
+                     clearInterval(timer);
+                     $scope.timeOver = true;
+                     $scope.endGame();
+                  }
                }
             }
+            $scope.$apply();
          }
-         $scope.$apply();
       },1000);
    }
    startTimeUpdate();

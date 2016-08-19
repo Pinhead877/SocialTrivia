@@ -11,10 +11,12 @@ block append main
       .row
          h2 #{ title }
       .row
-         clock-div.col-sm-6(hours="#{ time.hours }", minutes="#{ time.minutes }", seconds="#{ time.seconds }", on-time-over="showEndGame()")
+         clock-div.col-sm-6(hours="#{ time.hours }", minutes="#{ time.minutes }", seconds="#{ time.seconds }", on-time-over="showEndGame()", is-game-over="showEnd")
          high-scores-div.col-sm-6(game-id="#{ gameid }")
       .row
          ques-div(game-id="#{ gameid }", ng-hide="showEnd")
+      .row(ng-hide="showEnd")
+         button.btn.btn-red(ng-click="showEndGame()") End Game
       .row(ng-show="showEnd")
          h2 Game Ended!
-         button.btn(ng-click="goToResultsPage()") See Results
+         button.btn.btn-green(ng-click="goToResultsPage()") See Results

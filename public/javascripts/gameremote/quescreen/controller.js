@@ -2,6 +2,7 @@ var back;
 angular.module('mainApp').controller('quescreen-cont',["$scope","$location", "$http", function($scope, $location, $http){
 
    $scope.messages = [];
+   $scope.answers = [];
 
    $scope.addMsg = function(msg, type) {
       $scope.messages.push({show: true, type:(type==null)?'danger':type, msg: msg});
@@ -12,7 +13,18 @@ angular.module('mainApp').controller('quescreen-cont',["$scope","$location", "$h
    };
 
    $scope.sendAnswer = function(){
-      $http.get("/gamescreen/answers/"+$scope.params.gameId+"/"+$scope.params.queId+"/"+$scope.answer).then(function(res){
+      var joinedAnswer = "";
+      for(var i = 0; i<$scope.answers.length;i++){
+         joinedAnswer+=$scope.answers[i].join("")+" ";
+      }
+      joinedAnswer = joinedAnswer.substring(0, joinedAnswer.length-1);
+      var answer = {
+         gameid: $scope.params.gameId,
+         queid: $scope.params.queId,
+         answers: joinedAnswer
+      }
+      // $http.get("/gamescreen/answers/"+$scope.params.gameId+"/"+$scope.params.queId+"/"+$scope.answer).then(function(res){
+      $http.post("/gamescreen/answers", answer).then(function(res){
          $scope.addMsg((res.data===true)?"Correct answer!":"Wrong answer!", (res.data===true)?"success":"danger");
          back = true;
          goBack();
@@ -31,7 +43,26 @@ angular.module('mainApp').controller('quescreen-cont',["$scope","$location", "$h
 
    $scope.init = function(params){
       $scope.params = params;
+      for(var i=0; i<params.count.length;i++){
+         $scope.answers.push([]);
+         for(var j=0;j<params.count[i];j++){
+            var letterObj = {value: null};
+            letterObj.toString = function(){return this.value;}
+            $scope.answers[i].push(letterObj);
+         }
+      }
       $scope.selectQuestion();
+   }
+
+   $scope.chooseLetter = function(letter){
+      for(var i = 0; i<$scope.answers.length;i++){
+         for(var j = 0; j<$scope.answers[i].length;j++){
+            if($scope.answers[i][j].value==null){
+               $scope.answers[i][j].value = letter;
+               return;
+            }
+         }
+      }
    }
 
 }]);
