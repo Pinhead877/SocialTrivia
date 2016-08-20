@@ -12,7 +12,31 @@ module.exports = function(mongodb, errors) {
    });
 
    router.get('/quepick/:gameId', function(req, res, next) {
-      res.render('gameremote/qpick', {gameid: req.params.gameId});
+      var gameID = parseInt(req.params.gameId), playerID = req.session.userid;
+      mongo.connect(mongodb.urlToDB, function(err, db){
+         if(err){
+            res.send(errors.DB_CONNECT_ERROR);
+            return;
+         }
+         else{
+            var gamesDB = db.collection("games");
+            var gamesFound = gamesDB.find({_id: gameID});
+            gamesFound.toArray(function(err, result){
+               if(err){
+                  res.send(errors.UNKNOWN);
+               }else{
+                  if(_.find(result[0].players,{_id: playerID })){
+                     res.render('gameremote/qpick', {gameid: gameID});
+                  }else{
+                     res.render('error', {message: "You can't enter a game you dont exists in!", error: {}});
+                  }
+               }
+               db.close();
+            });
+         }
+      });
+
+
    });
 
    router.get('/:gameId/:queId',function(req, res){

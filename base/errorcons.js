@@ -18,11 +18,13 @@ errors.WORD_LENGTH = { error: {code: 1016, message: "Word length cannot exceed 7
 errors.NO_GAME_NAME = {error: {code: 2000, message: "Cant create a game without a name"} };
 errors.NO_QUES = {error: {code: 2001, message: "Cant create a game without questions"} };
 errors.GAME_NUM_ERROR = {error: {code: 2002, message: "The game number you entered doesnt exists!"} };
-errors.USER_EXITS_IN_GAME = { error: {code: 2003, message: "This user are already in this game"} };
+errors.USER_EXISTS_IN_GAME = { error: {code: 2003, message: "This user are already in this game"} };
 errors.CREATOR_IS_PLAYER = {error: {code: 2004, message: "You cant enter a game you created as a player"} };
 errors.NO_PLAYERS = {error: {code: 2005, message: "You need atleast 2 players to start a game"} };
 errors.CREATING_GAME = { error: {code: 2006, message: "Error creating new Game.\nPlease try again later."} };
 errors.GAME_ENDED = { error: {code: 2010, message: "Game Ended!"} };
+errors.GAME_STARTED_WITH_PLAYER = { error: {code: 2011, message: "Game already started - you are one of the players"} };
+errors.GAME_STARTED_NO_PLAYER = { error: {code: 2012, message: "Game already started - you can't join in the middle of the game"} };
 
 errors.QUE_ANSWERED = { error: {code: 3001, message: "Question already answered"} };
 errors.QUE_TRIED = { error: {code: 3002, message: "You've already tried to answer this question"} };

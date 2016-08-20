@@ -1,6 +1,9 @@
-extends layout
+extends layoutlogin
 
 block main
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+   section.section.section-padded
+      .container
+         h1 Oops...
+         h2= message
+         h3= error.status
+         pre #{error.stack}

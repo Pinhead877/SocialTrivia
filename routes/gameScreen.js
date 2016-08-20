@@ -168,20 +168,32 @@ module.exports = function(io, mongodb, errors){
                      console.log(err);
                      res.send(errors.UNKNOWN);
                      db.close();
-                  }else if(games.length===0){
+                  }
+                  else if(games.length===0){
                      res.send(errors.GAME_NUM_ERROR);
                      db.close();
-                  }else if(games[0].isStarted==true && !isGameActive(games[0])){
+                  }
+                  else if(games[0].isStarted===true && isGameActive(games[0])){
+                     if(_.find(games[0].players,{_id: playerID })){
+                        res.send(errors.GAME_STARTED_WITH_PLAYER);
+                     }else{
+                        res.send(errors.GAME_STARTED_NO_PLAYER);
+                     }
+                  }
+                  else if(games[0].isStarted===true && !isGameActive(games[0])){
                      res.send(errors.GAME_ENDED);
-                  }else{
+                  }
+                  else{
                      games[0].players = (games[0].players == null) ? [] : games[0].players;
                      if(playerID === parseInt(games[0].creator.userid)){
                         res.send(errors.CREATOR_IS_PLAYER);
                         db.close();
-                     }else if(_.find(games[0].players,{_id: playerID })){
-                        res.send(errors.USER_EXITS_IN_GAME);
+                     }
+                     else if(_.find(games[0].players,{_id: playerID })){
+                        res.send(errors.USER_EXISTS_IN_GAME);
                         db.close();
-                     }else{
+                     }
+                     else{
                         res.sendStatus(200);
                         io.sockets.in(gameID).emit('playersLogged');
                         games[0].players.push({

@@ -13,10 +13,16 @@ angular.module('mainApp').controller('game-enter-ctrl', ['$scope', '$http', func
       if($scope.gameNumber.$valid){
          $http.post('/gamescreen/entergame',{gamenum: $scope.gamenum}).then(function(result){
             if(result.data.error){
-               alert(result.data.error.message);
-               return;
+               var err = result.data.error;
+               if(err.code===2011){
+                  window.location.href = "/gamecontroller/quepick/"+$scope.gamenum;
+               }
+               else{
+                  alert(result.data.error.message);
+                  return;
+               }
             }
-            if(result.status===200){
+            else if(result.status===200){
                $scope.numberEntered = true;
                socket.emit('room', $scope.gamenum);
             }
@@ -28,17 +34,19 @@ angular.module('mainApp').controller('game-enter-ctrl', ['$scope', '$http', func
       $http.get("/services/session").then(function(result){
          if(result.data.error){
             console.log(result.data.error.message);
-         }else if(result.data.nickname){
+         }
+         else if(result.data.nickname){
             console.log(result.data);
             $scope.nickname = result.data.nickname;
-         }else{
+         }
+         else{
             console.log("Unknown server response");
          }
       });
    }
 
    window.onbeforeunload = function(event){
-      if(!$scope.gameStarted){
+      if($scope.numberEntered == true && $scope.gameStarted == null){
          $http.get('/gamescreen/userexitgame/'+$scope.gamenum);
          return "";
       }
