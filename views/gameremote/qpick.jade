@@ -10,7 +10,10 @@ block title
 block main
    section.section.section-padded
       .container.text-center(ng-controller="remote-cont", ng-init="gameid= #{ gameid }")
-         h2 Pick a Question
+         .row
+            h4 Your Score: #{ points }
+         .row
+            h2 Pick a Question
          .row
             .col-sm-12
                input.form-control(type='text', ng-model='numin')

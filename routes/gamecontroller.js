@@ -25,9 +25,12 @@ module.exports = function(mongodb, errors) {
                if(err){
                   res.send(errors.UNKNOWN);
                }else{
-                  if(_.find(result[0].players,{_id: playerID })){
-                     res.render('gameremote/qpick', {gameid: gameID});
-                  }else{
+                  var player = _.find(result[0].players,{_id: playerID });
+                  console.log(player);
+                  if(player != null){
+                     res.render('gameremote/qpick', { gameid: gameID, points: player.points });
+                  }
+                  else{
                      res.render('error', {message: "You can't enter a game you dont exists in!", error: {}});
                   }
                }
@@ -75,7 +78,7 @@ module.exports = function(mongodb, errors) {
    });
 
    router.get('/quescreen/:gameId/:queId', function(req, res){
-      var gameid = parseInt(req.params.gameId);
+      var gameid = parseInt(req.params.gameId), queid = req.params.queId-1;
       mongo.connect(mongodb.urlToDB, function(err, db){
          if(err){
             res.send(errors.DB_CONNECT_ERROR);
@@ -91,21 +94,23 @@ module.exports = function(mongodb, errors) {
                   res.render("gameremote/gameresults", {gameid: gameid });
                }else{
                   var lettersInEachWord = [];
-                  _.forEach(result[0].questions[req.params.queId-1].answer.split(" "), function(word){
+                  _.forEach(result[0].questions[queid].answer.split(" "), function(word){
                      lettersInEachWord.push(word.length);
                   });
-                  var possibleLettersString = result[0].questions[req.params.queId-1].answer.split(" ").join("");
+                  var possibleLettersString = result[0].questions[queid].answer.split(" ").join("");
                   possibleLettersString += createRandomLetters(MAX_POSSIBLE_LETTERS - possibleLettersString.length);
                   possibleLettersString = possibleLettersString.shuffle().toUpperCase();
                   var possibleLetters = [];
                   possibleLetters.push(possibleLettersString.substring(0,MAX_POSSIBLE_LETTERS/2).split(""));
                   possibleLetters.push(possibleLettersString.substring(MAX_POSSIBLE_LETTERS/2).split(""));
+                  var points = (result[0].questions[queid].playersTried == null) ? 5 : (result[0].questions[queid].playersTried.length * 5) + 5;
                   var params = {
                      gameId: gameid,
                      queId: req.params.queId,
                      count: lettersInEachWord,
-                     que: result[0].questions[req.params.queId-1].question,
-                     possibleLetters: possibleLetters
+                     que: result[0].questions[queid].question,
+                     possibleLetters: possibleLetters,
+                     quePoints: points
                   };
                   res.render('gameremote/quescreen',{params: params});
                }

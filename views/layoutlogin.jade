@@ -12,14 +12,13 @@ block navbar
                      span.icon-bar
                      span.icon-bar
                   a.navbar-brand(onclick="home()")
-                     img(src='template/img/logo.png', data-active-url='template/img/logo-active.png', alt='')
+                     img(src='/template/img/logo.png', data-active-url='/template/img/logo-active.png', alt='')
                #bs-example-navbar-collapse-1.collapse.navbar-collapse
                   .nav.navbar-nav.navbar-right.main-nav
                      login-div(upper="true")
                      #profile(ng-show="loggedin", style="margin-right: 40px;")
                         .row
-                           .col-sm-2
-                           .col-sm-2
+                           .col-sm-4
                               h3 {{user.nickname}}
                            .col-sm-2
                               button.btn.btn-blue(ng-click="goToProfilePage()") Profile
@@ -51,9 +50,3 @@ block navbar
                .col-xs-2
       a.close-link(href='#')
          i.fa.fa-arrow-up
-block footer
-   footer
-      .row
-         .col-sm-6.text-center-mobile
-            p 
-               | © 2016 Battle Smart 

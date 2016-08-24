@@ -319,7 +319,6 @@ module.exports = function(io, mongodb, errors){
                            return;
                         }
                         isCorrect = (answer===result[0].questions[queID].answer.toUpperCase());
-                        res.send(isCorrect);
                         io.sockets.in(gameID).emit((isCorrect)?'correct':'wrong', queID+1);
                         var questionsToSave = result[0].questions;
                         questionsToSave[queID].isAnswered = isCorrect;
@@ -349,6 +348,7 @@ module.exports = function(io, mongodb, errors){
                            }
                            db.close();
                            io.sockets.in(gameID).emit('pointsUpdated');
+                           res.send(isCorrect);
                         });
                      }
                   });

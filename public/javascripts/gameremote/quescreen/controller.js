@@ -1,5 +1,5 @@
 var back;
-angular.module('mainApp').controller('quescreen-cont',["$scope","$location", "$http", function($scope, $location, $http){
+angular.module('mainApp').controller('quescreen-cont',["$scope","$location", "$http", "$window", function($scope, $location, $http, $window){
 
    $scope.messages = [];
    $scope.answers = [];
@@ -23,7 +23,6 @@ angular.module('mainApp').controller('quescreen-cont',["$scope","$location", "$h
          queid: $scope.params.queId,
          answers: joinedAnswer
       }
-      // $http.get("/gamescreen/answers/"+$scope.params.gameId+"/"+$scope.params.queId+"/"+$scope.answer).then(function(res){
       $http.post("/gamescreen/answers", answer).then(function(res){
          $scope.addMsg((res.data===true)?"Correct answer!":"Wrong answer!", (res.data===true)?"success":"danger");
          back = true;
@@ -64,12 +63,11 @@ angular.module('mainApp').controller('quescreen-cont',["$scope","$location", "$h
          }
       }
    }
+   function goBack(){
+      setTimeout(function(){
+         window.onbeforeunload = undefined;
+         $window.location = "/gamecontroller/quepick/"+$scope.params.gameId;
+      },1000);
+   }
 
 }]);
-
-function goBack(){
-   setTimeout(function(){
-      window.onbeforeunload = undefined;
-      window.history.back();
-   },1000);
-}
