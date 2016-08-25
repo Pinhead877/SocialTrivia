@@ -26,7 +26,6 @@ module.exports = function(mongodb, errors) {
                   res.send(errors.UNKNOWN);
                }else{
                   var player = _.find(result[0].players,{_id: playerID });
-                  console.log(player);
                   if(player != null){
                      res.render('gameremote/qpick', { gameid: gameID, points: player.points });
                   }
