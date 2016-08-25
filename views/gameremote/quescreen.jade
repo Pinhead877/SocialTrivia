@@ -14,7 +14,10 @@ block main
          .row
             h2= params.que
          .row
-            h4 Points for Solving: #{ params.quePoints }
+            .col-xs-6
+               h4 Question Points #{ params.quePoints }
+            .col-xs-6
+               h4 Time Left {{ params.timeleft }}
          .row  
             .row(ng-repeat="word in answers")
                span.btn.btn-blue.answer(ng-repeat="letter in word", ng-model="letter.value", ng-click="letter.value = null;") {{ letter.value }}

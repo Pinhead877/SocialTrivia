@@ -324,10 +324,6 @@ module.exports = function(io, mongodb, errors){
                         questionsToSave[queID].isAnswered = isCorrect;
                         questionsToSave[queID].statusColor = (isCorrect)?'correct':'wrong';
                         questionsToSave[queID].answeredBy = (isCorrect)?userID:null;
-                        if(questionsToSave[queID].playersTried==null){
-                           questionsToSave[queID].playersTried = [];
-                        }
-                        questionsToSave[queID].playersTried.push({_id: userID});
                         var playersToSave = result[0].players;
                         let playerIndex = _.findIndex(result[0].players, {_id: userID});
                         let pointsMulti = CORRECT_ANSWER_POINTS*result[0].questions[queID].playersTried.length;

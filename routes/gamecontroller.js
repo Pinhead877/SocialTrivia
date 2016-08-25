@@ -29,6 +29,9 @@ module.exports = function(mongodb, errors) {
                   if(player != null){
                      res.render('gameremote/qpick', { gameid: gameID, points: player.points });
                   }
+                  else if(result[0].isEnded){
+                     res.render("gameremote/gameresults", {gameid: gameID });
+                  }
                   else{
                      res.render('error', {message: "You can't enter a game you dont exists in!", error: {}});
                   }
@@ -37,8 +40,6 @@ module.exports = function(mongodb, errors) {
             });
          }
       });
-
-
    });
 
    router.get('/:gameId/:queId',function(req, res){
@@ -92,36 +93,42 @@ module.exports = function(mongodb, errors) {
                   res.send(errors.UNKNOWN);
                }else if(!isGameActive(result[0])){
                   res.render("gameremote/gameresults", {gameid: gameid });
-               }else{
+               }else if(result[0].questions[queid].playersTried != null && _.findIndex(result[0].questions[queid].playersTried, {_id: playerID }) != -1){
+                  res.redirect("/gamecontroller/quepick/"+gameid);
+               }
+               else{
                   var lettersInEachWord = [];
                   _.forEach(result[0].questions[queid].answer.split(" "), function(word){
                      lettersInEachWord.push(word.length);
                   });
                   var possibleLettersString = result[0].questions[queid].answer.split(" ").join("");
-                  possibleLettersString += createRandomLetters(MAX_POSSIBLE_LETTERS - possibleLettersString.length);
+                  possibleLettersString += createRandomLettersEN(MAX_POSSIBLE_LETTERS - possibleLettersString.length);
                   possibleLettersString = possibleLettersString.shuffle().toUpperCase();
                   var possibleLetters = [];
                   possibleLetters.push(possibleLettersString.substring(0,MAX_POSSIBLE_LETTERS/2).split(""));
                   possibleLetters.push(possibleLettersString.substring(MAX_POSSIBLE_LETTERS/2).split(""));
                   var points = (result[0].questions[queid].playersTried == null) ? 5 : (result[0].questions[queid].playersTried.length * 5) + 5;
+                  var players = (result[0].questions[queid].playersTried==null)?[]:result[0].questions[queid].playersTried;
+                  var player = (_.find(players, {_id: playerID}) == null) ? {} : _.find(players, {_id: playerID});
+                  player.enteredOn = new Date();
+                  player.questionValidUntil = new Date().addMinutes(1);
+                  var questionsToSave = result[0].questions;
+                  if(questionsToSave[queid].playersTried==null){
+                     questionsToSave[queid].playersTried = [];
+                  }
+                  questionsToSave[queid].playersTried.push({_id: playerID});
                   var params = {
                      gameId: gameid,
                      queId: req.params.queId,
                      count: lettersInEachWord,
                      que: result[0].questions[queid].question,
                      possibleLetters: possibleLetters,
-                     quePoints: points
+                     quePoints: points,
+                     timeleft: (player.questionValidUntil - player.enteredOn)/1000
                   };
                   res.render('gameremote/quescreen',{params: params});
-                  var players = (result[0].questions[queid].playersTried==null)?[]:result[0].questions[queid].playersTried;
-                  var player = (players.length == 0)? {} : _.find(players, {_id: playerID});
-                  if(players.length == 0){
-                     player = {};
-                  }else{
-                     player = _.find(players, {_id: playerID});
-                  }
-                  player.enteredOn = new Date();
-                  gamesDB.updateOne({_id: gameid}, {$set: {playersTried: players}}, function(err, result){
+
+                  gamesDB.updateOne({_id: gameid}, {$set: {playersTried: players, questions: questionsToSave}}, function(err, result){
                      if(err){
                         console.log(errors.UNKNOWN);
                         console.log(err);
@@ -146,9 +153,17 @@ function isGameActive(game){
    return (game.ending - new Date() > 0 || game.isEnded===false);
 }
 
-function createRandomLetters(len){
+function createRandomLettersEN(len){
    var text = "";
-   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+   for( var i=0; i < len; i++ )
+   text += possible.charAt(Math.floor(Math.random() * possible.length));
+   return text;
+}
+
+function createRandomLettersHE(len){
+   var text = "";
+   var possible = "אבגדהוזחטיכלמנסעפצקרשת0123456789";
    for( var i=0; i < len; i++ )
    text += possible.charAt(Math.floor(Math.random() * possible.length));
    return text;
@@ -166,3 +181,8 @@ String.prototype.shuffle = function () {
    }
    return a.join("");
 }
+
+Date.prototype.addMinutes = function(m) {
+   this.setTime(this.getTime() + (m*60*1000) + (10*1000));
+   return this;
+};
