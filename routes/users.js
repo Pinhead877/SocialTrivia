@@ -31,10 +31,10 @@ module.exports = function(mongodb, errors) {
             res.send(errors.DB_CONNECT_ERROR);
          }else{
             var data = db.collection("users");
-            var user = data.find({
+            var userFound = data.find({
                nickname: generateRegExp(userDetails.nickname)
             });
-            user.toArray(function(e,user){
+            userFound.toArray(function(e,user){
                if(user.length>0){
                   res.send(errors.USER_EXISTS);
                }else{

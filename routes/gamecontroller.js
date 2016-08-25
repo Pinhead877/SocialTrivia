@@ -95,6 +95,8 @@ module.exports = function(mongodb, errors) {
                   res.render("gameremote/gameresults", {gameid: gameid });
                }else if(result[0].questions[queid].playersTried != null && _.findIndex(result[0].questions[queid].playersTried, {_id: playerID }) != -1){
                   res.redirect("/gamecontroller/quepick/"+gameid);
+               }else if(result[0].questions[queid].statusColor === 'selected'){
+                  res.redirect("/gamecontroller/quepick/"+gameid);
                }
                else{
                   var lettersInEachWord = [];
@@ -109,14 +111,16 @@ module.exports = function(mongodb, errors) {
                   possibleLetters.push(possibleLettersString.substring(MAX_POSSIBLE_LETTERS/2).split(""));
                   var points = (result[0].questions[queid].playersTried == null) ? 5 : (result[0].questions[queid].playersTried.length * 5) + 5;
                   var players = (result[0].questions[queid].playersTried==null)?[]:result[0].questions[queid].playersTried;
-                  var player = (_.find(players, {_id: playerID}) == null) ? {} : _.find(players, {_id: playerID});
+                  var player = {};
+                  player._id = playerID;
                   player.enteredOn = new Date();
                   player.questionValidUntil = new Date().addMinutes(1);
                   var questionsToSave = result[0].questions;
                   if(questionsToSave[queid].playersTried==null){
                      questionsToSave[queid].playersTried = [];
                   }
-                  questionsToSave[queid].playersTried.push({_id: playerID});
+                  questionsToSave[queid].playersTried.push(player);
+                  questionsToSave[queid].statusColor = "selected";
                   var params = {
                      gameId: gameid,
                      queId: req.params.queId,
@@ -124,11 +128,11 @@ module.exports = function(mongodb, errors) {
                      que: result[0].questions[queid].question,
                      possibleLetters: possibleLetters,
                      quePoints: points,
-                     timeleft: (player.questionValidUntil - player.enteredOn)/1000
+                     timeleft: parseInt((player.questionValidUntil - player.enteredOn)/1000)
                   };
                   res.render('gameremote/quescreen',{params: params});
 
-                  gamesDB.updateOne({_id: gameid}, {$set: {playersTried: players, questions: questionsToSave}}, function(err, result){
+                  gamesDB.updateOne({_id: gameid}, {$set: {questions: questionsToSave}}, function(err, result){
                      if(err){
                         console.log(errors.UNKNOWN);
                         console.log(err);

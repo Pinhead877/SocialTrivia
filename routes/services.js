@@ -6,6 +6,7 @@ module.exports = function(io, mongodb, errors) {
    var await = require('asyncawait/await');
    var mongo = mongodb.MongoClient;
    var _ = require('lodash');
+   var ObjectID = require('mongodb').ObjectID
 
    // Create new game - recieve a name from the client
    // than creates random game id and checks that it dosent apear in the DB
@@ -88,17 +89,19 @@ module.exports = function(io, mongodb, errors) {
          }
          else{
             var gamesDB = db.collection('games');
-            gamesDB.updateOne({_id: gameID},
+            var usersDB = db.collection('users');
+            gamesDB.findAndModify({_id: gameID},[],
                {$set: {isEnded: true} },
                function(err, result){
                   if(err){
                      console.log(errors.UNKNOWN);
                      console.log(err);
-                  }else if(result.result.n==0){
-                     console.log(errors.DB_OPERATION);
-                     console.log(result.result);
                   }
-                  db.close();
+                  console.log("endgame");
+                  console.log(result.value.players);
+                  _.forEach(result.value.players, function(player){
+                     usersDB.updateOne({_id: new ObjectID(player._id)}, {$inc: {points: player.points}});
+                  });
                }
             );
          }
@@ -107,7 +110,26 @@ module.exports = function(io, mongodb, errors) {
 
    router.get('/session', function(req, res){
       if(req.session.nickname){
-         res.send(req.session);
+         mongo.connect(mongodb.urlToDB, function(err, db){
+            if(err){
+               res.send(errors.DB_CONNECT_ERROR);
+               return;
+            }
+            else{
+               var usersDB = db.collection("users");
+               var usersFound = usersDB.find({_id: new ObjectID(req.session.userid)});
+               usersFound.toArray(function(err, result){
+                  if(err){
+                     res.send(errors.UNKNOWN);
+                  }else{
+                     req.session.points = result[0].points;
+                     req.session.save();
+                     res.send(req.session);
+                  }
+                  db.close();
+               });
+            }
+         });
       }else{
          res.send(errors.NO_SESSION);
       }

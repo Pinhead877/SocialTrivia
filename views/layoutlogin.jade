@@ -36,7 +36,10 @@ block navbar
       ul
          login-div(upper="true")
          #profile(ng-show="loggedin")
-            h4 {{user.nickname}}
+            h4
+               | {{user.nickname}} 
+               i.fa.fa-circle.gold 
+               |  {{user.points}}
             .row
                .col-xs-2
                .col-xs-4
