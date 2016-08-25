@@ -328,6 +328,13 @@ module.exports = function(io, mongodb, errors){
                         let playerIndex = _.findIndex(result[0].players, {_id: userID});
                         let pointsMulti = CORRECT_ANSWER_POINTS*result[0].questions[queID].playersTried.length;
                         playersToSave[playerIndex].points += (isCorrect)?pointsMulti:0;
+                        console.log(isCorrect);
+                        console.log(result[0].players.length);
+                        console.log(result[0].questions[queID].playersTried.length);
+                        if(isCorrect===false && result[0].players.length===result[0].questions[queID].playersTried.length){
+                           io.sockets.in(gameID).emit('blocked', queID+1);
+                           questionsToSave[queID].statusColor = 'blocked'
+                        }
                         gamesDB.updateOne(
                            {_id: parseInt(gameID)},
                            {$set: {

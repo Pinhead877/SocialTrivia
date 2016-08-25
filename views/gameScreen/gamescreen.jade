@@ -2,9 +2,10 @@ extends ../layout
   
 block head
    link(href='/stylesheets/gamescreen/gamescreen.css', rel='stylesheet')
+   script(src="/javascripts/game/gamescreen/services.js")
    script(src="/javascripts/game/gamescreen/controller.js")
    script(src="/javascripts/layout/filter.js")
-   script(src="/javascripts/game/gamescreen/directive.js")  
+   script(src="/javascripts/game/gamescreen/directive.js")
 
 block append main
    .container-fluid.text-center(ng-controller="main-game-ctrl", ng-init="init(#{ gameid });")
@@ -14,7 +15,7 @@ block append main
          clock-div.col-sm-6(hours="#{ time.hours }", minutes="#{ time.minutes }", seconds="#{ time.seconds }", on-time-over="showEndGame()", is-game-over="showEnd")
          high-scores-div.col-sm-6(game-id="#{ gameid }")
       .row
-         ques-div(game-id="#{ gameid }", ng-hide="showEnd")
+         ques-div(game-id="#{ gameid }", ng-hide="showEnd", on-game-over="showEndGame()")
       .row(ng-hide="showEnd")
          button.btn.btn-red(ng-click="showEndGame()") End Game
       .row(ng-show="showEnd")

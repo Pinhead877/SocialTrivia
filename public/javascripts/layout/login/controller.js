@@ -10,7 +10,7 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$window',
       if(result.data.error){
          console.log(result.data.error.message);
       }else if(result.data.nickname){
-         $scope.user.nickname = result.data.nickname;
+         $scope.user = result.data;
          $scope.loggedin = true;
          if($scope.upper==false){
             $window.location = "/";
@@ -47,7 +47,7 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$window',
             }
          });
       }else{
-         
+
       }
    }
    $scope.logout = function(){

@@ -7,9 +7,10 @@ module.exports = function(io, mongodb, errors) {
    var mongo = mongodb.MongoClient;
    var _ = require('lodash');
 
-   //Create new game - recieve a name from the client
-   //than creates random game id and checks that it dosent apear in the DB
-   //saves and sends to the client the _id, as it apears in the DB, the game name and the creators id
+   // Create new game - recieve a name from the client
+   // than creates random game id and checks that it dosent apear in the DB
+   // saves and sends to the client the _id,
+   // as it apears in the DB, the game name and the creators id
    router.post('/create/game', function(req, res){
       var gameName = req.body.name;
       var gameLength = req.body.minutes;

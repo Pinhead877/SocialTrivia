@@ -38,6 +38,7 @@ module.exports = function(mongodb, errors) {
                if(user.length>0){
                   res.send(errors.USER_EXISTS);
                }else{
+                  userDetails.points = 0;
                   var ins = data.insert(userDetails);
                   res.sendStatus(200);
                }
@@ -65,6 +66,7 @@ module.exports = function(mongodb, errors) {
                   var sess = req.session;
                   sess.nickname = user[0].nickname;
                   sess.userid = user[0]._id;
+                  sess.points = user[0].points;
                   res.sendStatus(200);
                }
                db.close();

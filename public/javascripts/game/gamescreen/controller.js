@@ -1,5 +1,5 @@
 socket = io();
-angular.module('mainApp').controller('main-game-ctrl', ["$scope","$window","$http", function($scope, $window, $http){
+angular.module('mainApp').controller('main-game-ctrl', ["$scope","$window","$http","QuestionsStatuses", function($scope, $window, $http, queServices){
 
    $scope.showEnd = false;
 
@@ -17,6 +17,7 @@ angular.module('mainApp').controller('main-game-ctrl', ["$scope","$window","$htt
       $('#num'+num).removeClass("selected");
       $('#num'+num).removeClass("wrong");
       $('#num'+num).addClass("correct");
+      $scope.checkForBlockedQuestion();
    });
 
    socket.on('wrong', function(num){
@@ -24,10 +25,15 @@ angular.module('mainApp').controller('main-game-ctrl', ["$scope","$window","$htt
       $('#num'+num).addClass("wrong");
    });
 
+   socket.on('blocked', function(num){
+      $('#num'+num).removeClass("selected");
+      $('#num'+num).removeClass("wrong");
+      $('#num'+num).addClass("blocked");
+      $scope.checkForBlockedQuestion();
+   });
+
    $scope.showEndGame = function(){
-      // $scope.$apply(function(){
-         $scope.showEnd = true;
-      // });
+      $scope.showEnd = true;
       $http.get("/services/endgame/"+$scope.gameid);
    }
 
@@ -38,6 +44,14 @@ angular.module('mainApp').controller('main-game-ctrl', ["$scope","$window","$htt
    $scope.init = function(gameID){
       $scope.gameid = gameID;
       socket.emit('room', $scope.gameid);
+   }
+
+   $scope.checkForBlockedQuestion = function(){
+      queServices.isQuestionHaveEnded($scope.gameid).then(function(result){
+         if(result){
+            $scope.showEndGame();
+         }
+      });
    }
 
 }]);
@@ -111,12 +125,33 @@ angular.module('mainApp').controller('game-screen-high', ["$scope", "$http", fun
    $scope.getPlayers();
 }]);
 
-angular.module('mainApp').controller('game-screen-ques', ["$scope","$http", function($scope, $http){
-   $http.get('/services/getQuestionsStatuses/'+$scope.gameId).then(function(result){
-      if(result.data.error){
-         alert(result.data.error.massege);
-      }else{
-         $scope.questionsStatuses = result.data;
+angular.module('mainApp').controller('game-screen-ques', ["$scope","$http","QuestionsStatuses", function($scope, $http, queServices){
+   queServices.GetStatuses($scope.gameId).then(function(result){
+      $scope.questionsStatuses = result;
+   });
+   queServices.isQuestionHaveEnded($scope.gameId).then(function(result){
+      if(result){
+         $scope.endGame();
       }
    });
+   // $http.get('/services/getQuestionsStatuses/'+$scope.gameId).then(function(result){
+   //    if(result.data.error){
+   //       alert(result.data.error.massege);
+   //    }else{
+   //       $scope.questionsStatuses = result.data;
+   //       countBlockedQuestions().then(function(numOfBlocked){
+   //          if(numOfBlocked==$scope.questionsStatuses.length){
+   //             $scope.endGame();
+   //          }
+   //       });
+   //    }
+   // });
+   // function countBlockedQuestions(){
+   //    var defered = $q.defer();
+   //    var blockedNums = _.filter($scope.questionsStatuses, function(status){
+   //       return status === "blocked" || status === "answered";
+   //    });
+   //    defered.resolve((blockedNums==null)?0:blockedNums.length);
+   //    return defered.promise;
+   // }
 }]);

@@ -30,6 +30,7 @@ angular.module('mainApp').directive('quesDiv', function(){
    return {
       restrict: "E",
       scope: {
+         endGame: '&onGameOver',
          gameId: '@'
       },
       controller: "game-screen-ques",
