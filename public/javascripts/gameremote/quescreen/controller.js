@@ -1,5 +1,5 @@
 var back;
-angular.module('mainApp').controller('quescreen-cont',["$scope","$location", "$http", "$window", function($scope, $location, $http, $window){
+angular.module('mainApp').controller('quescreen-cont',["$scope","$location", "$http", "$window", "$timeout", function($scope, $location, $http, $window, $timeout){
 
    $scope.messages = [];
    $scope.answers = [];
@@ -51,6 +51,7 @@ angular.module('mainApp').controller('quescreen-cont',["$scope","$location", "$h
          }
       }
       $scope.selectQuestion();
+      $timeout($scope.sendAnswer,1000*60*2);
    }
 
    $scope.chooseLetter = function(letter){

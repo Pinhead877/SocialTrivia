@@ -78,7 +78,8 @@ module.exports = function(mongodb, errors) {
    });
 
    router.get('/quescreen/:gameId/:queId', function(req, res){
-      var gameid = parseInt(req.params.gameId), queid = req.params.queId-1;
+      var gameid = parseInt(req.params.gameId), queid = req.params.queId-1,
+      playerID = req.session.userid;
       mongo.connect(mongodb.urlToDB, function(err, db){
          if(err){
             res.send(errors.DB_CONNECT_ERROR);
@@ -113,8 +114,25 @@ module.exports = function(mongodb, errors) {
                      quePoints: points
                   };
                   res.render('gameremote/quescreen',{params: params});
+                  var players = (result[0].questions[queid].playersTried==null)?[]:result[0].questions[queid].playersTried;
+                  var player = (players.length == 0)? {} : _.find(players, {_id: playerID});
+                  if(players.length == 0){
+                     player = {};
+                  }else{
+                     player = _.find(players, {_id: playerID});
+                  }
+                  player.enteredOn = new Date();
+                  gamesDB.updateOne({_id: gameid}, {$set: {playersTried: players}}, function(err, result){
+                     if(err){
+                        console.log(errors.UNKNOWN);
+                        console.log(err);
+                     }else if(result.result.n===0){
+                        console.log(errors.DB_OPERATION);
+                        console.log(result.result);
+                     }
+                     db.close();
+                  });
                }
-               db.close();
             });
          }
       });
