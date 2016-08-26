@@ -274,7 +274,7 @@ nav.navbar-fixed-top .navbar-nav > li > a:not(.btn) {
 .btn.btn-white-fill {
 	color: black;
 	border-color: #fff;
-	background: transparent;
+	background: silver;
 	border: 1px solid gray;
 }
 
@@ -366,7 +366,34 @@ section {
 }
 
 .intro-table-first {
+	-webkit-transition: background-image 0.3s ease, background-position 0.3s;
+	transition: background-image 0.3s ease, background-position 0.3s;
 	background-image: url('../../template/img/table-1.jpg');
+}
+
+.intro-table-first .expand {
+	margin: 30px;
+	margin-top: 120px;
+	opacity: 0;
+	-webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
+	transition: transform 0.3s ease, opacity 0.3s;
+	-webkit-transform: scale(0.6);
+	-ms-transform: scale(0.6);
+	transform: scale(0.6);
+}
+
+.intro-table-first:hover .expand {
+	opacity: 1;
+	-webkit-transform: scale(1);
+	-ms-transform: scale(1);
+	transform: scale(1);
+}
+
+.intro-table-first h4 {
+	-webkit-transform: translateY(170px);
+	transform: translateY(170px);
+	-webkit-transition: -webkit-transform 0.3s;
+	transition: transform 0.3s;
 }
 
 .intro-table-hover {
@@ -383,7 +410,10 @@ section {
 }
 
 .intro-table-hover:hover {
-	background-image: url('../../template/img/table-2-hover.jpg');
+	background-position: 50% 50%;
+}
+
+.intro-table-first:hover {
 	background-position: 50% 50%;
 }
 
@@ -407,11 +437,21 @@ section {
 	transform: translateY(0);
 }
 
+.intro-table-first:hover h4 {
+	-webkit-transform: translateY(0);
+	transform: translateY(0);
+}
+
 .intro-table-hover:hover .expand {
 	opacity: 1;
 	-webkit-transform: scale(1);
 	-ms-transform: scale(1);
 	transform: scale(1);
+}
+
+.intro-table-first .hide-hover {
+	-webkit-transition: opacity 0.3s ease;
+	transition: opacity 0.3s ease;
 }
 
 .intro-table-hover .hide-hover {
@@ -420,6 +460,10 @@ section {
 }
 
 .intro-table-hover:hover .hide-hover {
+	opacity: 0;
+}
+
+.intro-table-first:hover .hide-hover {
 	opacity: 0;
 }
 

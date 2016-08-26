@@ -1,0 +1,13 @@
+table.table.table-striped(st-table='displayHighScores', st-safe-src='highscores')
+   thead
+      tr
+         th.col-xs-1
+            i.fa.fa-hashtag
+         th.col-xs-6 Player Name
+         th.col-xs-5 Score
+   tbody
+      tr(ng-repeat='user in displayHighScores track by $index')
+         td.col-xs-1 {{$index+1}}
+         td.col-xs-6 {{user.nickname}}
+         td.col-xs-5 
+            strong {{user.points}}

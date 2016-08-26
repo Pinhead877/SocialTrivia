@@ -14,9 +14,9 @@ module.exports = function(db, errors) {
       res.render('profile/usergames');
    });
 
-   router.post('/list', function(req, res){
-      console.log(req.body);
-   });
+   // router.post('/list', function(req, res){
+   //    console.log(req.body);
+   // });
 
    router.post('/create', function(req, res){
       //TODO - add validation check if empty and check length
@@ -40,8 +40,18 @@ module.exports = function(db, errors) {
       });
    });
 
-   router.get("/highscores", function(req, res){
-
+   router.get("/gethighscores", function(req, res){
+      var usersDB = db.collection("users");
+      var usersFound = usersDB.find({});
+      usersFound.sort({"points": -1});
+      usersFound.limit(100);
+      usersFound.toArray(function(err, result){
+         if(err){
+            res.send(errors.UNKNOWN);
+         }else{
+            res.send(result);
+         }
+      });
    });
 
    router.post('/login', function(req, res){

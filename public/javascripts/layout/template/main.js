@@ -26,9 +26,12 @@ function questions(){
    window.location.href = "/profile/questions";
 }
 
+function halloffame(){
+   window.location.href = "/halloffame";
+}
+
 jQuery(function($) {
 	"use strict";
-	// Author Code Here
 
 	var owlPricing;
 	var ratio = 2;

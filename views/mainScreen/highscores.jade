@@ -1,9 +1,17 @@
 extends ../layoutlogin
 
-block head
+block title
    title Hall of Fame
    
+block head
+   script(src='/javascripts/templates/mainscreen/highscorelist/controller.js')
+   script(src='/javascripts/templates/mainscreen/highscorelist/directive.js')
+
+
 block main
    section.section.section-padded
-      .container
+      .container.text-center
+         #messages.col-sm-offset-8.col-sm-4(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')", close="closeMsg($index)") {{message.msg}}
+         h2 Hall of Fame
+         user-high-scores
          
