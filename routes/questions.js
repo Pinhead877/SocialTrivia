@@ -6,7 +6,6 @@ var request = require('request');
 module.exports = function(db, errors) {
    var app = require('express');
    var router = app.Router();
-   // var mongo = mongodb.MongoClient;
    var ObjectID = require('mongodb').ObjectID
    var _ = require('lodash');
 
@@ -18,78 +17,59 @@ module.exports = function(db, errors) {
    //that PUBLIC!
    router.get('/list/:type', function(req, res){
       var type = req.params.type;
-      // mongo.connect(mongodb.urlToDB, function(err, db){
-      //    if(err){
-      //       res.send(errors.DB_CONNECT_ERROR);
-      //       db.close();
-      //    }else{
-            var quesCollection = db.collection('questions');
-            var results;
-            if(type == "public"){
-               results = quesCollection.find({$or: [{userid: req.session.userid}, {isPrivate: false}]});
+      var quesCollection = db.collection('questions');
+      var results;
+      if(type == "public"){
+         results = quesCollection.find({$or: [{userid: req.session.userid}, {isPrivate: false}]});
+      }
+      else if(type == "private"){
+         results = quesCollection.find({userid: req.session.userid});
+      }
+      else {
+         db.close();
+         return;
+      }
+      var resultUsers;
+      results.toArray(function(err, ques){
+         // TODO - Do only if type is public - if private use the creators name
+         var userIds = [];
+         for(var i=0;i<ques.length;i++){
+            var userId = ques[i].userid;
+            if(!isArrayContains(userIds, userId)){
+               userIds.push(new ObjectID(userId));
             }
-            else if(type == "private"){
-               results = quesCollection.find({userid: req.session.userid});
+         }
+         var usersCollection = db.collection('users');
+         resultUsers = usersCollection.find({_id : {$in: userIds}});
+         resultUsers.toArray(function(err, users){
+            for(var i=0;i<ques.length;i++){
+               ques[i].nickname = getUserObjectById(ques[i].userid, users).nickname;
             }
-            else {
-               db.close();
-               return;
-            }
-            var resultUsers;
-            results.toArray(function(err, ques){
-               // TODO - Do only if type is public - if private use the creators name
-               var userIds = [];
-               for(var i=0;i<ques.length;i++){
-                  var userId = ques[i].userid;
-                  if(!isArrayContains(userIds, userId)){
-                     userIds.push(new ObjectID(userId));
-                  }
-               }
-               var usersCollection = db.collection('users');
-               resultUsers = usersCollection.find({_id : {$in: userIds}});
-               resultUsers.toArray(function(err, users){
-                  for(var i=0;i<ques.length;i++){
-                     ques[i].nickname = getUserObjectById(ques[i].userid, users).nickname;
-                  }
-                  res.send(ques);
-                  // db.close();
-               });
-            });
-      //    }
-      // });
+            res.send(ques);
+         });
+      });
    });
 
    router.post('/delete', function (req, res) {
       var userID = req.session.userid, questionToDelete = req.body;
-      // mongo.connect(mongodb.urlToDB, function(err, db){
-      //    if(err){
-      //       res.send(errors.DB_CONNECT_ERROR);
-      //       return;
-      //    }
-      //    else{
-            var quesDB = db.collection('questions');
-            var quesFound = quesDB.find({_id: new ObjectID(questionToDelete._id)});
-            quesFound.toArray(function(err, result){
-               if(err){
-                  res.send(errors.UNKNOWN);
-                  // db.close();
-               }else{
-                  if(result[0].userid==userID){
-                     quesDB.deleteOne({_id: new ObjectID(questionToDelete._id)}, function(err, result){
-                        if(err){
-                           console.log(err);
-                        }else {
-                           res.sendStatus(200);
-                        }
-                        // db.close();
-                     });
-                  }else{
-                     // db.close();
+      var quesDB = db.collection('questions');
+      var quesFound = quesDB.find({_id: new ObjectID(questionToDelete._id)});
+      quesFound.toArray(function(err, result){
+         if(err){
+            res.send(errors.UNKNOWN);
+         }else{
+            if(result[0].userid==userID){
+               quesDB.deleteOne({_id: new ObjectID(questionToDelete._id)}, function(err, result){
+                  if(err){
+                     console.log(err);
+                  }else {
+                     res.sendStatus(200);
                   }
-               }
-            });
-      //    }
-      // });
+               });
+            }else{
+            }
+         }
+      });
    });
 
    router.get('/add',function(req, res){
@@ -122,18 +102,10 @@ module.exports = function(db, errors) {
          res.send(errors.DEV_ERROR);
          return;
       }
-      // mongo.connect(mongodb.urlToDB, function(err, db){
-      //    if(err){
-      //       console.error(err);
-      //       res.send(errors.DB_CONNECT_ERROR);
-      //    }else{
-            var quesCollection = db.collection('questions');
-            queObj.userid = sess.userid;
-            quesCollection.insert(queObj);
-            res.sendStatus(200);
-         // }
-         // db.close();
-      // });
+      var quesCollection = db.collection('questions');
+      queObj.userid = sess.userid;
+      quesCollection.insert(queObj);
+      res.sendStatus(200);
    });
 
    router.post('/update', function(req, res){
@@ -151,48 +123,31 @@ module.exports = function(db, errors) {
          res.sendStatus(403);
          return;
       }
-      // mongo.connect(mongodb.urlToDB, function(err, db){
-      //    if(err){
-      //       console.error(err);
-      //       res.send(errors.DB_CONNECT_ERROR);
-      //    }else{
-            var quesCollection = db.collection('questions');
-            var queID = que._id;
-            delete que._id;
-            quesCollection.updateOne({_id: new ObjectID(queID)}, que, function(err, result){
-               if(err){
-                  res.send(errors.UNKNOWN);
-                  console.log(err);
-               }else if(result.result.n==0){
-                  console.log(result);
-               }else{
-                  res.sendStatus(200);
-               }
-               // db.close();
-            });
-      //    }
-      // });
+      var quesCollection = db.collection('questions');
+      var queID = que._id;
+      delete que._id;
+      quesCollection.updateOne({_id: new ObjectID(queID)}, que, function(err, result){
+         if(err){
+            res.send(errors.UNKNOWN);
+            console.log(err);
+         }else if(result.result.n==0){
+            console.log(result);
+         }else{
+            res.sendStatus(200);
+         }
+      });
    });
 
    router.get('/getCategories',function(req, res){
-      // mongo.connect(mongodb.urlToDB, function(err, db){
-      //    if(err){
-      //       res.send(errors.DB_CONNECT_ERROR);
-      //       return;
-      //    }
-      //    else{
-            var categoryDB = db.collection("categories");
-            var categoriesFound = categoryDB.find({});
-            categoriesFound.toArray(function(err, result){
-               if(err || result.length==0){
-                  res.send(errors.UNKNOWN);
-               }else{
-                  res.send(_.orderBy(result, ['name']));
-               }
-               // db.close();
-            });
-      //    }
-      // });
+      var categoryDB = db.collection("categories");
+      var categoriesFound = categoryDB.find({});
+      categoriesFound.toArray(function(err, result){
+         if(err || result.length==0){
+            res.send(errors.UNKNOWN);
+         }else{
+            res.send(_.orderBy(result, ['name']));
+         }
+      });
    });
 
    return router;
