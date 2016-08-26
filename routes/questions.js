@@ -3,10 +3,10 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var request = require('request');
 
-module.exports = function(mongodb, errors) {
+module.exports = function(db, errors) {
    var app = require('express');
    var router = app.Router();
-   var mongo = mongodb.MongoClient;
+   // var mongo = mongodb.MongoClient;
    var ObjectID = require('mongodb').ObjectID
    var _ = require('lodash');
 
@@ -18,11 +18,11 @@ module.exports = function(mongodb, errors) {
    //that PUBLIC!
    router.get('/list/:type', function(req, res){
       var type = req.params.type;
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            res.send(errors.DB_CONNECT_ERROR);
-            db.close();
-         }else{
+      // mongo.connect(mongodb.urlToDB, function(err, db){
+      //    if(err){
+      //       res.send(errors.DB_CONNECT_ERROR);
+      //       db.close();
+      //    }else{
             var quesCollection = db.collection('questions');
             var results;
             if(type == "public"){
@@ -52,27 +52,27 @@ module.exports = function(mongodb, errors) {
                      ques[i].nickname = getUserObjectById(ques[i].userid, users).nickname;
                   }
                   res.send(ques);
-                  db.close();
+                  // db.close();
                });
             });
-         }
-      });
+      //    }
+      // });
    });
 
    router.post('/delete', function (req, res) {
       var userID = req.session.userid, questionToDelete = req.body;
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            res.send(errors.DB_CONNECT_ERROR);
-            return;
-         }
-         else{
+      // mongo.connect(mongodb.urlToDB, function(err, db){
+      //    if(err){
+      //       res.send(errors.DB_CONNECT_ERROR);
+      //       return;
+      //    }
+      //    else{
             var quesDB = db.collection('questions');
             var quesFound = quesDB.find({_id: new ObjectID(questionToDelete._id)});
             quesFound.toArray(function(err, result){
                if(err){
                   res.send(errors.UNKNOWN);
-                  db.close();
+                  // db.close();
                }else{
                   if(result[0].userid==userID){
                      quesDB.deleteOne({_id: new ObjectID(questionToDelete._id)}, function(err, result){
@@ -81,15 +81,15 @@ module.exports = function(mongodb, errors) {
                         }else {
                            res.sendStatus(200);
                         }
-                        db.close();
+                        // db.close();
                      });
                   }else{
-                     db.close();
+                     // db.close();
                   }
                }
             });
-         }
-      });
+      //    }
+      // });
    });
 
    router.get('/add',function(req, res){
@@ -122,18 +122,18 @@ module.exports = function(mongodb, errors) {
          res.send(errors.DEV_ERROR);
          return;
       }
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            console.error(err);
-            res.send(errors.DB_CONNECT_ERROR);
-         }else{
+      // mongo.connect(mongodb.urlToDB, function(err, db){
+      //    if(err){
+      //       console.error(err);
+      //       res.send(errors.DB_CONNECT_ERROR);
+      //    }else{
             var quesCollection = db.collection('questions');
             queObj.userid = sess.userid;
             quesCollection.insert(queObj);
             res.sendStatus(200);
-         }
-         db.close();
-      });
+         // }
+         // db.close();
+      // });
    });
 
    router.post('/update', function(req, res){
@@ -151,11 +151,11 @@ module.exports = function(mongodb, errors) {
          res.sendStatus(403);
          return;
       }
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            console.error(err);
-            res.send(errors.DB_CONNECT_ERROR);
-         }else{
+      // mongo.connect(mongodb.urlToDB, function(err, db){
+      //    if(err){
+      //       console.error(err);
+      //       res.send(errors.DB_CONNECT_ERROR);
+      //    }else{
             var quesCollection = db.collection('questions');
             var queID = que._id;
             delete que._id;
@@ -168,19 +168,19 @@ module.exports = function(mongodb, errors) {
                }else{
                   res.sendStatus(200);
                }
-               db.close();
+               // db.close();
             });
-         }
-      });
+      //    }
+      // });
    });
 
    router.get('/getCategories',function(req, res){
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            res.send(errors.DB_CONNECT_ERROR);
-            return;
-         }
-         else{
+      // mongo.connect(mongodb.urlToDB, function(err, db){
+      //    if(err){
+      //       res.send(errors.DB_CONNECT_ERROR);
+      //       return;
+      //    }
+      //    else{
             var categoryDB = db.collection("categories");
             var categoriesFound = categoryDB.find({});
             categoriesFound.toArray(function(err, result){
@@ -189,10 +189,10 @@ module.exports = function(mongodb, errors) {
                }else{
                   res.send(_.orderBy(result, ['name']));
                }
-               db.close();
+               // db.close();
             });
-         }
-      });
+      //    }
+      // });
    });
 
    return router;

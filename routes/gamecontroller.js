@@ -1,10 +1,10 @@
 var MAX_POSSIBLE_LETTERS = 12;
 
 // BASE /gamecontroller
-module.exports = function(mongodb, errors) {
+module.exports = function(db, errors) {
    var express = require('express');
    var router = express.Router();
-   var mongo = mongodb.MongoClient;
+   // var mongo = mongodb.MongoClient;
    var _ = require('lodash');
 
    router.get('/', function(req, res, next) {
@@ -13,12 +13,12 @@ module.exports = function(mongodb, errors) {
 
    router.get('/quepick/:gameId', function(req, res, next) {
       var gameID = parseInt(req.params.gameId), playerID = req.session.userid;
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            res.send(errors.DB_CONNECT_ERROR);
-            return;
-         }
-         else{
+      // mongo.connect(mongodb.urlToDB, function(err, db){
+      //    if(err){
+      //       res.send(errors.DB_CONNECT_ERROR);
+      //       return;
+      //    }
+      //    else{
             var gamesDB = db.collection("games");
             var gamesFound = gamesDB.find({_id: gameID});
             gamesFound.toArray(function(err, result){
@@ -36,20 +36,20 @@ module.exports = function(mongodb, errors) {
                      res.render('error', {message: "You can't enter a game you dont exists in!", error: {}});
                   }
                }
-               db.close();
+               // db.close();
             });
-         }
-      });
+      //    }
+      // });
    });
 
    router.get('/:gameId/:queId',function(req, res){
       var gameID = parseInt(req.params.gameId), queID = parseInt(req.params.queId)-1;
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            res.send(errors.DB_CONNECT_ERROR);
-            return;
-         }
-         else{
+      // mongo.connect(mongodb.urlToDB, function(err, db){
+      //    if(err){
+      //       res.send(errors.DB_CONNECT_ERROR);
+      //       return;
+      //    }
+      //    else{
             var gamesDB = db.collection("games");
             var gamesFound = gamesDB.find({_id: gameID});
             gamesFound.toArray(function(err, result){
@@ -71,21 +71,21 @@ module.exports = function(mongodb, errors) {
                      res.sendStatus(200);
                   }
                }
-               db.close();
+               // db.close();
             });
-         }
-      });
+      //    }
+      // });
    });
 
    router.get('/quescreen/:gameId/:queId', function(req, res){
       var gameid = parseInt(req.params.gameId), queid = req.params.queId-1,
       playerID = req.session.userid;
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            res.send(errors.DB_CONNECT_ERROR);
-            return;
-         }
-         else{
+      // mongo.connect(mongodb.urlToDB, function(err, db){
+      //    if(err){
+      //       res.send(errors.DB_CONNECT_ERROR);
+      //       return;
+      //    }
+      //    else{
             var gamesDB = db.collection("games");
             var gamesFound = gamesDB.find({_id: gameid });
             gamesFound.toArray(function(err, result){
@@ -140,12 +140,12 @@ module.exports = function(mongodb, errors) {
                         console.log(errors.DB_OPERATION);
                         console.log(result.result);
                      }
-                     db.close();
+                     // db.close();
                   });
                }
             });
-         }
-      });
+      //    }
+      // });
    });
 
    return router;

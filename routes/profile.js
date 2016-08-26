@@ -1,7 +1,7 @@
-module.exports = function(mongodb, errors) {
+module.exports = function(db, errors) {
    var express = require('express');
    var router = express.Router();
-   var mongo = mongodb.MongoClient;
+   // var mongo = mongodb.MongoClient;
    var _ = require('lodash');
    var ObjectID = require('mongodb').ObjectID
 
@@ -19,12 +19,12 @@ module.exports = function(mongodb, errors) {
 
    router.get('/getGames',function(req, res){
       var userID = req.session.userid;
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            res.send(errors.DB_CONNECT_ERROR);
-            return;
-         }
-         else{
+      // mongo.connect(mongodb.urlToDB, function(err, db){
+      //    if(err){
+      //       res.send(errors.DB_CONNECT_ERROR);
+      //       return;
+      //    }
+      //    else{
             var gamesDB = db.collection('games');
             var gamesFound = gamesDB.find({'creator.userid': userID});
             gamesFound.toArray(function(err, result){
@@ -34,10 +34,10 @@ module.exports = function(mongodb, errors) {
                   _.sortBy(result, ['isStarted']);
                   res.send(result.reverse());
                }
-               db.close();
+               // db.close();
             });
-         }
-      });
+      //    }
+      // });
    });
 
    return router;

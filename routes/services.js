@@ -1,10 +1,10 @@
 // BASE /services
-module.exports = function(io, mongodb, errors) {
+module.exports = function(io, db, errors) {
    var app = require('express');
    var router = app.Router();
    var async = require('asyncawait/async');
    var await = require('asyncawait/await');
-   var mongo = mongodb.MongoClient;
+   // var mongo = mongodb.MongoClient;
    var _ = require('lodash');
    var ObjectID = require('mongodb').ObjectID
 
@@ -27,12 +27,12 @@ module.exports = function(io, mongodb, errors) {
          gameLength = 3*req.body.questions.length;
       }
       var gameid;
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            console.log(err);
-            res.send(errors.DB_CONNECT_ERROR);
-            return;
-         }else{
+      // mongo.connect(mongodb.urlToDB, function(err, db){
+      //    if(err){
+      //       console.log(err);
+      //       res.send(errors.DB_CONNECT_ERROR);
+      //       return;
+      //    }else{
             var gamesDB = db.collection("games");
             //declare but not use! the async function
             //used to get the data from the DB
@@ -67,7 +67,7 @@ module.exports = function(io, mongodb, errors) {
                         console.error(err);
                         res.send(errors.CREATING_GAME);
                      }else{
-                     db.close();
+                     // db.close();
                      res.send({gameid: gameid});
                   }
                   });
@@ -76,18 +76,18 @@ module.exports = function(io, mongodb, errors) {
                console.log(e);
                res.send(e);
             });
-         }
-      });
+         // }
+      // });
    });
 
    router.get('/endgame/:gameid', function(req, res){
       var gameID = parseInt(req.params.gameid);
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            res.send(errors.DB_CONNECT_ERROR);
-            return;
-         }
-         else{
+      // mongo.connect(mongodb.urlToDB, function(err, db){
+      //    if(err){
+      //       res.send(errors.DB_CONNECT_ERROR);
+      //       return;
+      //    }
+      //    else{
             var gamesDB = db.collection('games');
             var usersDB = db.collection('users');
             gamesDB.findAndModify({_id: gameID},[],
@@ -104,18 +104,18 @@ module.exports = function(io, mongodb, errors) {
                   });
                }
             );
-         }
-      });
+         // }
+      // });
    });
 
    router.get('/session', function(req, res){
       if(req.session.nickname){
-         mongo.connect(mongodb.urlToDB, function(err, db){
-            if(err){
-               res.send(errors.DB_CONNECT_ERROR);
-               return;
-            }
-            else{
+         // mongo.connect(mongodb.urlToDB, function(err, db){
+         //    if(err){
+         //       res.send(errors.DB_CONNECT_ERROR);
+         //       return;
+         //    }
+         //    else{
                var usersDB = db.collection("users");
                var usersFound = usersDB.find({_id: new ObjectID(req.session.userid)});
                usersFound.toArray(function(err, result){
@@ -126,10 +126,10 @@ module.exports = function(io, mongodb, errors) {
                      req.session.save();
                      res.send(req.session);
                   }
-                  db.close();
+                  // db.close();
                });
-            }
-         });
+         //    }
+         // });
       }else{
          res.send(errors.NO_SESSION);
       }
@@ -137,12 +137,12 @@ module.exports = function(io, mongodb, errors) {
 
    router.get('/gethighscores/:gameId', function(req, res){
       var gameID = parseInt(req.params.gameId);
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            res.send(errors.DB_CONNECT_ERROR);
-            return;
-         }
-         else{
+      // mongo.connect(mongodb.urlToDB, function(err, db){
+      //    if(err){
+      //       res.send(errors.DB_CONNECT_ERROR);
+      //       return;
+      //    }
+      //    else{
             var gamesDB = db.collection('games');
             var gamesFound = gamesDB.find({_id: gameID});
             gamesFound.toArray(function(err, result){
@@ -158,20 +158,20 @@ module.exports = function(io, mongodb, errors) {
                      res.send(result[0].players.slice(0,5));
                   }
                }
-               db.close();
+               // db.close();
             });
-         }
-      });
+         // }
+      // });
    });
 
    router.get('/getQuestionsStatuses/:gameId',function(req, res){
       var gameID = parseInt(req.params.gameId);
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            res.send(errors.DB_CONNECT_ERROR);
-            return;
-         }
-         else{
+      // mongo.connect(mongodb.urlToDB, function(err, db){
+      //    if(err){
+      //       res.send(errors.DB_CONNECT_ERROR);
+      //       return;
+      //    }
+      //    else{
             var gamesDB = db.collection('games');
             var gamesFound = gamesDB.find({_id: gameID});
             gamesFound.toArray(function(err, result){
@@ -183,10 +183,10 @@ module.exports = function(io, mongodb, errors) {
                      else return 'unanswered';
                   }));
                }
-               db.close();
+               // db.close();
             });
-         }
-      });
+      //    }
+      // });
    });
 
    return router;

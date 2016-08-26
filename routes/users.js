@@ -1,9 +1,9 @@
 // BASE /users
 
-module.exports = function(mongodb, errors) {
+module.exports = function(db, errors) {
    var express = require('express');
    var router = express.Router();
-   var mongo = mongodb.MongoClient;
+   // var mongo = mongodb.MongoClient;
 
    //TODO - example on how to get the params from the url
    router.get('/profile', function(req, res, next) {
@@ -26,10 +26,10 @@ module.exports = function(mongodb, errors) {
          res.send(errors.DEV_ERROR);
          return;
       }
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            res.send(errors.DB_CONNECT_ERROR);
-         }else{
+      // mongo.connect(mongodb.urlToDB, function(err, db){
+      //    if(err){
+      //       res.send(errors.DB_CONNECT_ERROR);
+      //    }else{
             var data = db.collection("users");
             var userFound = data.find({
                nickname: generateRegExp(userDetails.nickname)
@@ -42,17 +42,21 @@ module.exports = function(mongodb, errors) {
                   var ins = data.insert(userDetails);
                   res.sendStatus(200);
                }
-               db.close();
+               // db.close();
             });
-         }
-      });
+         // }
+      // });
+   });
+
+   router.get("/highscores", function(req, res){
+
    });
 
    router.post('/login', function(req, res){
-      mongo.connect(mongodb.urlToDB, function(err, db){
-         if(err){
-            res.send(errors.DB_CONNECT_ERROR);
-         }else{
+      // mongo.connect(mongodb.urlToDB, function(err, db){
+      //    if(err){
+      //       res.send(errors.DB_CONNECT_ERROR);
+      //    }else{
             var data = db.collection("users");
             var user = data.find({
                nickname: generateRegExp(req.body.nickname),
@@ -69,10 +73,10 @@ module.exports = function(mongodb, errors) {
                   sess.points = user[0].points;
                   res.sendStatus(200);
                }
-               db.close();
+               // db.close();
             });
-         }
-      });
+         // }
+      // });
 
    });
 

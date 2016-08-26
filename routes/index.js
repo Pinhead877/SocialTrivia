@@ -14,5 +14,5 @@ router.get('/login', function(req, res){
 router.get('/register', function(req, res){
    res.render('mainScreen/register')
 });
-
+ 
 module.exports = router;
