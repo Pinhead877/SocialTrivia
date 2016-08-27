@@ -3,10 +3,10 @@ link(rel='stylesheet', href="/stylesheets/templates/login.css")
 //- Add error messages from the server 
 #wrap(ng-hide="loggedin", ng-class="{'upper-div': upper}")
    form(name="loginForm", novalidate, ng-submit="login()")
-      .row(ng-class="{'upper-div': upper}")
-         .form-group(ng-class="{ 'has-error' : loginForm.nickname.$invalid && !loginForm.nickname.$pristine, 'upper-div': upper }")
+      .row
+         .form-group.col-sm-6(ng-class="{ 'has-error' : loginForm.nickname.$invalid && !loginForm.nickname.$pristine, 'upper-div': upper }")
             input.form-control(type="text", name="nickname", placeholder="Nickname", ng-model="userDetails.nickname" ng-minlength="4", ng-max-length="10", required)
-         .form-group(ng-class="{ 'has-error' : loginForm.password.$invalid && !loginForm.password.$pristine, 'upper-div': upper }")
+         .form-group.col-sm-6(ng-class="{ 'has-error' : loginForm.password.$invalid && !loginForm.password.$pristine, 'upper-div': upper }")
             input.form-control(type="password", name="password", placeholder="Password", ng-model="unprotectedPassword" ng-minlength="4", ng-max-length="10", required)
       .row(ng-class="{'upper-div': upper}")
          .col-xs-6
