@@ -1,15 +1,18 @@
 doctype html
 link(rel='stylesheet', href="/stylesheets/templates/login.css")
 //- Add error messages from the server 
-#wrap(ng-hide="loggedin", ng-class="{'upper-div': upper}")
+#wrap(ng-hide="loggedin")
    form(name="loginForm", novalidate, ng-submit="login()")
       .row
-         .form-group.col-sm-6(ng-class="{ 'has-error' : loginForm.nickname.$invalid && !loginForm.nickname.$pristine, 'upper-div': upper }")
-            input.form-control(type="text", name="nickname", placeholder="Nickname", ng-model="userDetails.nickname" ng-minlength="4", ng-max-length="10", required)
-         .form-group.col-sm-6(ng-class="{ 'has-error' : loginForm.password.$invalid && !loginForm.password.$pristine, 'upper-div': upper }")
-            input.form-control(type="password", name="password", placeholder="Password", ng-model="unprotectedPassword" ng-minlength="4", ng-max-length="10", required)
-      .row(ng-class="{'upper-div': upper}")
-         .col-xs-6
-            button.btn.btn-blue(type="submit") Login
-         .col-xs-6
-            button.btn.btn-blue(type="button", ng-click="goToRegisterPage()") Register
+         .col-sm-4
+            .form-group(ng-class="{ 'has-error' : loginForm.nickname.$invalid && !loginForm.nickname.$pristine}")
+               input.form-control(type="text", name="nickname", placeholder="Nickname", ng-model="userDetails.nickname" ng-minlength="4", ng-max-length="10", required)
+         .col-sm-4
+            .form-group(ng-class="{ 'has-error' : loginForm.password.$invalid && !loginForm.password.$pristine}")
+               input.form-control(type="password", name="password", placeholder="Password", ng-model="unprotectedPassword" ng-minlength="4", ng-max-length="10", required)
+         .col-sm-4
+            .row
+               .col-xs-6
+                  button.btn.btn-blue(type="submit") Login
+               .col-xs-6
+                  button.btn.btn-blue(type="button", ng-click="goToRegisterPage()") Register

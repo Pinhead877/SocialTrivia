@@ -13,6 +13,7 @@ block append head
 block main
    section.section.section-padded
       .container(ng-controller="register")
+         #messages.col-sm-offset-8.col-sm-4(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')", close="closeMsg($index)") {{message.msg}}
          h1 Register
          form(name="registerForm", novalidate, ng-submit="registerUser()", class="form-horizontal")
             .form-group(ng-class="{ 'has-error' : registerForm.nickname.$invalid && !registerForm.nickname.$pristine }")
@@ -24,6 +25,11 @@ block main
                label(class='control-label col-sm-3', for='password') Password
                .col-sm-6
                   input.form-control(type='password',id='password', name="password" ng-model="passwordform" ng-minlength="4", ng-maxlength="10", required)
+               .col-md-3
+            .form-group(ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine }")   
+               label(class='control-label col-sm-3', for='password') Confirm Password
+               .col-sm-6
+                  input.form-control(type='password',id='passwordConfirm', name="passwordConfirm" ng-model="passwordConfirm" ng-minlength="4", ng-maxlength="10", required)
                .col-md-3
             .form-group(ng-class="{ 'has-error' : registerForm.gender.$invalid && !registerForm.gender.$pristine }")
                label(class='control-label col-sm-3', for='gender') Gender
