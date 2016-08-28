@@ -11,7 +11,7 @@ section.section
          .form-group(ng-class="{ 'has-error' : queForm.ansText.$invalid && !queForm.ansText.$pristine }")
             label.control-label.col-md-3 Enter the answer
             .col-md-8
-               input.form-control.col-md-8(tooltip-popup-close-delay='1500', uib-tooltip='Max sentence length: 15, Max word length: 7', placeholder="Max sentence length: 15, Max word length: 7", name="ansText", type="text", ng-model="queDetails.answer", required, ng-minlength="2", ng-maxlength="14")
+               input.form-control.col-md-8(tooltip-popup-on-mouth='1500', uib-tooltip='Max sentence length: 15, Max word length: 7', placeholder="Max sentence length: 15, Max word length: 7", name="ansText", type="text", ng-model="queDetails.answer", required, ng-minlength="2", ng-maxlength="14")
          .form-group(ng-class="{ 'has-error' : queForm.ansText.$invalid && !queForm.ansText.$pristine }")
             label.control-label.col-md-3 Pick a Category
             .col-md-8

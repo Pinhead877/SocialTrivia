@@ -205,8 +205,8 @@ nav.navbar-fixed-top .navbar-nav > li > a:not(.btn) {
 	-webkit-transition: all 0.3s ease;
 	transition: all 0.3s ease;
 	margin: 5px;
-	border-bottom-width: 3px;
-	border-bottom-color: #fff;
+	border-bottom-width: 2px;
+	border-bottom-color: #dadada;
 }
 
 .btn:hover,

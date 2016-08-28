@@ -17,7 +17,7 @@ block append main
                label(class='control-label col-sm-2', for='gamenum') Game ID:
                .col-sm-10
                   input.form-control(type='number', name='gamenum', ng-model='gamenum', min='1', max='999999999', required)
-            button.btn.btn-blue(type="submit", ng-disabled="gameNumber.$invalid") Send
+            button.btn.btn-blue(type="submit", ng-disabled="gameNumber.$invalid") Join The Game
          #wait(ng-show="numberEntered")
             h1 Please wait for the game to start
             img.img-responsive(src='https://media.giphy.com/media/w9yg6QsZJ3JC/giphy.gif')
