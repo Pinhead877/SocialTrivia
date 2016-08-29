@@ -81,8 +81,6 @@ module.exports = function(io, db, errors) {
                console.log(errors.UNKNOWN);
                console.log(err);
             }
-            console.log("endgame");
-            console.log(result.value.players);
             _.forEach(result.value.players, function(player){
                usersDB.updateOne({_id: new ObjectID(player._id)}, {$inc: {points: player.points}});
             });

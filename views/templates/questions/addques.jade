@@ -1,25 +1,24 @@
 link(rel='stylesheet', href='/stylesheets/questions/addques.css')
 section.section
    #messages.col-sm-offset-8.col-sm-4(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')", close="closeMsg($index)") {{message.msg}}
-   .container
-      form(name="queForm", novalidate, ng-submit="addQuetion()", class="form-horizontal")
-         h3 Add Question
-         .form-group(ng-class="{ 'has-error' : queForm.queText.$invalid && !queForm.queText.$pristine }")
-            label.control-label.col-md-3 Enter your question
-            .col-md-8
-               input.form-control(placeholder="Min length: 6, Max Length: 60", name="queText", type="text", ng-model="queDetails.question", required, ng-minlength="6", ng-maxlength="60")
-         .form-group(ng-class="{ 'has-error' : queForm.ansText.$invalid && !queForm.ansText.$pristine }")
-            label.control-label.col-md-3 Enter the answer
-            .col-md-8
-               input.form-control.col-md-8(tooltip-popup-close-delay='1500', uib-tooltip='Max sentence length: 15, Max word length: 7', placeholder="Max sentence length: 15, Max word length: 7", name="ansText", type="text", ng-model="queDetails.answer", required, ng-minlength="2", ng-maxlength="14")
-         .form-group(ng-class="{ 'has-error' : queForm.ansText.$invalid && !queForm.ansText.$pristine }")
-            label.control-label.col-md-3 Pick a Category
-            .col-md-8
-               select.form-control.col-md-8(ng-options="cat.name for cat in categoriesList track by cat._id", ng-model="queDetails.category")
-         .form-group
-            .col-sm-3
-            .col-md-8
-               input(type='checkbox',id="isPrivate", name="isPrivate", ng-model='queDetails.isPrivate' checked='false')
-               label(for="isPrivate") Keep question private? 
-         button.btn.btn-blue(type="submit", ng-disabled="queForm.$invalid") {{ submitText }}
-         button.btn.btn-blue(type="button", ng-click="clearQue()") Reset
+   form(name="queForm", novalidate, ng-submit="addQuetion()", class="form-horizontal")
+      h3 Add Question
+      .form-group(ng-class="{ 'has-error' : queForm.queText.$invalid && !queForm.queText.$pristine }")
+         label.control-label.col-md-3 Enter your question
+         .col-md-8
+            input.form-control(placeholder="Min length: 6, Max Length: 60", name="queText", type="text", ng-model="queDetails.question", required, ng-minlength="6", ng-maxlength="60")
+      .form-group(ng-class="{ 'has-error' : queForm.ansText.$invalid && !queForm.ansText.$pristine }")
+         label.control-label.col-md-3 Enter the answer
+         .col-md-8
+            input.form-control.col-md-8(tooltip-popup-close-delay='1500', uib-tooltip='Max sentence length: 15, Max word length: 7', placeholder="Max sentence length: 15, Max word length: 7", name="ansText", type="text", ng-model="queDetails.answer", required, ng-minlength="2", ng-maxlength="14")
+      .form-group(ng-class="{ 'has-error' : queForm.ansText.$invalid && !queForm.ansText.$pristine }")
+         label.control-label.col-md-3 Pick a Category
+         .col-md-8
+            select.form-control.col-md-8(ng-options="cat.name for cat in categoriesList track by cat._id", ng-model="queDetails.category")
+      .form-group
+         .col-sm-3
+         .col-md-8
+            input(type='checkbox',id="isPrivate", name="isPrivate", ng-model='queDetails.isPrivate' checked='false')
+            label(for="isPrivate") Keep question private? 
+      button.btn.btn-blue(type="submit", ng-disabled="queForm.$invalid") {{ submitText }}
+      button.btn.btn-blue(type="button", ng-click="clearQue()") Reset
