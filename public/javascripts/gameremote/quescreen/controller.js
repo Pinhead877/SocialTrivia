@@ -31,9 +31,8 @@ angular.module('mainApp').controller('quescreen-cont',["$scope","$location", "$h
    };
 
    window.onbeforeunload = function(event) {
-      $http.get('/gamescreen/back/'+$scope.params.gameId+'/'+$scope.params.queId);
-      if(!back)
-      return "Do you really want to leave?";
+      $scope.sendAnswer();
+      return "";
    }
 
    $scope.selectQuestion = function(){

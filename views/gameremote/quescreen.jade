@@ -19,7 +19,7 @@ block main
             .col-xs-6
                h4 Time Left {{ params.timeleft }}
          .row  
-            .row(ng-repeat="word in answers")
+            .row.answer-word-row(ng-repeat="word in answers")
                span.btn.btn-blue.answer(ng-repeat="letter in word", ng-model="letter.value", ng-click="letter.value = null;") {{ letter.value }}
          .row(ng-repeat="possibleLetters in params.possibleLetters track by $index")
             button.btn.btn-green.letters(ng-repeat="letter in possibleLetters track by $index", ng-click="chooseLetter(letter)") {{ letter }}
