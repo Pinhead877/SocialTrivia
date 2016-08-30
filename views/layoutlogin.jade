@@ -12,7 +12,7 @@ block navbar
                      span.icon-bar
                      span.icon-bar
                   a.navbar-brand(onclick="home()")
-                     img(src='/template/img/logo.png', data-active-url='/template/img/logo-active.png', alt='')
+                     img.img-responsive(src='/images/logo.png', data-active-url='/images/logo.png', alt='Battle Smart', class="logoimg")
                #bs-example-navbar-collapse-1.collapse.navbar-collapse
                   .nav.navbar-nav.navbar-right.main-nav
                      login-div(upper="true")
@@ -34,7 +34,7 @@ block navbar
 
    .mobile-nav
       ul
-         login-div(upper="true")
+         login-div(upper="false")
          #profile(ng-show="loggedin")
             h4
                | {{user.nickname}} 

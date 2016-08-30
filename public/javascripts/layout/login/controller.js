@@ -12,9 +12,9 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$window',
       }else if(result.data.nickname){
          $scope.user = result.data;
          $scope.loggedin = true;
-         if($scope.upper==false){
-            $window.location = "/";
-         }
+         // if($scope.upper==false){
+         //    $window.location = "/";
+         // }
       }else{
          console.log("Unknown server response");
       }

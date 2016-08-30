@@ -21,8 +21,11 @@ module.exports = function(db, errors) {
    router.post('/create', function(req, res){
       //TODO - add validation check if empty and check length
       var userDetails = req.body;
-      if(isObjectInvalid(userDetails)){
-         res.send(errors.DEV_ERROR);
+      // if(isObjectInvalid(userDetails)){
+      //    res.send(errors.DEV_ERROR);
+      //    return;
+      // }
+      if(isObjectInvalid(userDetails, res)){
          return;
       }
       var data = db.collection("users");
@@ -93,11 +96,25 @@ function generateRegExp(text) {
 }
 
 //TODO - send errors with the right info to the client
-function isObjectInvalid(obj) {
-   if(!isNicknameValid(obj.nickname)) return true;
-   if(!isStringValid(obj.password)) return true;
-   if(isEmptyOrUndefined(obj.gender)) return true;
-   if(isEmptyOrUndefined(obj.birthday)) return true;
+function isObjectInvalid(obj, res) {
+   if(!isNicknameValid(obj.nickname))
+   {
+      res.send(errors.NICKNAME);
+      return true;
+   }
+   if(!isStringValid(obj.password))
+   {
+      res.send(errors.PASSWORD);
+      return true;
+   }
+   if(isEmptyOrUndefined(obj.gender))
+   {
+      return true;
+   }
+   if(isEmptyOrUndefined(obj.birthday))
+   {
+      return true;
+   }
    return false;
 }
 
