@@ -1,4 +1,4 @@
-extends ../layout
+extends ../layoutlogin
 
 block head
    
@@ -6,28 +6,29 @@ block head
 block main
    section.section.section-padded
       .container(ng-controller="login-cont")
-         .row
-            .col-sm-8
+         .row.text-center
+            .col-sm-12
                h1 Login
                form(name="loginForm", novalidate, ng-submit="login()")
                   .row
                      .col-sm-2
-                     .col-sm-10
+                     .col-sm-8
                         .form-group(ng-class="{ 'has-error' : loginForm.nickname.$invalid && !loginForm.nickname.$pristine}")
                            input.form-control(type="text", name="nickname", placeholder="Nickname", ng-model="userDetails.nickname" ng-minlength="4", ng-max-length="10", required)
+                     .col-sm-2
                   .row
                      .col-sm-2
-                     .col-sm-10
+                     .col-sm-8
                         .form-group(ng-class="{ 'has-error' : loginForm.password.$invalid && !loginForm.password.$pristine}")
                            input.form-control(type="password", name="password", placeholder="Password", ng-model="unprotectedPassword" ng-minlength="4", ng-max-length="10", required)
+                     .col-sm-2
                   .row
                      .col-sm-2
-                     .col-sm-10
+                     .col-sm-8
                         .row
-                           .col-xs-6
+                           .col-xs-6.text-right
                               button.btn.btn-blue(type="submit") Login
-                           .col-xs-6
+                           .col-xs-6.text-left
                               button.btn.btn-blue(type="button", ng-click="goToRegisterPage()") Register
-            .col-sm-4
-               img.img-responsive(src="/images/logo.png")
+                     .col-sm-2
             
