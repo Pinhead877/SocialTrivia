@@ -4,6 +4,7 @@ angular.module('mainApp').controller('main-game-ctrl', ["$scope","$window","$htt
    $scope.showEnd = false;
 
    socket.on('selected', function(num){
+      $('#num'+num).removeClass("wrong");
       $('#num'+num).removeClass("unanswered");
       $('#num'+num).addClass("selected");
    });
