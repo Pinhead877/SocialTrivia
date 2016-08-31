@@ -9,7 +9,7 @@ errors.DB_CONNECT_ERROR = {error: {code: 1000, message: "Error connecting to dat
 errors.DB_OPERATION = { error: {code: 1001, message: "Database operation error"} };
 
 errors.PASSWORD = {error: {code: 1008, message: "Password is required and must be between 4 and 10 letters or numbers"} };
-errors.NICKNAME = {error: {code: 1009, message: "Nickname can only contain letters or numbers without spaces"} };
+errors.NICKNAME = {error: {code: 1009, message: "Nickname can only contain english letters or numbers without spaces"} };
 errors.USER_EXISTS = {error: {code: 1010, message: "Username already exists"} };
 errors.NO_SESSION = {error: {code: 1011, message: "No session found, please login"} };
 errors.BAD_LOGIN = {error: {code: 1012, message: "Incorrect Username or Password"} };

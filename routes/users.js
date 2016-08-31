@@ -25,7 +25,14 @@ module.exports = function(db, errors) {
       //    res.send(errors.DEV_ERROR);
       //    return;
       // }
-      if(isObjectInvalid(userDetails, res)){
+      if(!isNicknameValid(userDetails.nickname))
+      {
+         res.send(errors.NICKNAME);
+         return;
+      }
+      if(!isStringValid(userDetails.password))
+      {
+         res.send(errors.PASSWORD);
          return;
       }
       var data = db.collection("users");
@@ -95,29 +102,6 @@ function generateRegExp(text) {
    return new RegExp(["^",text,"$"].join(""), "i");
 }
 
-//TODO - send errors with the right info to the client
-function isObjectInvalid(obj, res) {
-   if(!isNicknameValid(obj.nickname))
-   {
-      res.send(errors.NICKNAME);
-      return true;
-   }
-   if(!isStringValid(obj.password))
-   {
-      res.send(errors.PASSWORD);
-      return true;
-   }
-   if(isEmptyOrUndefined(obj.gender))
-   {
-      return true;
-   }
-   if(isEmptyOrUndefined(obj.birthday))
-   {
-      return true;
-   }
-   return false;
-}
-
 function isNicknameValid(text) {
    if(isLengthInvalid(text)) return false;
    if(!isStringValid(text)) return false;
@@ -136,13 +120,13 @@ function isStringValid(text){
 }
 
 function isEmptyOrUndefined(item){
-   if(item==="" || item===undefined || item===null) return true;
+   if(item==="" || item == null) return true;
    return false;
 }
 
 function isStringConatainsNumbersAndLetters(inputtxt){
    //RegExp of letters and Numbers
    var letterNumber = /([a-z]|[A-Z]|[0-9])/g;
-   if(inputtxt.match(letterNumber).length<inputtxt.length) return false;
+   if(inputtxt.match(letterNumber)==null || inputtxt.match(letterNumber).length<inputtxt.length) return false;
    return true;
 }
