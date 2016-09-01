@@ -81,8 +81,16 @@ module.exports = function(io, db, errors) {
                console.log(errors.UNKNOWN);
                console.log(err);
             }
-            _.forEach(result.value.players, function(player){
-               usersDB.updateOne({_id: new ObjectID(player._id)}, {$inc: {points: player.points}});
+            res.sendStatus(200);
+            var game = result.value;
+            _.forEach(game.players, function(player){
+               var correctAnswers = _.filter(game.questions, {answeredBy: player._id});
+               usersDB.updateOne(
+                  {_id: new ObjectID(player._id)},
+                  {$inc:
+                     { points: player.points, questionsAnswered: correctAnswers.length, fullGamesPlayed: 1 }
+                  }
+               );
             });
          }
       );
@@ -138,6 +146,30 @@ module.exports = function(io, db, errors) {
                if(stat.statusColor) return stat.statusColor;
                else return 'unanswered';
             }));
+         }
+      });
+   });
+
+   router.get('/getEndedStats/:gameId', function(req, res){
+      var gameID = parseInt(req.params.gameId);
+      var gamesDB = db.collection('games');
+      var gamesFound = gamesDB.find({_id: gameID});
+      gamesFound.toArray(function(err, result){
+         if(err){
+            res.send(errors.UNKNOWN);
+         }
+         else if(result.length==0){
+            res.send(errors.GAME_NUM_ERROR);
+         }
+         else{
+            _.forEach(result[0].questions, function(question){
+               delete question.answer;
+               if(question.answeredBy!=null){
+                  var player = _.find(result[0].players, {_id:question.answeredBy});
+                  question.answeredBy = player.nickname;
+               }
+            });
+            res.send(result[0]);
          }
       });
    });

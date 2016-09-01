@@ -78,7 +78,6 @@ angular.module('mainApp').controller('game-screen-clock', ["$scope", function($s
          if($scope.isGameOver===true){
             clearInterval(timer);
             $scope.timeOver = true;
-            $scope.endGame();
             $scope.$apply();
          }else{
             $scope.time.seconds--;

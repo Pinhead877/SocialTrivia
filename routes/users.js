@@ -4,27 +4,19 @@ module.exports = function(db, errors) {
    var express = require('express');
    var router = express.Router();
 
-   //TODO - example on how to get the params from the url
-   router.get('/profile', function(req, res, next) {
-      // console.log(req.query); get variables from the url
-      res.render('profile/profilescreen');
-   });
+   // example on how to get the params from the url
+   // router.get('/profile', function(req, res, next) {
+   //    // console.log(req.query); get variables from the url
+   //    res.render('profile/profilescreen');
+   // });
 
    router.get('/gamelist/', function(){
       res.render('profile/usergames');
    });
 
-   // router.post('/list', function(req, res){
-   //    console.log(req.body);
-   // });
-
    router.post('/create', function(req, res){
       //TODO - add validation check if empty and check length
       var userDetails = req.body;
-      // if(isObjectInvalid(userDetails)){
-      //    res.send(errors.DEV_ERROR);
-      //    return;
-      // }
       if(!isNicknameValid(userDetails.nickname))
       {
          res.send(errors.NICKNAME);
@@ -35,6 +27,16 @@ module.exports = function(db, errors) {
          res.send(errors.PASSWORD);
          return;
       }
+      if(!isStringValid(userDetails.gender))
+      {
+         res.send(errors.UNKNOWN);
+         return;
+      }
+      if(isEmptyOrUndefined(userDetails.birthday))
+      {
+         res.send(errors.UNKNOWN);
+         return;
+      }
       var data = db.collection("users");
       var userFound = data.find({
          nickname: generateRegExp(userDetails.nickname)
@@ -42,8 +44,11 @@ module.exports = function(db, errors) {
       userFound.toArray(function(e,user){
          if(user.length>0){
             res.send(errors.USER_EXISTS);
-         }else{
+         }
+         else{
             userDetails.points = 0;
+            userDetails.questionsAnswered = 0;
+            userDetails.fullGamesPlayed = 0;
             var ins = data.insert(userDetails);
             res.sendStatus(200);
          }
@@ -58,7 +63,8 @@ module.exports = function(db, errors) {
       usersFound.toArray(function(err, result){
          if(err){
             res.send(errors.UNKNOWN);
-         }else{
+         }
+         else{
             res.send(result);
          }
       });
@@ -74,7 +80,8 @@ module.exports = function(db, errors) {
          if(e) console.log("error");
          if(user.length === 0){
             res.send(errors.BAD_LOGIN);
-         }else if(user.length===1){
+         }
+         else if(user.length===1){
             var sess = req.session;
             sess.nickname = user[0].nickname;
             sess.userid = user[0]._id;

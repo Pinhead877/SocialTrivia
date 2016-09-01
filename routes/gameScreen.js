@@ -14,7 +14,7 @@ module.exports = function(io, db, errors){
    });
 
    router.get('/results/:gameid',function(req, res){
-      res.render('gameScreen/results', {});
+      res.render('gameScreen/results', {gameid: parseInt(req.params.gameid)});
    });
 
    router.get('/create',function(req, res){

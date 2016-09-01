@@ -1,7 +1,24 @@
 extends ../layoutlogin
 
+block append head
+   script(src="/javascripts/game/gameresult/controller.js")
+   link(rel='stylesheet', href='/stylesheets/templates/quesdiv.css')
+
 block main
    section.section.section-padded
-      .container
-         h1 Results
-         p This game was ended here are the results!
+      .container(ng-controller="game-result-ctrl", ng-init="gameid=#{ gameid }; getGameStats()").text-center
+         #messages.col-sm-offset-8.col-sm-4(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')", close="closeMsg($index)") {{message.msg}}
+         h1 {{ game.name }} - Results
+         p Great job everybody! here are the results
+         .row
+            h3.col-xs-3 No.
+            h3.col-xs-5 Question
+            h3.col-xs-4 Answered By
+         .row(ng-repeat="question in game.questions track by $index")
+            .col-xs-3
+               .numwrap
+                  div(class="{{ question.statusColor || 'unanswered' }}") {{ $index+1 }}
+            .col-xs-5.vertical-center
+               h5 {{ question.question }}
+            .col-xs-4.vertical-center
+               h5 {{ question.answeredBy || 'No one...  O_o ' }}
