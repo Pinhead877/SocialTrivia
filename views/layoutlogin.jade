@@ -19,10 +19,10 @@ block navbar
                      #profile(ng-show="loggedin", style="margin-right: 40px;")
                         .row
                            .col-sm-4.text-center
-                              h3#usernick 
-                                 | {{user.nickname}} 
-                                 i.fa.fa-circle.gold 
-                                 |  {{user.points}}
+                              h3#usernick {{user.nickname}} {{user.points}}
+                                 span.fa.fa-circle.gold 
+                                 //- | {{user.nickname}} 
+                                 //- |  {{user.points}}
                            .col-sm-2
                               button.btn.btn-blue(ng-click="goToProfilePage()") Profile
                            .col-sm-2

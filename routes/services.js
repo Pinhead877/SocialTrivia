@@ -45,7 +45,7 @@ module.exports = function(io, db, errors) {
             var gameToCreate = {
                _id: gameid,
                name: gameName,
-               questions: req.body.questions,
+               questions: req.body.questions.shuffle(),
                isStarted: false,
                isEnded: false,
                dateCreated: new Date(),
@@ -83,12 +83,30 @@ module.exports = function(io, db, errors) {
             }
             res.sendStatus(200);
             var game = result.value;
+            var winnerPlayer = _.maxBy(game.players, 'points');
+            var tiePlayers = _.filter(game.players, {points: winnerPlayer.points});
+            winnerPlayer = (tiePlayers.length>1) ? null : winnerPlayer;
             _.forEach(game.players, function(player){
                var correctAnswers = _.filter(game.questions, {answeredBy: player._id});
+               var wrongAnswers = _.filter(game.questions, function(question){
+                  if(question.answeredBy!=player._id && _.find(question.playersTried, {_id: player._id})!=null){
+                     return question;
+                  }
+               });
+               var incWinner = (winnerPlayer != null && player._id===winnerPlayer._id) ? 1 : 0;
                usersDB.updateOne(
                   {_id: new ObjectID(player._id)},
-                  {$inc:
-                     { points: player.points, questionsAnswered: correctAnswers.length, fullGamesPlayed: 1 }
+                  {
+                     $inc:
+                     {
+                        points: player.points,
+                        questionsAnswered: correctAnswers.length,
+                        fullGamesPlayed: 1,
+                        questionsWrong: wrongAnswers.length,
+                        gamesWon: incWinner
+                     },
+                     $push:
+                     { gamesLength: game.gameLength }
                   }
                );
             });
@@ -189,4 +207,16 @@ var isNumInArray = function(num, arr){
    });
    if(t) return true;
    return false;
+}
+
+Array.prototype.shuffle = function() {
+   var i = this.length, j, temp;
+   if ( i == 0 ) return this;
+   while ( --i ) {
+      j = Math.floor( Math.random() * ( i + 1 ) );
+      temp = this[i];
+      this[i] = this[j];
+      this[j] = temp;
+   }
+   return this;
 }

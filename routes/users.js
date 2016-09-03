@@ -49,6 +49,8 @@ module.exports = function(db, errors) {
             userDetails.points = 0;
             userDetails.questionsAnswered = 0;
             userDetails.fullGamesPlayed = 0;
+            userDetails.questionsWrong = 0;
+            userDetails.gamesLength = [];
             var ins = data.insert(userDetails);
             res.sendStatus(200);
          }

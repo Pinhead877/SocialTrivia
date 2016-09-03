@@ -6,19 +6,24 @@ angular.module('mainApp').controller('login-cont',['$scope', '$http', '$window',
    $scope.enc = CryptoJS.SHA3;
    $scope.requiredField = false;
 
-   $http.get("/services/session").then(function(result){
-      if(result.data.error){
-         console.log(result.data.error.message);
-      }else if(result.data.nickname){
-         $scope.user = result.data;
-         $scope.loggedin = true;
-         // if($scope.upper==false){
-         //    $window.location = "/";
-         // }
-      }else{
-         console.log("Unknown server response");
-      }
-   });
+   $scope.checkSession = function(){
+      $http.get("/services/session").then(function(result){
+         if(result.data.error){
+            console.log(result.data.error.message);
+         }else if(result.data.nickname){
+            $scope.user = result.data;
+            $scope.loggedin = true;
+         }else{
+            console.log("Unknown server response");
+         }
+      });
+   }
+
+   if($scope.checkedSession==null && $scope.loggedin===false){
+      $scope.checkedSession = true;
+      $scope.checkSession();
+   }
+
    $scope.$watch('upper', function(){
       if($scope.upper===true){
 

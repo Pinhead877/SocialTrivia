@@ -1,10 +1,64 @@
-extened layout
+extends ../layoutlogin
 
 block head
-   link(href='/stylesheets/profilescreen.css', rel='stylesheet')
-
+   script(src="/javascripts/profile/profilepage/controller.js")
+   link(rel='stylesheet', href='/stylesheets/templates/quesdiv.css')
+   
 block main
-   header
-      h1 profile screen
-         .container
-      
+   section.section.section-padded
+      .container(ng-controller="profile-page-ctrl", ng-init="getPlayerDetails();").text-center
+         h2 {{ player.nickname }}
+         hr
+         h3 Player Summary
+         #messages.col-sm-offset-8.col-sm-4(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')", close="closeMsg($index)") {{message.msg}}
+         p Here are the things you accomplished while playing the game
+         hr
+         .row
+            .col-xs-6
+               h4
+                  a(ng-click="userGames()") View Created Games
+            .col-xs-6
+               h4
+                  a(ng-click="userQuestions()") View Created Questions
+         hr
+         .row
+            .col-xs-2
+               h4.text-right Gender
+            .col-xs-2
+               h4.text-left
+                  span.fa(class="fa-{{ player.gender | lowercase }}", ng-class="getColorClass(player.gender)")
+            .col-xs-2
+               h4.text-right Age
+            .col-xs-2
+               h4.text-left {{ player.age }}
+            .col-xs-2
+               h4.text-right Member Since
+            .col-xs-2
+               h4.text-left {{ player.createdOn | date:"dd/MM/yyyy" }}
+         hr
+         .row
+            .col-xs-3
+               h4.text-right Games Created
+            .col-xs-1
+               h4.text-left {{ player.gamesCreated }}
+            .col-xs-3
+               h4.text-right Questions Created 
+            .col-xs-1
+               h4.text-left {{ player.questionsCreated }}
+            .col-xs-3
+               h4.text-right Games Finised First
+            .col-xs-1
+               h4.text-left {{ player.gamesWon }}
+                  span.fa.fa-trophy.silver
+         hr
+         .row
+            .col-xs-2.text-right
+               .numwrap
+                  div(class="correct") {{ player.questionsAnswered }}
+            .col-xs-4.text-left
+               h4.vertical-center.text-left # of correct answers
+            .col-xs-2.text-right
+               .numwrap
+                  div(class="wrong") {{ player.questionsWrong }}
+            .col-xs-4.text-left
+               h4.vertical-center.text-left # of wrong answers
