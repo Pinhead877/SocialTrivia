@@ -42,4 +42,14 @@ angular.module("mainApp").controller('game-list-ctrl', ['$scope', '$http', '$win
       $window.location = "/gamescreen/"+game._id;
    }
 
+   $scope.restartGame = function(game){
+      $http.post('/services/restartGame', game).then(function(result){
+         if(result.data.error){
+            $scope.addMsg(result.data.error.message);
+         }else{
+            $window.location = "/gamescreen/gamestartscreen/"+result.data.gameid;
+         }
+      });
+   }
+
 }]);

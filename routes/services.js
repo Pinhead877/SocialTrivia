@@ -23,7 +23,7 @@ module.exports = function(io, db, errors) {
          return;
       }
       if(gameLength==null || gameLength<=0){
-         gameLength = 3*req.body.questions.length;
+         gameLength = 1*req.body.questions.length;
       }
       var gameid;
       var gamesDB = db.collection("games");
@@ -192,7 +192,58 @@ module.exports = function(io, db, errors) {
       });
    });
 
-   return router;
+   router.post('/restartGame', function(req, res){
+      var game = req.body;
+      var gamesDB = db.collection('games');
+      var asyncFind = async(function(){
+         return await(gamesDB.find({}));
+      });
+      //check for duplicate game id
+      asyncFind().then(function(dataReturned){
+         dataReturned.toArray(function(e,ids){
+            var checkID = true;
+            while(checkID){
+               gameid = Math.floor((Math.random()*999999999));
+               if(!isNumInArray(gameid, ids)){
+                  checkID = false;
+               }
+            }
+            _.forEach(game.questions, function(question){
+               question.playersTried = [];
+               question.statusColor = null;
+               question.isAnswered = false;
+               question.answeredBy = null;
+            });
+            var gameToCreate = {
+               _id: gameid,
+               name: game.name,
+               questions: game.questions.shuffle(),
+               isStarted: false,
+               isEnded: false,
+               dateCreated: new Date(),
+               creator: {
+                  userid: req.session.userid,
+                  nickname: req.session.nickname
+               },
+               gameLength: game.gameLength
+            };
+            gamesDB.insertOne(gameToCreate, function(err, result){
+               if(err){
+                  console.error(err);
+                  res.send(errors.CREATING_GAME);
+               }else{
+                  res.send({gameid: gameid});
+               }
+            });
+         });
+      }).catch(function(e) {
+         console.log(e);
+         res.send(e);
+      });
+   
+});
+
+return router;
 }
 
 /**     Private Methods    **/

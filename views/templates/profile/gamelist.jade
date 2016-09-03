@@ -25,13 +25,16 @@
             td.col-xs-2
                a(ng-click="startGame(game)", ng-if="!game.isStarted")
                   i.fa.fa-play(aria-hidden='true')
-                  |  Start Game
+                  |  Start 
                a(ng-click="seeResults(game)", ng-if="game.isStarted && game.isEnded")
                   i.fa.fa-trophy(aria-hidden='true')
-                  |  See Results
+                  |  Results 
+               a(ng-click="restartGame(game)", ng-if="game.isStarted && game.isEnded")
+                  i.fa.fa-refresh(aria-hidden='true')
+                  |  Restart 
                a(ng-click="goToGame(game)", ng-if="game.isStarted && !game.isEnded")
                   i.fa.fa-gamepad(aria-hidden='true')
-                  |  Go to Game
+                  |  Go to Game 
       tfoot
          tr
             td.text-center(colspan='6')
