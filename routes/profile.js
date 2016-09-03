@@ -8,6 +8,10 @@ module.exports = function(db, errors) {
       res.render('profile/profilescreen');
    });
 
+   router.get('/editProfile/', function(req, res){
+      res.render('profile/editprofile');
+   });
+
    router.get('/games/', function(req, res){
       res.render('profile/usergames');
    });

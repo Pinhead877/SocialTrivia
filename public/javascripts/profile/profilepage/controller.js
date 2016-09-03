@@ -31,4 +31,8 @@ angular.module("mainApp").controller("profile-page-ctrl", ["$scope", "$http", "$
    $scope.getColorClass = function(gender){
       if(gender!=null) return (gender.toLowerCase()==='female') ? 'pink' : 'blue';
    }
+
+   $scope.updateUser = function(){
+      $window.location = "/profile/editProfile";
+   }
 }]);

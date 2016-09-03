@@ -10,10 +10,13 @@ block main
          h2 {{ player.nickname }}
          hr
          .row
-            .col-xs-6
+            .col-xs-4
                h4
                   a(ng-click="userGames()") View Created Games
-            .col-xs-6
+            .col-xs-4
+               h4
+                  a(ng-click="updateUser()") Edit Profile
+            .col-xs-4
                h4
                   a(ng-click="userQuestions()") View Created Questions
          hr

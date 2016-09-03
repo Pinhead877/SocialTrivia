@@ -1,0 +1,61 @@
+extends ../layoutlogin
+
+block append head
+   script(src="/javascripts/profile/updateUser/controller.js")
+   script(src="/javascripts/layout/filter.js")
+   
+   
+block main
+   section.section.section-padded
+      .container(ng-controller="update-user-ctrl", ng-init="getUserDetails();")
+         #messages.col-sm-offset-8.col-sm-4(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')", close="closeMsg($index)") {{message.msg}}
+         h1 Register
+         form(name="updateForm", novalidate, ng-submit="updateUser()", class="form-horizontal")
+            .form-group(ng-class="{ 'has-error' : updateForm.password.$invalid && !updateForm.password.$pristine }")   
+               label(class='control-label col-sm-3', for='password') Password
+               .col-sm-6
+                  input.form-control(type='password',id='password', name="password" ng-model="passwordform" ng-minlength="4", ng-maxlength="10", required)
+               .col-md-3
+            .form-group(ng-class="{ 'has-error' : updateForm.password.$invalid && !updateForm.password.$pristine }")   
+               label(class='control-label col-sm-3', for='password') Confirm Password
+               .col-sm-6
+                  input.form-control(type='password',id='passwordConfirm', name="passwordConfirm" ng-model="passwordConfirm" ng-minlength="4", ng-maxlength="10", required)
+               .col-md-3
+            .form-group(ng-class="{ 'has-error' : updateForm.gender.$invalid && !updateForm.gender.$pristine }")
+               label(class='control-label col-sm-3', for='gender') Gender
+               .col-sm-6
+                  select.form-control(name="gender",id='gender', ng-model="userDetails.gender", required)
+                     option Male
+                     option Female
+               .col-md-3
+            .row
+               label.col-md-3.control-label Birthday
+               .col-md-2
+               .col-md-2
+               .col-md-2
+               .col-md-3
+            .row
+               .col-md-3
+               .col-md-2
+                  .form-group(ng-class="{ 'has-error' : updateForm.day.$invalid && !updateForm.day.$pristine }")
+                     label.control-label.col-sm-4(for='day') Day
+                     .col-md-8
+                        select.form-control(name="day",id='day', ng-model="birthday.day", required)
+                           option(ng-repeat="num in [] | range: 31") {{num}}
+               .col-md-2
+                  .form-group(ng-class="{ 'has-error' : updateForm.month.$invalid && !updateForm.month.$pristine }")
+                     label.control-label.col-sm-4(for='month') Month
+                     .col-md-8
+                        select.form-control(name="month",id='month', ng-model="birthday.month", required)
+                           option(ng-repeat="num in [] | range: 12") {{num}}
+               .col-md-2
+                  .form-group(ng-class="{ 'has-error' : updateForm.year.$invalid && !updateForm.year.$pristine }")
+                     label.control-label.col-sm-4(for='year') Year
+                     .col-md-8
+                        select.form-control(name="year",id='year', ng-model="birthday.year", required)
+                           option(ng-repeat="num in [] | rangeFromTO:currentYear:1900") {{num}}
+               .col-md-6
+            .row
+               .col-md-offset-7
+                  button.btn.btn-blue(type="submit", ng-disabled="updateForm.$invalid") Submit
+                  button.btn.btn-blue(type="button", ng-click="cancelEdit()") Cancel
