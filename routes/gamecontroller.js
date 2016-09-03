@@ -40,6 +40,7 @@ module.exports = function(db, errors) {
          if(err){
             res.send(errors.UNKNOWN);
          }else{
+            console.log(result[0]);
             var question = result[0].questions[queID];
             if(question==null){
                res.send(errors.QUE_NOT_EXISTS);
@@ -126,7 +127,7 @@ module.exports = function(db, errors) {
 /* ========== Private Methods ========== */
 
 function isGameActive(game){
-   return (game.ending - new Date() > 0 || game.isEnded===false);
+   return (game.ending - new Date() > 0 && game.isEnded===false);
 }
 
 function createRandomLettersEN(len){

@@ -40,7 +40,7 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', '_', '
    $scope.getQuestions = function(type){
       $http.get('/questions/list/'+type).then(function(result){
          if(result.data.error){
-            alert(result.data.error.message);
+            $scope.addMsg(result.data.error.message);
          }else{
             $scope.questionsList = result.data;
             if($scope.ques != null){
@@ -78,10 +78,10 @@ angular.module("mainApp").controller('que-list-ctrl', ['$scope', '$http', '_', '
    $scope.deleteQuestion = function(question){
       $http.post('/questions/delete', question).then(function(result){
          if(result.data.error){
-            alert(result.data.error.message);
+            $scope.addMsg(result.data.error.message);
          }else{
             $scope.refreshGrid();
-            alert("Question Deleted Successfully!");
+            $scope.addMsg("Question Deleted Successfully!", "success");
          }
       });
    }

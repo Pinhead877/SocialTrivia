@@ -1,6 +1,6 @@
 extends ../layout
   
-block head
+block append head
    link(href='/stylesheets/gamescreen/gamescreen.css', rel='stylesheet')
    script(src="/javascripts/game/gamescreen/services.js")
    script(src="/javascripts/game/gamescreen/controller.js")
@@ -8,16 +8,20 @@ block head
    script(src="/javascripts/game/gamescreen/directive.js")
 
 block append main
+   img(src='/images/logo.png', data-active-url='/images/logo.png', alt='Battle Smart', class="logoimg")
+   img(src='/images/logo.png', data-active-url='/images/logo.png', alt='Battle Smart', class="logoimg-right")
    .container-fluid.text-center(ng-controller="main-game-ctrl", ng-init="init(#{ gameid });")
       .row
          h2 #{ title }
-      .row
+      .row(ng-hide="showEnd")
          clock-div.col-sm-6(hours="#{ time.hours }", minutes="#{ time.minutes }", seconds="#{ time.seconds }", on-time-over="showEndGame()", is-game-over="showEnd")
          high-scores-div.col-sm-6(game-id="#{ gameid }")
-      .row
-         ques-div(game-id="#{ gameid }", ng-hide="showEnd", on-game-over="showEndGame()")
       .row(ng-hide="showEnd")
-         button.btn.btn-red(ng-click="showEndGame()") End Game
+         ques-div(game-id="#{ gameid }", ng-hide="showEnd", on-game-over="showEndGame()")
       .row(ng-show="showEnd")
          h2 Game Ended!
+      .row(ng-show="showEnd")
+         high-scores-div(game-id="#{ gameid }", end-game="true")
+      .row(ng-show="showEnd")
          button.btn.btn-green(ng-click="goToResultsPage()") See Results
+      button.btn.btn-red.bottom-center-btn(ng-click="showEndGame()") End Game

@@ -1,6 +1,6 @@
 extends ../layoutlogin
 
-block head
+block append head
    script(src="/javascripts/profile/profilepage/controller.js")
    link(rel='stylesheet', href='/stylesheets/templates/quesdiv.css')
    
@@ -9,10 +9,6 @@ block main
       .container(ng-controller="profile-page-ctrl", ng-init="getPlayerDetails();").text-center
          h2 {{ player.nickname }}
          hr
-         h3 Player Summary
-         #messages.col-sm-offset-8.col-sm-4(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')", close="closeMsg($index)") {{message.msg}}
-         p Here are the things you accomplished while playing the game
-         hr
          .row
             .col-xs-6
                h4
@@ -20,6 +16,10 @@ block main
             .col-xs-6
                h4
                   a(ng-click="userQuestions()") View Created Questions
+         hr
+         h3 Player Summary
+         #messages.col-sm-offset-8.col-sm-4(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')", close="closeMsg($index)") {{message.msg}}
+         p Here are the things you accomplished while playing the game
          hr
          .row
             .col-xs-2

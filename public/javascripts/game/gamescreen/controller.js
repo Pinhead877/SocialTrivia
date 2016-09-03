@@ -110,8 +110,9 @@ angular.module('mainApp').controller('game-screen-clock', ["$scope", function($s
 }]);
 
 angular.module('mainApp').controller('game-screen-high', ["$scope", "$http", function($scope, $http){
-   $scope.getPlayers = function(){
-      $http.get('/services/gethighscores/'+$scope.gameId).then(function(result){
+   var MIDDLE_OF_GAME = 3, END_OF_GAME = 10;
+   $scope.getPlayers = function(numOfPlayers){
+      $http.get('/services/gethighscores/'+$scope.gameId+"?numOfPlayers="+numOfPlayers).then(function(result){
          if(result.data.error){
             alert(result.data.error.massege);
          }else{
@@ -120,9 +121,14 @@ angular.module('mainApp').controller('game-screen-high', ["$scope", "$http", fun
       });
    }
    socket.on('pointsUpdated', function(){
-      $scope.getPlayers();
+      $scope.getPlayers(MIDDLE_OF_GAME);
    });
-   $scope.getPlayers();
+   if(eval($scope.endGame)==true){
+      $scope.getPlayers(END_OF_GAME);
+   }
+   else{
+      $scope.getPlayers(MIDDLE_OF_GAME);
+   }
 }]);
 
 angular.module('mainApp').controller('game-screen-ques', ["$scope","$http","QuestionsStatuses", function($scope, $http, queServices){

@@ -134,6 +134,7 @@ module.exports = function(io, db, errors) {
 
    router.get('/gethighscores/:gameId', function(req, res){
       var gameID = parseInt(req.params.gameId);
+      var numOfPlayers = req.query.numOfPlayers || 3;
       var gamesDB = db.collection('games');
       var gamesFound = gamesDB.find({_id: gameID});
       gamesFound.toArray(function(err, result){
@@ -146,7 +147,7 @@ module.exports = function(io, db, errors) {
                result[0].players.sort(function(a,b){
                   return b.points - a.points;
                });
-               res.send(result[0].players.slice(0,5));
+               res.send(result[0].players.slice(0,numOfPlayers));
             }
          }
       });
@@ -240,7 +241,7 @@ module.exports = function(io, db, errors) {
          console.log(e);
          res.send(e);
       });
-   
+
 });
 
 return router;

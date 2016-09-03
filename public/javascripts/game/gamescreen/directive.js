@@ -19,7 +19,8 @@ angular.module('mainApp').directive('highScoresDiv', function(){
    return {
       restrict: "E",
       scope: {
-         gameId: '@'
+         gameId: '@',
+         endGame: '@?'
       },
       controller: "game-screen-high",
       templateUrl: "/templates/gamescreen/highview"

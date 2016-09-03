@@ -177,6 +177,7 @@ module.exports = function(io, db, errors){
 
       router.get('/:gameId', function(req, res) {
          var gameId = parseInt(req.params.gameId);
+         var userID = req.session.userid;
          // find the game request in the DB
          var gamesDB = db.collection("games");
          var gamesFound = gamesDB.find({ _id: gameId });
@@ -194,6 +195,9 @@ module.exports = function(io, db, errors){
                }
                else if(result[0].isEnded===true){ // The game has Ended Properly redirect to results
                   res.render('gameScreen/results', errors.GAME_ENDED);
+               }
+               else if(result[0].creator.userid!=userID){
+                  res.render('error', {message: "Well well well... I see what you did there"});
                }
                else if(new Date() - result[0].ending > 0){ // The game has Ended But not set as Ended
                   res.render('gameScreen/results', errors.GAME_ENDED);
@@ -353,7 +357,7 @@ module.exports = function(io, db, errors){
    /* ========== Private Methods ========== */
 
    function isGameActive(game){
-      return (game.ending - new Date() > 0 || game.isEnded===false);
+      return (game.ending - new Date() > 0 && game.isEnded===false);
    }
 
    Date.prototype.addHours = function(h) {

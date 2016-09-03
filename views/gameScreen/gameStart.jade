@@ -5,12 +5,11 @@ block append head
    link(rel="stylesheet", href="/stylesheets/gamescreen/gamestart.css")
    
 block append main
-   section.section.section-padded
-      .container(ng-controller="game-start-cont", ng-init="init(#{ game })")
+   section.section.section-padded(style="position:inherit;", ng-controller="game-start-cont", ng-init="init(#{ game })")
+      .container.text-center
          #messages.col-sm-offset-8.col-sm-4(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')", close="closeMsg($index)") {{message.msg}}
          h2 Game ID: {{ gameid }}
          h3 Waiting for Players...
          .row
-            .namewrap(ng-repeat="player in playersLogged", style='background-color: {{ player.color }}') {{ player.nickname }}
-         .row 
-            button.btn.btn-blue(ng-click="startGame()") Start Game
+            h3.namewrap(ng-repeat="player in playersLogged", style='background-color: {{ player.color }}') {{ player.nickname }}
+      button.btn.btn-blue.bottom-center-btn(ng-click="startGame()") Start Game
