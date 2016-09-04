@@ -6,6 +6,7 @@ module.exports = function(io, db, errors){
    var express = require('express');
    var router = express.Router();
    var _ = require('lodash');
+   var ObjectID = require('mongodb').ObjectID
 
    io.on('connection', function(socket){
       socket.on('room', function(gameId){
@@ -349,6 +350,51 @@ module.exports = function(io, db, errors){
                )
             }
          });
+      });
+
+      router.get('/endgame/:gameid', function(req, res){
+         var gameID = parseInt(req.params.gameid);
+         var gamesDB = db.collection('games');
+         var usersDB = db.collection('users');
+         gamesDB.findAndModify({_id: gameID},[],
+            {$set: {isEnded: true} },
+            function(err, result){
+               if(err){
+                  console.log(errors.UNKNOWN);
+                  console.log(err);
+               }
+               res.sendStatus(200);
+               var game = result.value;
+               var winnerPlayer = _.maxBy(game.players, 'points');
+               var tiePlayers = _.filter(game.players, {points: winnerPlayer.points});
+               winnerPlayer = (tiePlayers.length>1) ? null : winnerPlayer;
+               io.sockets.in(gameID).emit('gameend');
+               _.forEach(game.players, function(player){
+                  var correctAnswers = _.filter(game.questions, {answeredBy: player._id});
+                  var wrongAnswers = _.filter(game.questions, function(question){
+                     if(question.answeredBy!=player._id && _.find(question.playersTried, {_id: player._id})!=null){
+                        return question;
+                     }
+                  });
+                  var incWinner = (winnerPlayer != null && player._id===winnerPlayer._id) ? 1 : 0;
+                  usersDB.updateOne(
+                     {_id: new ObjectID(player._id)},
+                     {
+                        $inc:
+                        {
+                           points: player.points,
+                           questionsAnswered: correctAnswers.length,
+                           fullGamesPlayed: 1,
+                           questionsWrong: wrongAnswers.length,
+                           gamesWon: incWinner
+                        },
+                        $push:
+                        { gamesLength: game.gameLength }
+                     }
+                  );
+               });
+            }
+         );
       });
 
       return router;

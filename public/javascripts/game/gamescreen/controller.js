@@ -35,7 +35,7 @@ angular.module('mainApp').controller('main-game-ctrl', ["$scope","$window","$htt
 
    $scope.showEndGame = function(){
       $scope.showEnd = true;
-      $http.get("/services/endgame/"+$scope.gameid);
+      $http.get("/gamescreen/endgame/"+$scope.gameid);
    }
 
    $scope.goToResultsPage = function(){

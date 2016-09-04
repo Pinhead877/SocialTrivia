@@ -1,4 +1,5 @@
-angular.module('mainApp').controller('remote-cont', ["$scope", "$location", "$http" ,function($scope, $location, $http){
+angular.module('mainApp').controller('remote-cont', ["$scope", "$window", "$http" ,function($scope, $window, $http){
+   socket = io();
 
    $scope.messages = [];
 
@@ -19,14 +20,21 @@ angular.module('mainApp').controller('remote-cont', ["$scope", "$location", "$ht
          if(res.data.error){
             $scope.addMsg(res.data.error.message);
             if(res.data.error.code==2010){
-               window.location = "/gamescreen/results/"+$scope.gameid;
+               $window.location = "/gamescreen/results/"+$scope.gameid;
             }
          }
          else if(res.status===200){
-            window.location = "/gamecontroller/quescreen/"+$scope.gameid+"/"+$scope.numin;
+            $window.location = "/gamecontroller/quescreen/"+$scope.gameid+"/"+$scope.numin;
          }
       }, function(res){
          console.log(res);
+      });
+   }
+
+   $scope.init = function(){
+      socket.emit('room', $scope.gameid);
+      socket.on('gameend', function(num){
+         $window.location = "/gamescreen/results/"+$scope.gameid;
       });
    }
 }]);

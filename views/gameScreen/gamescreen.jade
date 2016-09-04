@@ -24,4 +24,4 @@ block append main
          high-scores-div(game-id="#{ gameid }", end-game="true")
       .row(ng-show="showEnd")
          button.btn.btn-green(ng-click="goToResultsPage()") See Results
-      button.btn.btn-red.bottom-center-btn(ng-click="showEndGame()") End Game
+      button.btn.btn-red.bottom-center-btn(ng-hide="showEnd", ng-click="showEndGame()") End Game

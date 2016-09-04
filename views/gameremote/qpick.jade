@@ -9,7 +9,7 @@ block title
   
 block main
    section.section.section-padded
-      .container.text-center(ng-controller="remote-cont", ng-init="gameid= #{ gameid }")
+      .container.text-center(ng-controller="remote-cont", ng-init="gameid= #{ gameid };init();")
          .row
             h4 Your Score: #{ points }
          .row
