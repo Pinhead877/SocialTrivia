@@ -1,6 +1,16 @@
 angular.module('mainApp').controller('game-enter-ctrl', ['$scope', '$http', function($scope, $http){
    socket = io();
 
+   $scope.messages = [];
+
+   $scope.addMsg = function(msg, type) {
+      $scope.messages.push({show: true, type:(type==null)?'danger':type, msg: msg});
+   };
+
+   $scope.closeMsg = function(index) {
+      $scope.messages[index].show = false;
+   };
+
    socket.on('startgame', function(num){
       $scope.gameStarted = true;
       window.location.href = "/gamecontroller/quepick/"+$scope.gamenum;
@@ -18,7 +28,7 @@ angular.module('mainApp').controller('game-enter-ctrl', ['$scope', '$http', func
                   window.location.href = "/gamecontroller/quepick/"+$scope.gamenum;
                }
                else{
-                  alert(result.data.error.message);
+                  $scope.addMsg(result.data.error.message);
                   return;
                }
             }

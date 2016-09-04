@@ -21,6 +21,7 @@ block append main
          #wait(ng-show="numberEntered")
             h1 Please wait for the game to start
             img.img-responsive(src='https://media.giphy.com/media/w9yg6QsZJ3JC/giphy.gif')
-            
+         #messages-wrap
+            #messages.col-xs-12(ng-hide="!message.show", dismiss-on-timeout="5000",uib-alert, ng-repeat="message in messages", ng-class="'alert-' + (message.type || 'warning')", close="closeMsg($index)") {{message.msg}}
             
          

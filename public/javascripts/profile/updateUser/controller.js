@@ -28,7 +28,7 @@ angular.module("mainApp").controller("update-user-ctrl",["$scope", "$http", func
    };
 
    $scope.updateUser = function(){
-
+      
    }
 
    $scope.cancelEdit = function(){

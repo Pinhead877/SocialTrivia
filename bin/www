@@ -13,7 +13,6 @@ mongo.MongoClient.connect('mongodb://127.0.0.1/socialdb', function(err, db){
       return;
    }
    else{
-      console.log("MONGO CONNECTION!");
       var app = require('../app')(db);
 
       /**

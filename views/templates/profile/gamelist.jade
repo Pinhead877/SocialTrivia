@@ -19,7 +19,7 @@
             td.col-xs-2 {{ game.gameLength }}
             td.col-xs-2 {{ game.questions.length }}
             td.col-xs-2
-               span(ng-if="!game.isStarted") Not Played Yet
+               span(ng-if="!game.isStarted") Not Played
                span(ng-if="game.isStarted && game.isEnded") Ended
                span(ng-if="game.isStarted && !game.isEnded") In Progress
             td.col-xs-2

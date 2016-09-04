@@ -40,17 +40,25 @@ block main
                h4.text-left {{ player.createdOn | date:"dd/MM/yyyy" }}
          hr
          .row
-            .col-xs-3
+            .col-xs-4
                h4.text-right Games Created
-            .col-xs-1
+            .col-xs-2
                h4.text-left {{ player.gamesCreated }}
-            .col-xs-3
+            .col-xs-4
                h4.text-right Questions Created 
-            .col-xs-1
+            .col-xs-2
                h4.text-left {{ player.questionsCreated }}
-            .col-xs-3
-               h4.text-right Games Finised First
-            .col-xs-1
+         
+         hr
+         .row
+            .col-xs-4
+               h4.text-right Games Finished
+            .col-xs-2
+               h4.text-left {{ player.fullGamesPlayed }} 
+                  span.fa.fa-check-square-o.green
+            .col-xs-4
+               h4.text-right Games Finished First
+            .col-xs-2
                h4.text-left {{ player.gamesWon }}
                   span.fa.fa-trophy.silver
          hr

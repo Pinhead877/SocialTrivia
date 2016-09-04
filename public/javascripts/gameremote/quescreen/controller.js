@@ -1,8 +1,8 @@
 var back;
 angular.module('mainApp').controller('quescreen-cont',["$scope","$location", "$http", "$window", "$interval", function($scope, $location, $http, $window, $interval){
 
-   $scope.messages = [];
    $scope.answers = [];
+   $scope.messages = [];
 
    $scope.addMsg = function(msg, type) {
       $scope.messages.push({show: true, type:(type==null)?'danger':type, msg: msg});

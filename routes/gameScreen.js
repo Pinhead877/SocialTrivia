@@ -150,7 +150,7 @@ module.exports = function(io, db, errors){
             }
             else{
                games[0].players = (games[0].players == null) ? [] : games[0].players;
-               if(playerID === parseInt(games[0].creator.userid)){
+               if(playerID === games[0].creator.userid){
                   res.send(errors.CREATOR_IS_PLAYER);
                }
                else if(_.find(games[0].players,{_id: playerID })){
