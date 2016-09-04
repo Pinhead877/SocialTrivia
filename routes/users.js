@@ -104,24 +104,6 @@ module.exports = function(db, errors) {
       res.render('mainScreen/index');
    });
 
-   router.get('/getUser', function(req, res){
-      var userID = req.session.userid;
-      var usersDB = db.collection("users");
-      var usersFound = usersDB.find({_id: new ObjectID(userID)});
-      usersFound.toArray(function(err, result){
-         if(err){
-            res.send(errors.UNKNOWN);
-         }
-         else if(result.length==0){
-            return;
-         }
-         else{
-            delete result[0].password;
-            res.send(result[0]);
-         }
-      });
-   });
-
    return router;
 }
 

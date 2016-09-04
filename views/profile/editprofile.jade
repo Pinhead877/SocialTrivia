@@ -14,12 +14,12 @@ block main
             .form-group(ng-class="{ 'has-error' : updateForm.password.$invalid && !updateForm.password.$pristine }")   
                label(class='control-label col-sm-3', for='password') Password
                .col-sm-6
-                  input.form-control(type='password',id='password', name="password" ng-model="passwordform" ng-minlength="4", ng-maxlength="10", required)
+                  input.form-control(type='password',id='password', name="password" ng-model="passwordform" ng-minlength="4", ng-maxlength="10")
                .col-md-3
             .form-group(ng-class="{ 'has-error' : updateForm.password.$invalid && !updateForm.password.$pristine }")   
                label(class='control-label col-sm-3', for='password') Confirm Password
                .col-sm-6
-                  input.form-control(type='password',id='passwordConfirm', name="passwordConfirm" ng-model="passwordConfirm" ng-minlength="4", ng-maxlength="10", required)
+                  input.form-control(type='password',id='passwordConfirm', name="passwordConfirm" ng-model="passwordConfirm" ng-minlength="4", ng-maxlength="10")
                .col-md-3
             .form-group(ng-class="{ 'has-error' : updateForm.gender.$invalid && !updateForm.gender.$pristine }")
                label(class='control-label col-sm-3', for='gender') Gender

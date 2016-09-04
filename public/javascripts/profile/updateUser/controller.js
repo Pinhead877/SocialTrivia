@@ -11,10 +11,10 @@ angular.module("mainApp").controller("update-user-ctrl",["$scope", "$http", func
 
    $scope.enc = CryptoJS.SHA3;
    $scope.currentYear = moment().year();
-   $scope.birthday ={};
+   $scope.birthday = {};
 
    $scope.getUserDetails = function(){
-      $http.get('/users/getUser').then(function(result){
+      $http.get('/profile/getUser').then(function(result){
          if(result.data.error){
             $scope.addMsg(result.data.error.message);
          }else{
@@ -28,7 +28,24 @@ angular.module("mainApp").controller("update-user-ctrl",["$scope", "$http", func
    };
 
    $scope.updateUser = function(){
-      
+      if($scope.updateForm.$valid){
+         if($scope.passwordform!=null && $scope.passwordform!=$scope.passwordConfirm){
+            $scope.addMsg("Passwords do not match");
+            return;
+         }
+         var encPass = $scope.enc($scope.passwordform, { outputLength: 256 });
+         $scope.userDetails.password = encPass.toString();
+         var bday = moment($scope.birthday.year+"-"+$scope.birthday.month+"-"+$scope.birthday.day, "YYYY-MM-DD");
+         $scope.userDetails.birthday = bday.toString();
+         $http.post('/profile/putUser',$scope.userDetails).then(function(result){
+            if(result.data.error){
+               $scope.addMsg(result.data.error.message);
+            }else if(result.status===200){
+               $scope.addMsg("User Updated successfully!", "success");
+               window.location.href = "/profile";
+            }
+         });
+      }
    }
 
    $scope.cancelEdit = function(){

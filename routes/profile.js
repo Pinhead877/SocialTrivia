@@ -27,7 +27,8 @@ module.exports = function(db, errors) {
       gamesFound.toArray(function(err, result){
          if(err){
             res.send(errors.UNKNOWN);
-         }else{
+         }
+         else{
             _.sortBy(result, ['isStarted']);
             res.send(result.reverse());
          }
@@ -67,6 +68,51 @@ module.exports = function(db, errors) {
                   });
                }
             });
+         }
+      });
+   });
+
+   router.get('/getUser', function(req, res){
+      var userID = req.session.userid;
+      var usersDB = db.collection("users");
+      var usersFound = usersDB.find({_id: new ObjectID(userID)});
+      usersFound.toArray(function(err, result){
+         if(err){
+            res.send(errors.UNKNOWN);
+         }
+         else if(result.length==0){
+            return;
+         }
+         else{
+            delete result[0].password;
+            res.send(result[0]);
+         }
+      });
+   });
+
+   router.post('/putUser', function(req, res){
+      var userID = req.session.userid;
+      var usersDB = db.collection("users");
+      var userToUpdate = {};
+      if(req.body.password!=null){
+         userToUpdate.password = req.body.password;
+      }
+      if(req.body.gender==null || req.body.birthday==null){
+         res.sendStatus(401);
+         return;
+      }
+      userToUpdate.gender = req.body.gender;
+      userToUpdate.birthday = req.body.birthday;
+      usersDB.updateOne({_id: new ObjectID(userID)}, {$set: userToUpdate} ,function(err, result){
+         if(err){
+            res.send(errors.UNKNOWN);
+            console.log(err);
+         }
+         else if(result.result.n==0){
+            console.log(result);
+         }
+         else{
+            res.sendStatus(200);
          }
       });
    });
