@@ -9,12 +9,16 @@ module.exports = function(db, errors) {
    var ObjectID = require('mongodb').ObjectID
    var _ = require('lodash');
 
+   /**
+    * shows the question list page
+    */
    router.get('/list', function(req, res){
       res.render('questions/queslistpage');
    });
 
-   //function to get all the questions in the DB
-   //that PUBLIC!
+   /**
+    * returns an array of questions filter by type - private or public
+    */
    router.get('/list/:type', function(req, res){
       var type = req.params.type;
       var quesCollection = db.collection('questions');
@@ -50,6 +54,10 @@ module.exports = function(db, errors) {
       });
    });
 
+   /**
+    * deletes a question from the db
+    * @type {[type]}
+    */
    router.post('/delete', function (req, res) {
       var userID = req.session.userid, questionToDelete = req.body;
       var quesDB = db.collection('questions');
@@ -72,10 +80,16 @@ module.exports = function(db, errors) {
       });
    });
 
+   /**
+    * show add question page
+    */
    router.get('/add',function(req, res){
       res.render('questions/addques');
    })
 
+   /**
+    * creates a new question in the db
+    */
    router.post('/create', function(req, res){
       var queObj = req.body;
       if(isTextInvalid(queObj.question, 6, 60)){
@@ -108,6 +122,9 @@ module.exports = function(db, errors) {
       res.sendStatus(200);
    });
 
+   /**
+    * updates the question in the db
+    */
    router.post('/update', function(req, res){
       var que = req.body;
       if(isTextInvalid(que.question, 6, 120)){
@@ -138,6 +155,10 @@ module.exports = function(db, errors) {
       });
    });
 
+   /**
+    * returns an array of categories from the db
+    * @type {[type]}
+    */
    router.get('/getCategories',function(req, res){
       var categoryDB = db.collection("categories");
       var categoriesFound = categoryDB.find({});
@@ -154,12 +175,19 @@ module.exports = function(db, errors) {
 }
 
 /** ====================== Private Methods ====================== **/
+
+/**
+ * returns the user from a users array by the id
+ */
 function getUserObjectById(userid, users){
    for(var i=0;i<users.length;i++){
       if(userid == users[i]._id) return users[i];
    }
    return null;
 }
+/**
+ * checks if item exists in array
+ */
 function isArrayContains(array, item){
    for(var j=0;j<array.length;j++){
       if(item == array[j]) return true;
@@ -167,6 +195,9 @@ function isArrayContains(array, item){
    return false;
 }
 
+/**
+ * string validation
+ */
 function isTextInvalid(text, min, max){
    if(text===undefined || text === null) return true;
    if(text.length<min || text.length>max) return true;

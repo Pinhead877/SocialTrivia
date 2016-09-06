@@ -11,10 +11,16 @@ module.exports = function(db, errors) {
    //    res.render('profile/profilescreen');
    // });
 
+   /**
+    * DECREPTED
+    */
    router.get('/gamelist/', function(){
       res.render('profile/usergames');
    });
 
+   /**
+    * creates new user in the db
+    */
    router.post('/create', function(req, res){
       //TODO - add validation check if empty and check length
       var userDetails = req.body;
@@ -58,6 +64,9 @@ module.exports = function(db, errors) {
       });
    });
 
+   /**
+    * get the high scores for the high scores page
+    */
    router.get("/gethighscores", function(req, res){
       var usersDB = db.collection("users");
       var usersFound = usersDB.find({});
@@ -73,6 +82,9 @@ module.exports = function(db, errors) {
       });
    });
 
+   /**
+    * logins a user to the game
+    */
    router.post('/login', function(req, res){
       var data = db.collection("users");
       var user = data.find({
@@ -94,6 +106,9 @@ module.exports = function(db, errors) {
       });
    });
 
+   /**
+    * logs out a user from the game
+    */
    router.get('/logout', function(req, res){
       req.session.destroy(function(err){
          if(err){
@@ -108,32 +123,50 @@ module.exports = function(db, errors) {
 }
 
 /** ====================== Private Methods ====================== **/
+/**
+ * generates a regex expression of the given text
+ */
 function generateRegExp(text) {
    return new RegExp(["^",text,"$"].join(""), "i");
 }
 
+/**
+ * nickname validation
+ */
 function isNicknameValid(text) {
    if(isLengthInvalid(text)) return false;
    if(!isStringValid(text)) return false;
    return true;
 }
 
+/**
+ * text length validatino
+ */
 function isLengthInvalid(text){
    if(text.length<4 || text.length>10) return true;
    return false;
 }
 
+/**
+ * general string validation
+ */
 function isStringValid(text){
    if(isEmptyOrUndefined(text)) return false;
    if(!isStringConatainsNumbersAndLetters(text)) return false;
    return true;
 }
 
+/**
+ * checks if an item is empty, undefined or null
+ */
 function isEmptyOrUndefined(item){
    if(item==="" || item == null) return true;
    return false;
 }
 
+/**
+ * checks if a text is only letters and numbers
+ */
 function isStringConatainsNumbersAndLetters(inputtxt){
    //RegExp of letters and Numbers
    var letterNumber = /([a-z]|[A-Z]|[0-9])/g;

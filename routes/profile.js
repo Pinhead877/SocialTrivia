@@ -4,22 +4,37 @@ module.exports = function(db, errors) {
    var _ = require('lodash');
    var ObjectID = require('mongodb').ObjectID
 
+   /**
+    * shows the profile page
+    */
    router.get('/', function(req, res){
       res.render('profile/profilescreen');
    });
 
+   /**
+    * shows the edit profile page
+    */
    router.get('/editProfile/', function(req, res){
       res.render('profile/editprofile');
    });
 
+   /**
+    * shows the user games page
+    */
    router.get('/games/', function(req, res){
       res.render('profile/usergames');
    });
 
+   /**
+    * shows the user question page
+    */
    router.get('/questions/', function(req, res){
       res.render('profile/userquestions');
    });
 
+   /**
+    * returns an array of the current user games
+    */
    router.get('/getGames',function(req, res){
       var userID = req.session.userid;
       var gamesDB = db.collection('games');
@@ -35,6 +50,9 @@ module.exports = function(db, errors) {
       });
    });
 
+   /**
+    * return the current user details with statistics
+    */
    router.get('/getPlayerDetails', function(req, res){
       var userID = req.session.userid;
       var playerDB = db.collection('users');
@@ -72,6 +90,9 @@ module.exports = function(db, errors) {
       });
    });
 
+   /**
+    * get the user details for the edit page
+    */
    router.get('/getUser', function(req, res){
       var userID = req.session.userid;
       var usersDB = db.collection("users");
@@ -90,6 +111,9 @@ module.exports = function(db, errors) {
       });
    });
 
+   /**
+    * updates the user in the DB
+    */
    router.post('/putUser', function(req, res){
       var userID = req.session.userid;
       var usersDB = db.collection("users");
@@ -122,6 +146,9 @@ module.exports = function(db, errors) {
 
 /** ** ** ** ** Private Methods ** ** ** ** **/
 
+/**
+ * convert milliseconds to years
+ */
 function getYearsFromMilli(time){
    time=Math.floor(time/1000);
    return Math.floor(time/31536000);

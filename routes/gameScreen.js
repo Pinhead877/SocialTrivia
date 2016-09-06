@@ -8,25 +8,41 @@ module.exports = function(io, db, errors){
    var _ = require('lodash');
    var ObjectID = require('mongodb').ObjectID
 
+   /**
+    * Socket connection
+    * join the socket client to a brodcast room
+    */
    io.on('connection', function(socket){
       socket.on('room', function(gameId){
          socket.join(gameId);
       });
    });
 
+   /**
+    * results page by gameid
+    */
    router.get('/results/:gameid',function(req, res){
       res.render('gameScreen/results', {gameid: parseInt(req.params.gameid)});
    });
 
+   /**
+    * create game page
+    */
    router.get('/create',function(req, res){
       res.render('gameScreen/create', {});
    });
 
+   /**
+    * game start page by gameid
+    */
    router.get('/gamestartscreen/:gameId',function(req, res){
       var gameID = parseInt(req.params.gameId);
       res.render('gameScreen/gameStart', { game: gameID });
    });
 
+   /**
+    * exit the user from the players list
+    */
    router.get('/userexitgame/:gameId', function(req, res){
       var gameID = parseInt(req.params.gameId);
       var gamesDB = db.collection('games');
@@ -53,7 +69,9 @@ module.exports = function(io, db, errors){
          });
       });
 
-      //TODO - send the userid and name of the requested ids
+      /**
+       * get the logged users to game by gameid
+       */
       router.get('/loggedToGameList/:gameid', function(req, res){
          var gameid = parseInt(req.params.gameid);
          var gamesDB = db.collection('games');
@@ -78,6 +96,9 @@ module.exports = function(io, db, errors){
          });
       });
 
+      /**
+       * start a game by gameid
+       */
       router.get('/startgame/:gameId', function(req, res){
          var gameID = parseInt(req.params.gameId);
          var gamesDB = db.collection('games');
@@ -123,6 +144,10 @@ module.exports = function(io, db, errors){
          });
       });
 
+      /**
+       * enters a player to the game
+       * adds him to the players list
+       */
       router.post('/entergame', function(req,res){
          var gameID = parseInt(req.body.gamenum), playerID = req.session.userid;
          if(gameID==null){
@@ -176,6 +201,9 @@ module.exports = function(io, db, errors){
          });
       });
 
+      /**
+       * shows the game screen
+       */
       router.get('/:gameId', function(req, res) {
          var gameId = parseInt(req.params.gameId);
          var userID = req.session.userid;
@@ -207,12 +235,10 @@ module.exports = function(io, db, errors){
                      function(err, result){
                         if(err)
                         {
-                           console.log("else if(new Date() - result[0].ending > 0){");
                            console.log(err);
                         }
                         else if(result.result.n===0)
                         {
-                           console.log("else if(new Date() - result[0].ending > 0){");
                            console.log(result.result);
                         }
                      });
@@ -252,6 +278,9 @@ module.exports = function(io, db, errors){
             });
          });
 
+         /**
+          * try to answer a question
+          */
          router.post('/answers',function(req, res){
             var gameID = parseInt(req.body.gameid), queID = parseInt(req.body.queid)-1,
             answer = req.body.answers, isCorrect, userID = req.session.userid;
@@ -301,6 +330,10 @@ module.exports = function(io, db, errors){
             });
          });
 
+         /**
+          * DECREPTED
+          * when player goes in a question and goes back it becomes unanswered again
+          */
          router.get('/back/:gameId/:queId', function(req, res){
             var gameID = parseInt(req.params.gameId), queID = parseInt(req.params.queId)-1;
             io.sockets.in(gameID).emit('unanswered', queID+1);
@@ -325,7 +358,9 @@ module.exports = function(io, db, errors){
                }
             });
          });
-
+         /**
+          * select the number on screen
+          */
          router.get('/select/:gameId/:queId', function(req, res){
             var gameID = parseInt(req.params.gameId), queID = parseInt(req.params.queId)-1;
             io.sockets.in(gameID).emit('selected', queID+1);
@@ -352,6 +387,9 @@ module.exports = function(io, db, errors){
          });
       });
 
+      /**
+       * ends the game
+       */
       router.get('/endgame/:gameid', function(req, res){
          var gameID = parseInt(req.params.gameid);
          var gamesDB = db.collection('games');
@@ -402,15 +440,23 @@ module.exports = function(io, db, errors){
 
    /* ========== Private Methods ========== */
 
+   /**
+    * check if the game is active
+    */
    function isGameActive(game){
       return (game.ending - new Date() > 0 && game.isEnded===false);
    }
 
+   /**
+    * addHours method to the Date class
+    */
    Date.prototype.addHours = function(h) {
       this.setTime(this.getTime() + (h*60*60*1000) + (10*1000));
       return this;
    };
-
+   /**
+    * addminutes method to the Date class
+    */
    Date.prototype.addMinutes = function(m) {
       this.setTime(this.getTime() + (m*60*1000) + (10*1000));
       return this;

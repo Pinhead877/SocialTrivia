@@ -7,10 +7,12 @@ module.exports = function(io, db, errors) {
    var _ = require('lodash');
    var ObjectID = require('mongodb').ObjectID
 
-   // Create new game - recieve a name from the client
-   // than creates random game id and checks that it dosent apear in the DB
-   // saves and sends to the client the _id,
-   // as it apears in the DB, the game name and the creators id
+   /**
+    *    Create new game - recieve a name from the client
+    *    than creates random game id and checks that it dosent apear in the DB
+    *    saves and sends to the client the _id,
+    *    as it apears in the DB, the game name and the creators id
+    */
    router.post('/create/game', function(req, res){
       var gameName = req.body.name;
       var gameLength = req.body.minutes;
@@ -70,6 +72,10 @@ module.exports = function(io, db, errors) {
       });
    });
 
+   /**
+    * get the current session from the db and updates the points
+    * @type {[type]}
+    */
    router.get('/session', function(req, res){
       if(req.session.nickname){
          var usersDB = db.collection("users");
@@ -88,6 +94,10 @@ module.exports = function(io, db, errors) {
       }
    });
 
+   /**
+    * returns an array of the users high scores
+    * @type {[type]}
+    */
    router.get('/gethighscores/:gameId', function(req, res){
       var gameID = parseInt(req.params.gameId);
       var numOfPlayers = req.query.numOfPlayers || 3;
@@ -109,6 +119,10 @@ module.exports = function(io, db, errors) {
       });
    });
 
+   /**
+    * get the questions statuses for the game screen
+    * answered, unanswered, blocked...
+    */
    router.get('/getQuestionsStatuses/:gameId',function(req, res){
       var gameID = parseInt(req.params.gameId);
       var gamesDB = db.collection('games');
@@ -125,6 +139,10 @@ module.exports = function(io, db, errors) {
       });
    });
 
+   /**
+    * retruns details of the game for the game result page
+    * @type {[type]}
+    */
    router.get('/getEndedStats/:gameId', function(req, res){
       var gameID = parseInt(req.params.gameId);
       var gamesDB = db.collection('games');
@@ -149,6 +167,9 @@ module.exports = function(io, db, errors) {
       });
    });
 
+   /**
+    * restarts an existing game
+    */
    router.post('/restartGame', function(req, res){
       var game = req.body;
       var gamesDB = db.collection('games');
@@ -204,8 +225,9 @@ return router;
 }
 
 /**     Private Methods    **/
-
-//function to check if a number is in a given array
+/**
+ * function to check if a number is in a given array
+ */
 var isNumInArray = function(num, arr){
    var t;
    arr.forEach(function(val,i,arr){
@@ -217,6 +239,9 @@ var isNumInArray = function(num, arr){
    return false;
 }
 
+/**
+ * add shuffle methods to the Array class
+ */
 Array.prototype.shuffle = function() {
    var i = this.length, j, temp;
    if ( i == 0 ) return this;

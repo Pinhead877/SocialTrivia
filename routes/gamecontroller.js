@@ -5,11 +5,16 @@ module.exports = function(db, errors) {
    var express = require('express');
    var router = express.Router();
    var _ = require('lodash');
-
+   /**
+    * get the game enter page
+    */
    router.get('/', function(req, res, next) {
       res.render('gameremote/gameenter', {});
    });
 
+   /**
+    * Question pick screen by the gameid
+    */
    router.get('/quepick/:gameId', function(req, res, next) {
       var gameID = parseInt(req.params.gameId), playerID = req.session.userid;
       var gamesDB = db.collection("games");
@@ -32,6 +37,9 @@ module.exports = function(db, errors) {
       });
    });
 
+   /**
+    * first check if the question is available for answer
+    */
    router.get('/:gameId/:queId',function(req, res){
       var gameID = parseInt(req.params.gameId), queID = parseInt(req.params.queId)-1;
       var gamesDB = db.collection("games");
@@ -59,6 +67,9 @@ module.exports = function(db, errors) {
       });
    });
 
+   /**
+    * the question page by gameid and queid
+    */
    router.get('/quescreen/:gameId/:queId', function(req, res){
       var gameid = parseInt(req.params.gameId), queid = req.params.queId-1,
       playerID = req.session.userid;
@@ -125,11 +136,19 @@ module.exports = function(db, errors) {
 }
 
 /* ========== Private Methods ========== */
-
+/**
+ * checks if the game is active
+ * @param   game the game object
+ * @return {Boolean}  true if the game is active
+ */
 function isGameActive(game){
    return (game.ending - new Date() > 0 && game.isEnded===false);
 }
-
+/**
+ * creates random english letters
+ * @param  int len the length of the desired string
+ * @return string     random letters string
+ */
 function createRandomLettersEN(len){
    var text = "";
    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -138,6 +157,9 @@ function createRandomLettersEN(len){
    return text;
 }
 
+/**
+ * Future implemetaions for hebrew
+ */
 function createRandomLettersHE(len){
    var text = "";
    var possible = "אבגדהוזחטיכלמנסעפצקרשת0123456789";
@@ -146,6 +168,10 @@ function createRandomLettersHE(len){
    return text;
 }
 
+/**
+ * add shuffle function to the String type
+ * @return string    shuffled string
+ */
 String.prototype.shuffle = function () {
    var a = this.split(""),
    n = a.length;
@@ -159,6 +185,10 @@ String.prototype.shuffle = function () {
    return a.join("");
 }
 
+/**
+ * add add minutes method to the date class
+ * @param int m number of minutes
+ */
 Date.prototype.addMinutes = function(m) {
    this.setTime(this.getTime() + (m*60*1000) + (10*1000));
    return this;
